@@ -1,0 +1,74 @@
+<%- include("parts/head.ejs") %>
+<%- include("parts/navbar.ejs") %>
+<!-- start search -->
+<div class="search" id="search-content">
+<form action="" class="search__form">
+    <i class="ri-search-line search__icon"></i>
+    <input type="search" placeholder="What are you looking for?" class="search__input">
+</form>
+<i class="ri-close-line search__close" id="search-close"></i>
+</div>
+<!-- end search -->
+  <!-- end header -->
+
+<!-- start contact us page -->
+ <div class="contact-us sub-pages">
+        <div class="heading-of-sub-pages">
+            <div class="head-of-page">
+              Contact Us
+        </div>      
+        <div class="content">
+    <a href="../index.html"><span>Home / </span></a>
+    <a href="#"><span>Contact Us</span></a>
+</div>
+ </div>
+      <div class="container">
+<div class="grid-of-sub-pages grid-of-contact-us">
+    <div class="first-part">
+        <span>send us a message</span>
+        <div class="image">
+            <img src="../images/telephone-contact-us.png" alt="">
+        </div>
+    </div>
+    <div class="second-part">
+      
+<form action="#" method="post" class="contact-form">
+    <div class="form-group">
+        <div class="input-container">
+            <i class="fas fa-user icon"></i>
+            <input type="text" id="name" name="name" required placeholder="Name *" class="form-control">
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <div class="input-container">
+            <i class="fa-solid fa-mobile-screen-button icon"></i>
+            <input type="tel" id="phone" name="phone" required placeholder="Phone *" class="form-control">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="input-container">
+            <i class="fas fa-envelope icon"></i>
+            <input type="email" id="email" name="email" required placeholder="Email *" class="form-control">
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <div class="input-container">
+            <textarea id="message" name="message" rows="5" required placeholder="Message *" class="form-control"></textarea>
+        </div>
+    </div>
+
+    
+    <button type="submit" class="submit-btn">Send</button>
+</form>
+
+
+    </div>
+    </div>
+</div>
+</div>
+<!-- end contact us page -->
+
+<%- include("parts/footer.ejs") %>
