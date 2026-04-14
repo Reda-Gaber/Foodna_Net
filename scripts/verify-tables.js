@@ -6,11 +6,23 @@ require('dotenv').config();
 const mysql = require('mysql2/promise');
 
 async function verifyTables() {
+  const verifyDbHost = process.env.DB_HOST || 'localhost';
+  const verifyUseSsl = !['localhost', '127.0.0.1', '::1'].includes(verifyDbHost);
+  const verifyDbPort = process.env.DB_PORT
+    ? Number(process.env.DB_PORT)
+    : verifyUseSsl
+      ? 4000
+      : 3306;
+
   const connection = await mysql.createConnection({
-    host: process.env.DB_HOST || 'localhost',
+    host: verifyDbHost,
     user: process.env.DB_USER || 'root',
     password: process.env.DB_PASSWORD || '',
-    database: process.env.DB_NAME || 'Foodna_Online'
+    database: process.env.DB_NAME || 'Foodna_Online',
+    port: verifyDbPort,
+    ssl: verifyUseSsl
+      ? { rejectUnauthorized: false, minVersion: 'TLSv1.2' }
+      : false
   });
 
   try {

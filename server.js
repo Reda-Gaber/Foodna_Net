@@ -43,11 +43,22 @@ app.use(cors({
 // ==================== Session Configuration ====================
 // نحتاج إلى connection pool للـ session store
 const mysql = require('mysql2');
+const sessionDbHost = process.env.DB_HOST || 'localhost';
+const sessionUseSsl = !['localhost', '127.0.0.1', '::1'].includes(sessionDbHost);
+const sessionDbPort = process.env.DB_PORT
+  ? Number(process.env.DB_PORT)
+  : sessionUseSsl
+    ? 4000
+    : 3306;
 const dbPool = mysql.createPool({
-  host: process.env.DB_HOST || 'localhost',
+  host: sessionDbHost,
   user: process.env.DB_USER || 'root',
   password: process.env.DB_PASSWORD || '',
   database: process.env.DB_NAME || 'Foodna_Online',
+  port: sessionDbPort,
+  ssl: sessionUseSsl
+    ? { rejectUnauthorized: false, minVersion: 'TLSv1.2' }
+    : false,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0

@@ -11,11 +11,23 @@
 require('dotenv').config();
 const mysql = require('mysql2/promise');
 
+const completeDbHost = process.env.DB_HOST || 'localhost';
+const completeUseSsl = !['localhost', '127.0.0.1', '::1'].includes(completeDbHost);
+const completeDbPort = process.env.DB_PORT
+  ? Number(process.env.DB_PORT)
+  : completeUseSsl
+    ? 4000
+    : 3306;
+
 const pool = mysql.createPool({
-  host: process.env.DB_HOST,
+  host: completeDbHost,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
+  port: completeDbPort,
+  ssl: completeUseSsl
+    ? { rejectUnauthorized: false, minVersion: 'TLSv1.2' }
+    : false,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
