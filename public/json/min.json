@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
     "slider": [
         {
@@ -168,4 +169,176 @@
             "id": 12
         }
     ]
+=======
+{
+    "slider": [
+        {
+            "imgs": "images/slide1.png"
+        },
+         {
+            "imgs": "images/slide2.png"
+        },
+         {
+            "imgs": "images/slide2.png"
+        },
+         {
+            "imgs": "images/slide2.png"
+        }
+    ],
+    "Offers": [
+        {
+           "imgs_1": "images/offer1.png",
+            "imgs_2": "images/offer2.png" 
+        },
+         {
+           "imgs_1": "images/offer3.png",
+            "imgs_2": "images/offer4.png" 
+        },
+         {
+           "imgs_1": "images/offer5.png",
+            "imgs_2": "images/offer6.png" 
+        }
+    ],
+    "products": [
+        {
+            "img": "images/img1.png",
+            "title": "Seyami Funghi Ranch",
+            "points": "92-228",
+            "price": "105",
+            "text":"Mushrooms, Mozarella Cheese and Fresh Tomato Sauce",
+            "icon_1": "ri-search-line",
+            "icon_2": "ri-heart-3-line",
+            "icon_3": "ri-shopping-cart-2-line",
+            "test": "pz",
+            "id": 1
+        },
+        {
+            "img": "images/img1.png",
+            "title": "Margherita Classic",
+            "points": "80-200",
+            "price": "95",
+            "text":"Mushrooms, Mozarella Cheese and Fresh Tomato Sauce",
+            "icon_1": "ri-search-line",
+            "icon_2": "ri-heart-3-line",
+            "icon_3": "ri-shopping-cart-2-line",
+            "test": "pz",
+            "id": 2
+        },
+        {
+            "img": "images/img1.png",
+            "title": "Pepperoni Feast",
+            "points": "110-250",
+            "price": "120",
+            "text":"Mushrooms, Mozarella Cheese and Fresh Tomato Sauce",
+            "icon_1": "ri-search-line",
+            "icon_2": "ri-heart-3-line",
+            "icon_3": "ri-shopping-cart-2-line",
+            "test": "pz",
+            "id": 3
+        },
+        {
+            "img": "images/img1.png",
+            "title": "BBQ Chicken",
+            "points": "100-240",
+            "price": "115",
+            "text":"Mushrooms, Mozarella Cheese and Fresh Tomato Sauce",
+            "icon_1": "ri-search-line",
+            "icon_2": "ri-heart-3-line",
+            "icon_3": "ri-shopping-cart-2-line",
+            "test": "pz",
+            "id": 4
+        },
+         {
+            "img": "images/img1.png",
+            "title": "Veggie Supreme",
+            "points": "70-190",
+            "price": "90",
+            "text":"Mushrooms, Mozarella Cheese and Fresh Tomato Sauce",
+            "icon_1": "ri-search-line",
+            "icon_2": "ri-heart-3-line",
+            "icon_3": "ri-shopping-cart-2-line",
+            "test": "pz",
+            "id": 5
+        },
+         {
+            "img": "images/img1.png",
+            "title": "Seafood Special",
+            "points": "120-260",
+            "price": "130",
+            "text":"Mushrooms, Mozarella Cheese and Fresh Tomato Sauce",
+            "icon_1": "ri-search-line",
+            "icon_2": "ri-heart-3-line",
+            "icon_3": "ri-shopping-cart-2-line",
+            "test": "pz",
+            "id": 6
+        },
+        {
+            "img": "images/chicken.png",
+            "title": "Seyami Funghi Ranch",
+            "points": "92-228",
+            "price": "105",
+            "icon_1": "ri-search-line",
+            "icon_2": "ri-heart-3-line",
+            "icon_3": "ri-shopping-cart-2-line",
+            "test": "ch",
+            "id": 7
+
+        },
+        {
+            "img": "images/chicken.png",
+            "title": "Margherita Classic",
+            "points": "80-200",
+            "price": "95",
+            "icon_1": "ri-search-line",
+            "icon_2": "ri-heart-3-line",
+            "icon_3": "ri-shopping-cart-2-line",
+            "test": "ch",
+            "id": 8
+        },
+        {
+            "img": "images/chicken.png",
+            "title": "Pepperoni Feast",
+            "points": "110-250",
+            "price": "120",
+            "icon_1": "ri-search-line",
+            "icon_2": "ri-heart-3-line",
+            "icon_3": "ri-shopping-cart-2-line",
+            "test": "ch",
+            "id": 9
+        },
+        {
+            "img": "images/chicken.png",
+            "title": "BBQ Chicken",
+            "points": "100-240",
+            "price": "115",
+            "icon_1": "ri-search-line",
+            "icon_2": "ri-heart-3-line",
+            "icon_3": "ri-shopping-cart-2-line",
+            "test": "ch",
+            "id": 10
+        },
+         {
+            "img": "images/chicken.png",
+            "title": "Veggie Supreme",
+            "points": "70-190",
+            "price": "90",
+            "icon_1": "ri-search-line",
+            "icon_2": "ri-heart-3-line",
+            "icon_3": "ri-shopping-cart-2-line",
+            "test": "ch",
+            "id": 11
+        },
+         {
+            "img": "images/chicken.png",
+            "title": "Seafood Special",
+            "points": "120-260",
+            "price": "130",
+            "icon_1": "ri-search-line",
+            "icon_2": "ri-heart-3-line",
+            "icon_3": "ri-shopping-cart-2-line",
+            "test": "ch",
+            "id": 12
+        }
+    ]
+>>>>>>> cfe4b419c13fbe7c4dbc0d703add959a2e78e5fb
 }

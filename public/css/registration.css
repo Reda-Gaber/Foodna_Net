@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* ====== متغيرات التصميم (Variables) ====== */
 :root {
  
@@ -541,3 +542,377 @@ font-size: 30px;
   white-space: pre-line;
   font-family: 'Cairo', sans-serif;
 }
+=======
+:root {
+ 
+/*========== font ==========*/
+  --section-background: #F6F6F6;
+  --font-1: "Cairo", sans-serif;
+  --font-2: "Oswald", sans-serif;
+  --font-product: "Oswald", sans-serif;
+  --header-height: 3.5rem;
+
+  /*========== Colors ==========*/
+  /*Color mode HSL(hue, saturation, lightness)*/
+  --first-color: hsl(0, 24%, 8%);
+  --title-color: hsl(230, 70%, 16%);
+  /* --text-color: hsl(230, 16%, 45%); */
+    --text-color: #e62a32;
+  --border-color: hsl(230, 50%, 90%);
+  --white-color: hsl(0, 0%, 100%);
+  /* --body-color: hsl(230, 100%, 96%); */
+    --body-color: #FFF;
+  --heading-offer-color: #000;
+
+  --container-color: hsl(230, 100%, 99%);
+  --main-color: #e62a32;
+  /* --footer-color: #b03f3f; */
+  --footer-color: #dc000a;
+  --text-footer-color: #FFF;
+  --hover-color: #000;
+  --background-of-header-for-pages: #000;
+  /*========== Font and typography ==========*/
+  /*.5rem = 8px | 1rem = 16px ...*/
+  --body-font: "Montserrat", sans-serif;
+  --second-font: "Montagu Slab", serif;
+  --biggest-font-size: 2rem;
+  --h1-font-size: 1.5rem;
+  --h2-font-size: 1.25rem;
+  --h3-font-size: 1rem;
+  --special-size: 3.5rem;
+  /*========== Font weight ==========*/
+  --font-regular: 400;
+  --font-medium: 500;
+  --font-semi-bold: 600;
+  /*========== z index ==========*/
+  --z-tooltip: 10;
+  --z-fixed: 100;
+    /*========== padding ==========*/
+  --padding-for-head-of-pages: 50px;
+}
+
+/* end variables */
+
+body{
+    margin: 0px;
+    padding: 0px;
+}
+
+/* start register page  */
+
+/* start head of register page  */
+
+.sub-pages .heading-of-sub-pages {
+  position: relative;
+  background-color: var(--background-of-header-for-pages);
+  width: 100%;
+  height: 35vh;
+  align-items: center;
+  color: var(--white-color);
+  font-weight: var(--font-medium);
+  font-size: var(--special-size);
+}
+
+.sub-pages .heading-of-sub-pages .head-of-page {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.sub-pages .content-of-sub-pages {
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  padding: 20px;
+
+}
+
+.sub-pages .content-of-sub-pages a {
+  font-weight: var(--font-regular);
+  font-size: var(--h3-font-size);
+  color: #FFF;
+  text-decoration: none;
+}
+
+.sub-pages .heading-of-sub-pages .content-of-sub-pages a:first-child {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* end head of register page  */
+
+
+
+
+.main-containers-1{
+      padding:48px 0;
+    }
+.containers{
+ max-width:700px;
+ margin:auto;
+ padding-inline:20px;
+ display: flex;
+ justify-content: center;
+ align-self: center;
+ column-gap: 10px;
+}
+.card{
+    min-width: 480px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+   margin: 0px 10px;
+}
+
+
+.card h2{
+    color: var(--footer-color);
+    margin: 0px 0px 20px;
+    width: 100%;
+    font-weight: 800;
+    font-family: var(--font-1);
+}
+form{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+
+}
+.field{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    max-width: 100%;
+}
+.field label{
+  color: var(--footer-color);
+  font-size: 15px;
+  font-family: var(--font-1);
+  font-weight: 600;
+
+}
+.input{
+ padding: 10px;
+ background-color: white;
+ border: 2px solid silver;
+ border-radius: 6px;
+}
+.eye{
+    position: relative;
+}
+.eye button{
+    width: 20px;
+    height: 20px;
+    background: transparent;
+    border: none;
+    text-align: center;
+    position: absolute;
+    right: 12px;
+    top: 33px;
+    outline: none;
+
+}
+.eye button i{
+    font-size: 17px;
+    font-weight: 700;
+}
+.remember{
+  font-weight: 800;
+  font-size: 15px;
+  font-family: var(--font-1);
+}
+label.remember input {
+  cursor: pointer;
+}
+.btn{
+    padding: 15px;
+    color: white;
+    background-color: var(--footer-color);
+    border: 1px solid white;
+    border-radius: 6px;
+    font-family: var(--font-1);
+    cursor: pointer;
+}
+.actions{
+    display: flex;
+    justify-content: space-between;
+}
+.actions a{
+    color: var(--main-color);
+    text-decoration: none;
+    font-family: var(--font-1);
+}
+.text-conten{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    width: 90%;
+    border-left: 1px solid silver;
+   padding-right: 30px;
+   position: relative;
+   margin-top: 30px;
+}
+.text-conten .texts{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    position: absolute;
+    top: 0px;
+    padding-left: 20px;
+   
+}
+.text-conten .texts h2{
+    text-align: center;
+    margin: 0px 0px 5px;
+    font-family: var(--font-1);
+}
+.text-conten .texts p{
+    font-size: 15px;
+    text-align: center;
+    font-family: var(--font-1);
+     line-height: 25px;
+     color: var(--background-of-header-for-pages);
+     padding: 0px 20px;
+}
+.text-conten button{
+   padding: 10px 15px;
+    border: none;
+    border-radius: 15px;
+    margin: 20px;
+    font-family: var(--font-1);
+    cursor: pointer;
+}
+.main-containers-2{
+    padding: 48px 0;
+    
+   
+}
+.main-containers-2 .eye button{
+ right: 12px;
+    top: 33px;
+}
+.helper{
+    font-size: 15px;
+    color: black;
+    margin: 0px;
+    line-height: 25px;
+}
+.arror_on{
+  margin-top: 5px;
+  display: block;
+}
+.drol{
+  display: none;
+}
+.arror_one{
+  border: 2px solid red;
+}
+@media screen and (min-width: 206px) and (max-width: 1000px) {
+ 
+ .containers{
+    min-width: 430px;
+ }
+    .text-conten{
+    display: none;
+ }
+ .hero{
+    width: 100%;
+    
+ }
+}
+.ach{
+   display: none;
+}
+
+/* end register page  */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+>>>>>>> cfe4b419c13fbe7c4dbc0d703add959a2e78e5fb

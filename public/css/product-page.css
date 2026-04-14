@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* ====== متغيرات التصميم (Variables) ====== */
 :root {
  
@@ -580,3 +581,298 @@ img {
     transform: scale(1.03);
   }
 }
+=======
+:root {
+ 
+/*========== font ==========*/
+  --section-background: #F6F6F6;
+  --font-1: "Cairo", sans-serif;
+  --font-2: "Oswald", sans-serif;
+  --font-product: "Oswald", sans-serif;
+  --header-height: 3.5rem;
+
+  /*========== Colors ==========*/
+  /*Color mode HSL(hue, saturation, lightness)*/
+  --first-color: hsl(0, 24%, 8%);
+  --title-color: hsl(230, 70%, 16%);
+  /* --text-color: hsl(230, 16%, 45%); */
+    --text-color: #e62a32;
+  --border-color: hsl(230, 50%, 90%);
+  --white-color: hsl(0, 0%, 100%);
+  /* --body-color: hsl(230, 100%, 96%); */
+    --body-color: #FFF;
+  --heading-offer-color: #000;
+
+  --container-color: hsl(230, 100%, 99%);
+  --main-color: #e62a32;
+  /* --footer-color: #b03f3f; */
+  --footer-color: #dc000a;
+  --text-footer-color: #FFF;
+  --hover-color: #000;
+  --background-of-header-for-pages: #000;
+  /*========== Font and typography ==========*/
+  /*.5rem = 8px | 1rem = 16px ...*/
+  --body-font: "Montserrat", sans-serif;
+  --second-font: "Montagu Slab", serif;
+  --biggest-font-size: 2rem;
+  --h1-font-size: 1.5rem;
+  --h2-font-size: 1.25rem;
+  --h3-font-size: 1rem;
+  --special-size: 3.5rem;
+  /*========== Font weight ==========*/
+  --font-regular: 400;
+  --font-medium: 500;
+  --font-semi-bold: 600;
+  /*========== z index ==========*/
+  --z-tooltip: 10;
+  --z-fixed: 100;
+    /*========== padding ==========*/
+  --padding-for-head-of-pages: 50px;
+}
+/* end variables */
+
+/* Start Global Rules */
+* {
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+html {
+  scroll-behavior: smooth;
+}
+body {
+  font-family:var(--font-2);
+  position: relative;
+  text-transform: capitalize;
+  background-color: var(--body-color);
+  color: var(--text-color);
+  transition: background-color .4s;
+}
+body,
+input,
+button {
+  font-family: var(--body-font);
+  font-size: var(--normal-font-size);
+}
+input,
+button {
+  border: none;
+  outline: none;
+}
+
+h1, h2, h3, h4 {
+  color: var(--title-color);
+  font-family: var(--second-font);
+  font-weight: var(--font-medium);
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+.header{
+    border-bottom: 1px solid var(--border-color);
+}
+.up_main{
+    width: 100%;
+    overflow: hidden;
+    padding: 40px;
+    margin-top: 40px;
+}
+.top-product{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+.product-up{
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 0px;
+   
+}
+.img-product{
+    padding: 0px;
+    display: flex;
+    justify-items: flex-end;
+    justify-content: center;
+    padding-top: 20px;
+    
+}
+.img-product img{
+    padding: 0px;
+   width: calc(100% - 90px);
+}
+.text-product{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 23px;
+    margin-top: 0px;
+}
+.text-product h2{
+    font-family: var(--font-2);
+ color: var(--text-color);
+ font-weight: 900;
+ font-size: 23px;
+ letter-spacing: -.5px;
+}
+.text-product p{
+    font-family: var(--font-2);
+    font-size: 15.7px;
+}
+.text-product .description-product{
+    font-weight: 750;
+    letter-spacing: -.4px;
+    color: var(--first-color);
+    font-size: 15.3px;
+}
+.text-product .points-one-product{
+    color: var(--first-color);
+    letter-spacing: -.3px;
+}
+.text-product .points-two-product{
+    display: flex;
+    align-items: center;
+    row-gap: 6px;
+}
+.text-product .points-two-product i{
+   font-size: 28px;
+    color: var(--first-color);
+}
+.text-product .points-two-product p{
+    letter-spacing: -.3px;
+    color: var(--main-color);
+}
+.size-product{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    row-gap: 20px;
+    border-bottom: 1.5px solid var(--border-color);
+    padding-bottom: 60px;
+}
+.size-product .size{
+ font-family: var(--font-2);
+ font-weight: 700;
+ font-size: 17px;
+ color: var(--main-color);
+}
+.size-product .size-options{
+    display: flex;
+    gap: 15px;
+}
+.size-product .size-options button{
+ padding: 7px;
+ border: 2px solid var(--border-color);
+ border-radius: 5px;
+ background: transparent;
+ transition: .5s;
+}
+.size-product .size-options button:hover{
+    border: 2px solid var(--heading-offer-color);
+}
+.size-product .size-options button a{
+    color: var(--first-color);
+}
+.check_box{
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  position: relative;
+  top: -20px;
+}
+.check_box h2{
+  font-family: var(--font-2);
+  color: var(--text-color);
+  margin-bottom: 15px;
+  margin-top: 0px;
+  font-size: 22px;
+  font-weight: 700;
+}
+.sid{
+  width: 100%;
+}
+.sid .sd{
+ display: grid;
+ grid-template-columns: repeat(2, 320px);
+ gap: 10px;
+
+}
+.sid .sd button{
+  font-family: var(--font-2);
+  width: 100%;
+ padding: 15px 15px;
+  background: transparent;
+  border: 1px solid var(--background-of-header-for-pages);
+  border-radius: 5px;
+  display: block;
+  text-align: left;
+  color: var(--main-color);
+  font-size: 14px;
+  font-weight: 800;
+
+}
+.sauce-chek button{
+  padding: 25px 10px;
+}
+.sid .sd button span{
+  font-size: 10px;
+  margin-left: 5px;
+}
+ .mjx{
+  padding: 15px;
+  width: 120px;
+  padding: 20px;
+  background-color: var(--footer-color);
+  border-radius: 5px;
+  color: var(--body-color);
+
+ }
+ .activess{
+  pointer-events: none;
+ }
+
+.products-grid_1{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+.product{
+  width: 370px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+>>>>>>> cfe4b419c13fbe7c4dbc0d703add959a2e78e5fb

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Foodna Shop - Restaurant Management System
 
 نظام متكامل لإدارة مطعم يوفر واجهات للعملاء والموظفين والإدارة.
@@ -146,3 +147,6 @@ ISC
 
 
 
+=======
+# Foodna_Net
+>>>>>>> cfe4b419c13fbe7c4dbc0d703add959a2e78e5fb
