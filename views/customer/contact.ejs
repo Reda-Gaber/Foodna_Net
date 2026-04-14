@@ -1,0 +1,74 @@
+<%- include("parts/head.ejs") %>
+<%- include("parts/navbar.ejs") %>
+<!-- start search -->
+<div class="search" id="search-content">
+<form action="" class="search__form">
+    <i class="ri-search-line search__icon"></i>
+    <input type="search" placeholder="ماذا تبحث عنه؟" class="search__input">
+</form>
+<i class="ri-close-line search__close" id="search-close"></i>
+</div>
+<!-- end search -->
+  <!-- end header -->
+
+<!-- start contact us page -->
+ <div class="contact-us sub-pages">
+        <div class="heading-of-sub-pages">
+            <div class="head-of-page">
+              اتصل بنا
+        </div>      
+        <div class="content">
+    <a href="/"><span>الرئيسية</span></a>
+    <a href="#"><span>اتصل بنا</span></a>
+</div>
+ </div>
+      <div class="container">
+<div class="grid-of-sub-pages grid-of-contact-us">
+    <div class="first-part">
+        <span>ارسل الينا رسالة ؟</span>
+        <div class="image">
+            <img src="../images/telephone-contact-us.png" alt="">
+        </div>
+    </div>
+    <div class="second-part">
+      
+<form action="#" method="post" class="contact-form">
+    <div class="form-group">
+        <div class="input-container">
+            <i class="fas fa-user icon"></i>
+            <input type="text" id="name" name="name" required placeholder="الاسم *" class="form-control">
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <div class="input-container">
+            <i class="fa-solid fa-mobile-screen-button icon"></i>
+            <input type="tel" id="phone" name="phone" required placeholder="الهاتف *" class="form-control">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="input-container">
+            <i class="fas fa-envelope icon"></i>
+            <input type="email" id="email" name="email" required placeholder="البريد الإلكتروني *" class="form-control">
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <div class="input-container">
+            <textarea id="message" name="message" rows="5" required placeholder="الرسالة *" class="form-control"></textarea>
+        </div>
+    </div>
+
+    
+    <button type="submit" class="submit-btn">إرسال الرسالة</button>
+</form>
+
+
+    </div>
+    </div>
+</div>
+</div>
+<!-- end contact us page -->
+
+<%- include("parts/footer.ejs") %>

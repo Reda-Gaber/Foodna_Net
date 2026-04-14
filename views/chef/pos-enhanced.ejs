@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة المطبخ - Foodna Shob Chef Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            overflow: hidden;
+        }
+
+        .chef-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* ============ HEADER ============ */
+        .chef-header {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .chef-header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .chef-header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chef-header-info {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            font-size: 1rem;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-badge {
+            background: rgba(255, 255, 255, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .status-active {
+            background: rgba(76, 175, 80, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* ============ CONTENT AREA ============ */
+        .chef-content {
+            flex: 1;
+            overflow: hidden;
+            padding: 2rem;
+            background: #f5f5f5;
+        }
+
+        .orders-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .orders-header h2 {
+            font-size: 1.4rem;
+            color: #333;
+            margin: 0;
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .filter-btn {
+            padding: 0.6rem 1.2rem;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            border-color: #4CAF50;
+            background: #4CAF50;
+            color: white;
+        }
+
+        .refresh-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .refresh-btn:hover {
+            background: #45a049;
+            transform: rotate(-180deg);
+            transition: all 0.6s ease;
+        }
+
+        .refresh-btn.loading {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        /* ============ ORDERS GRID ============ */
+        .orders-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 1.5rem;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+
+        .orders-grid::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .orders-grid::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .orders-grid::-webkit-scrollbar-thumb {
+            background: #4CAF50;
+            border-radius: 4px;
+        }
+
+        .orders-grid::-webkit-scrollbar-thumb:hover {
+            background: #45a049;
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 400px;
+            color: #999;
+            text-align: center;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+        }
+
+        /* ============ ORDER CARD ============ */
+        .order-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 3px solid #4CAF50;
+            display: flex;
+            flex-direction: column;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .order-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.2);
+        }
+
+        .order-card.completed {
+            opacity: 0.6;
+            border-color: #999;
+        }
+
+        .order-card-header {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .order-number {
+            font-size: 1.3rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .order-time {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .order-status-badge {
+            background: rgba(255, 255, 255, 0.3);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .status-pending {
+            background: #ff9800;
+            color: white;
+        }
+
+        .status-shipped {
+            background: #2196F3;
+            color: white;
+        }
+
+        .status-delivered {
+            background: #4CAF50;
+            color: white;
+        }
+
+        /* ============ ORDER BODY ============ */
+        .order-body {
+            flex: 1;
+            padding: 1.2rem;
+            overflow-y: auto;
+            max-height: 250px;
+        }
+
+        .order-body::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .order-body::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .order-body::-webkit-scrollbar-thumb {
+            background: #4CAF50;
+            border-radius: 2px;
+        }
+
+        .order-notes {
+            background: #fff3e0;
+            border-right: 3px solid #ff9800;
+            padding: 0.8rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: #e65100;
+        }
+
+        .order-notes strong {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-weight: 600;
+        }
+
+        .order-items-title {
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 0.95rem;
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .item-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.2rem;
+        }
+
+        .item-quantity {
+            font-size: 0.85rem;
+            color: #999;
+        }
+
+        .item-total {
+            text-align: left;
+            font-weight: 700;
+            color: #4CAF50;
+            min-width: 60px;
+        }
+
+        /* ============ ORDER FOOTER ============ */
+        .order-footer {
+            background: #f9f9f9;
+            padding: 1rem 1.2rem;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .order-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .total-amount {
+            font-size: 1.2rem;
+            color: #4CAF50;
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-family: 'Cairo', sans-serif;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .mark-prepared-btn {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .mark-prepared-btn:hover:not(:disabled) {
+            background: #45a049;
+            transform: scale(1.05);
+        }
+
+        .view-details-btn {
+            background: #2196F3;
+            color: white;
+        }
+
+        .view-details-btn:hover {
+            background: #0b7dda;
+        }
+
+        .action-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .action-btn.loading {
+            position: relative;
+            color: transparent;
+        }
+
+        .action-btn.loading::after {
+            content: '';
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            top: 50%;
+            left: 50%;
+            margin-left: -7px;
+            margin-top: -7px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ============ MODAL ============ */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            overflow: auto;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 1rem;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            color: #333;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+
+        .modal-body {
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .modal-detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #666;
+        }
+
+        .detail-value {
+            color: #333;
+            text-align: left;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        .modal-btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .modal-confirm-btn {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .modal-confirm-btn:hover {
+            background: #45a049;
+        }
+
+        .modal-cancel-btn {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .modal-cancel-btn:hover {
+            background: #d0d0d0;
+        }
+
+        /* ============ RESPONSIVE ============ */
+        @media (max-width: 768px) {
+            .chef-container {
+                height: auto;
+            }
+
+            .chef-content {
+                padding: 1rem;
+            }
+
+            .orders-grid {
+                grid-template-columns: 1fr;
+                max-height: 70vh;
+            }
+
+            .orders-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            .filter-controls {
+                width: 100%;
+                flex-wrap: wrap;
+            }
+
+            .chef-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .chef-header-info {
+                width: 100%;
+                justify-content: space-around;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chef-container">
+        <!-- HEADER -->
+        <div class="chef-header">
+            <div class="chef-header-left">
+                <h1>
+                    <i class="ri-restaurant-2-line"></i>
+                    لوحة المطبخ
+                </h1>
+            </div>
+            <div class="chef-header-info">
+                <div class="info-item">
+                    <i class="ri-time-line"></i>
+                    <span id="currentTime">--:--</span>
+                </div>
+                <div class="info-item">
+                    <span class="status-badge status-active">
+                        <span id="pendingCount">0</span> طلب قيد الانتظار
+                    </span>
+                </div>
+                <div class="info-item">
+                    <i class="ri-user-line"></i>
+                    <span id="chefName">الطاهي</span>
+                </div>
+                <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
+            </div>
+        </div>
+
+        <!-- CONTENT AREA -->
+        <div class="chef-content">
+            <div class="orders-header">
+                <h2>الطلبات الجديدة</h2>
+                <div class="filter-controls">
+                    <button class="filter-btn active" data-filter="all" onclick="filterOrders(this, 'all')">جميع الطلبات</button>
+                    <button class="filter-btn" data-filter="pending" onclick="filterOrders(this, 'pending')">قيد الانتظار</button>
+                    <button class="filter-btn" data-filter="shipped" onclick="filterOrders(this, 'shipped')">قيد الإعداد</button>
+                    <button class="refresh-btn" onclick="refreshOrders()">
+                        <i class="ri-refresh-line"></i>
+                        تحديث
+                    </button>
+                </div>
+            </div>
+
+            <div class="orders-grid" id="ordersGrid">
+                <div class="empty-state">
+                    <i class="ri-inbox-line"></i>
+                    <p>جاري تحميل الطلبات...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ORDER DETAILS MODAL -->
+    <div class="modal" id="detailsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">تفاصيل الطلب</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Content will be populated by JS -->
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-cancel-btn" onclick="closeModal()">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============ STATE MANAGEMENT ============
+        let state = {
+            orders: [],
+            filteredOrders: [],
+            currentFilter: 'all',
+            refreshInterval: null,
+            autoRefreshEnabled: true,
+            currentChef: '<%= user?.name || "الطاهي" %>'
+        };
+
+        // ============ INITIALIZATION ============
+        document.addEventListener('DOMContentLoaded', async () => {
+            document.getElementById('chefName').textContent = state.currentChef;
+            updateTime();
+            setInterval(updateTime, 1000);
+
+            await loadOrders();
+            setupAutoRefresh();
+        });
+
+        // ============ UPDATE TIME ============
+        function updateTime() {
+            const now = new Date();
+            const time = now.toLocaleTimeString('ar-SA', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.getElementById('currentTime').textContent = time;
+        }
+
+        // ============ LOAD ORDERS ============
+        async function loadOrders() {
+            try {
+                const response = await fetch('/kitchen/api/orders', {
+                    credentials: 'include'
+                });
+                
+                const data = await response.json();
+
+                if (data.success && Array.isArray(data.data)) {
+                    state.orders = data.data;
+                    applyFilter(state.currentFilter);
+                    updateOrdersDisplay();
+                } else {
+                    showEmptyState('فشل تحميل الطلبات');
+                }
+            } catch (error) {
+                console.error('Load orders error:', error);
+                showEmptyState('خطأ في الاتصال');
+            }
+        }
+
+        // ============ FILTER ORDERS ============
+        function filterOrders(element, filter) {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            element.classList.add('active');
+            state.currentFilter = filter;
+            applyFilter(filter);
+            updateOrdersDisplay();
+        }
+
+        function applyFilter(filter) {
+            if (filter === 'all') {
+                state.filteredOrders = state.orders;
+            } else if (filter === 'pending') {
+                state.filteredOrders = state.orders.filter(o => o.Order_Status === 'Pending');
+            } else if (filter === 'shipped') {
+                state.filteredOrders = state.orders.filter(o => o.Order_Status === 'Shipped');
+            }
+        }
+
+        // ============ UPDATE ORDERS DISPLAY ============
+        function updateOrdersDisplay() {
+            const grid = document.getElementById('ordersGrid');
+            
+            // Update pending count
+            const pendingCount = state.orders.filter(o => o.Order_Status === 'Pending').length;
+            document.getElementById('pendingCount').textContent = pendingCount;
+
+            if (!state.filteredOrders.length) {
+                showEmptyState('لا توجد طلبات');
+                return;
+            }
+
+            grid.innerHTML = state.filteredOrders.map(order => {
+                const createdAt = new Date(order.Created_At);
+                const timeElapsed = getTimeElapsed(createdAt);
+                const statusClass = `status-${order.Order_Status.toLowerCase()}`;
+                
+                return `
+                    <div class="order-card">
+                     
+                        <div class="order-card-header">
+                            <div>
+                                <div class="order-number">
+                                    <i class="ri-receipt-line"></i>
+                                    الطلب #${order.Order_ID}
+                                </div>
+                                <div class="order-time">منذ ${timeElapsed}</div>
+                            </div>
+                            <div class="status-badge ${statusClass}">
+                                ${getStatusLabel(order.Order_Status)}
+                            </div>
+                        </div>
+
+                        <div class="order-body">
+                            ${order.Notes ? `
+                                <div class="order-notes">
+                                    <strong>📝 ملاحظات:</strong>
+                                    ${order.Notes}
+                                </div>
+                            ` : ''}
+
+                            <div class="order-items-title">
+                                <i class="ri-dishes-line"></i>
+                                العناصر (${order.items?.length || 0})
+                            </div>
+
+                            ${(order.items || []).map(item => `
+                                <div class="order-item">
+                                    <div class="item-details">
+                                        <div class="item-name">${item.Product_Name}</div>
+                                        <div class="item-quantity">الكمية: ${item.Quantity}</div>
+                                    </div>
+                                    <div class="item-total">${item.Quantity}×</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    
+                        <div class="order-footer">
+                            <div class="order-total">
+                                <span>المجموع:</span>
+                                <span class="total-amount">${parseFloat(order.Total_Amount || 0).toFixed(2)} ر.س</span>
+                            </div>
+                            
+                            <div class="order-actions">
+                                ${order.Order_Status !== 'Delivered' ? `
+                                    <button class="action-btn mark-prepared-btn" onclick="markAsPrepared(${order.Order_ID})">
+                                        <i class="ri-check-line"></i>
+                                        ${order.Order_Status === 'Pending' ? 'قيد الإعداد' : 'تم'}
+                                    </button>
+                                ` : `<div class="action-btn" style="background: #4CAF50; color: white;"><i class="ri-check-double-line"></i> مكتمل</div>`}
+                                <button class="action-btn view-details-btn" onclick="showOrderDetails(${order.Order_ID})">
+                                    <i class="ri-information-line"></i>
+                                    التفاصيل
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ============ MARK AS PREPARED ============
+        async function markAsPrepared(orderId) {
+            const btn = event.target.closest('.mark-prepared-btn');
+            btn.disabled = true;
+            btn.classList.add('loading');
+
+            try {
+                const order = state.orders.find(o => o.Order_ID == orderId);
+                const newStatus = order.Order_Status === 'Pending' ? 'Shipped' : 'Delivered';
+
+                const response = await fetch('/kitchen/api/update', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        orderId: orderId,
+                        status: newStatus
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showSuccess(`تم تحديث حالة الطلب`);
+                    await loadOrders();
+                } else {
+                    showError(data.message || 'فشل تحديث الطلب');
+                    btn.disabled = false;
+                    btn.classList.remove('loading');
+                }
+            } catch (error) {
+                console.error('Mark prepared error:', error);
+                showError('خطأ: ' + error.message);
+                btn.disabled = false;
+                btn.classList.remove('loading');
+            }
+        }
+
+        // ============ SHOW ORDER DETAILS ============
+        function showOrderDetails(orderId) {
+            const order = state.orders.find(o => o.Order_ID == orderId);
+            if (!order) return;
+
+            const modalBody = document.getElementById('modalBody');
+            const createdAt = new Date(order.Created_At);
+
+            modalBody.innerHTML = `
+                <div class="modal-detail-row">
+                    <span class="detail-label">رقم الطلب:</span>
+                    <span class="detail-value">#${order.Order_ID}</span>
+                </div>
+                <div class="modal-detail-row">
+                    <span class="detail-label">الحالة:</span>
+                    <span class="detail-value">${getStatusLabel(order.Order_Status)}</span>
+                </div>
+                <div class="modal-detail-row">
+                    <span class="detail-label">الوقت:</span>
+                    <span class="detail-value">${createdAt.toLocaleString('ar-SA')}</span>
+                </div>
+                <div class="modal-detail-row">
+                    <span class="detail-label">المجموع:</span>
+                    <span class="detail-value">${parseFloat(order.Total_Amount || 0).toFixed(2)} ر.س</span>
+                </div>
+                ${order.Notes ? `
+                    <div class="modal-detail-row">
+                        <span class="detail-label">ملاحظات:</span>
+                        <span class="detail-value">${order.Notes}</span>
+                    </div>
+                ` : ''}
+                <div style="margin-top: 1rem; padding-top: 1rem; border-top: 2px solid #f0f0f0;">
+                    <h3 style="margin-bottom: 1rem; color: #333;">العناصر المطلوبة:</h3>
+                    ${(order.items || []).map((item, idx) => `
+                        <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #f0f0f0;">
+                            <span><strong>${item.Product_Name}</strong> × ${item.Quantity}</span>
+                            <span>${(item.Price * item.Quantity).toFixed(2)} ر.س</span>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            document.getElementById('detailsModal').classList.add('show');
+        }
+
+        // ============ CLOSE MODAL ============
+        function closeModal() {
+            document.getElementById('detailsModal').classList.remove('show');
+        }
+
+        // ============ REFRESH ORDERS ============
+        async function refreshOrders() {
+            const btn = event.target.closest('.refresh-btn');
+            btn.classList.add('loading');
+            
+            await loadOrders();
+            
+            btn.classList.remove('loading');
+            showSuccess('تم التحديث');
+        }
+
+        // ============ AUTO REFRESH ============
+        function setupAutoRefresh() {
+            if (state.refreshInterval) clearInterval(state.refreshInterval);
+            
+            state.refreshInterval = setInterval(async () => {
+                await loadOrders();
+            }, 3000); // Auto-refresh every 3 seconds
+        }
+
+        // ============ HELPERS ============
+        function getStatusLabel(status) {
+            const labels = {
+                'Pending': '⏳ قيد الانتظار',
+                'Shipped': '🍳 قيد الإعداد',
+                'Delivered': '✅ مكتمل'
+            };
+            return labels[status] || status;
+        }
+
+        function getTimeElapsed(date) {
+            const now = new Date();
+            const seconds = Math.floor((now - date) / 1000);
+            
+            if (seconds < 60) return 'للتو';
+            if (seconds < 3600) return `${Math.floor(seconds / 60)} دقيقة`;
+            if (seconds < 86400) return `${Math.floor(seconds / 3600)} ساعة`;
+            return `${Math.floor(seconds / 86400)} أيام`;
+        }
+
+        function showEmptyState(message) {
+            document.getElementById('ordersGrid').innerHTML = `
+                <div class="empty-state">
+                    <i class="ri-inbox-line"></i>
+                    <p>${message}</p>
+                </div>
+            `;
+        }
+
+        // ============ NOTIFICATIONS ============
+        function showSuccess(message) {
+            Swal.fire({
+                title: 'نجاح',
+                text: message,
+                icon: 'success',
+                timer: 1500,
+                showConfirmButton: false
+            });
+        }
+
+        function showError(message) {
+            Swal.fire({
+                title: 'خطأ',
+                text: message,
+                icon: 'error',
+                confirmButtonText: 'حسناً'
+            });
+        }
+
+        // ============ LOGOUT ============
+        function logout() {
+            Swal.fire({
+                title: 'تسجيل الخروج',
+                text: 'هل تريد الخروج من الحساب؟',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'نعم',
+                cancelButtonText: 'لا'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '/auth/logout';
+                }
+            });
+        }
+
+        // ============ CLOSE MODAL ON OUTSIDE CLICK ============
+        window.onclick = function(event) {
+            const modal = document.getElementById('detailsModal');
+            if (event.target == modal) {
+                modal.classList.remove('show');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>لوحة التحكم - Foodna Shop</title>
+    <link rel="stylesheet" href="/css/design-system.css" />
+    <link rel="stylesheet" href="/css/dashboard.style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600&family=Montserrat:wght@400;500;600&family=Oswald:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.css"
+    />
+    <style>
+      :root {
+        --primary-color: var(--main-color);
+        --primary-dark: var(--footer-color);
+        --secondary-color: var(--text-color);
+        --success-color: #10b981;
+        --warning-color: #f59e0b;
+        --danger-color: #ef4444;
+        --bg-color: var(--section-background);
+        --card-bg: var(--white-color);
+        --text-primary: var(--title-color);
+        --text-secondary: var(--text-color);
+        --border-color: var(--border-color);
+        --sidebar-width: 260px;
+        --topbar-height: 70px;
+      }
+
+      body {
+        font-family: var(--font-1);
+        direction: rtl;
+      }
+
+      .dashboard-container {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        width: var(--sidebar-width);
+        background-color: var(--card-bg);
+        border-left: 1px solid var(--border-color);
+        position: fixed;
+        height: 100vh;
+        overflow-y: auto;
+        transition: transform 0.3s ease;
+        z-index: 1000;
+        right: 0;
+      }
+
+      .sidebar-header {
+        padding: var(--spacing-lg);
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .sidebar-header h2 {
+        color: var(--main-color);
+        font-size: var(--h1-font-size);
+        font-weight: var(--font-semi-bold);
+      }
+
+      .sidebar-nav {
+        padding: var(--spacing-md) 0;
+      }
+
+      .nav-item {
+        display: flex;
+        align-items: center;
+        padding: var(--spacing-md) var(--spacing-lg);
+        color: var(--text-secondary);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border-right: 3px solid transparent;
+        gap: var(--spacing-sm);
+      }
+
+      .nav-item:hover {
+        background-color: var(--bg-color);
+        color: var(--main-color);
+      }
+
+      .nav-item.active {
+        border-right-color: var(--main-color);
+        background-color: var(--bg-color);
+        color: var(--main-color);
+      }
+
+      .main-content {
+        margin-right: var(--sidebar-width);
+        flex: 1;
+        min-height: 100vh;
+      }
+
+      .topbar {
+        background: var(--card-bg);
+        padding: var(--spacing-lg);
+        box-shadow: var(--shadow-sm);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--spacing-lg);
+      }
+
+      .content {
+        padding: var(--spacing-lg);
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: var(--spacing-lg);
+        margin-bottom: var(--spacing-xl);
+      }
+
+      .stat-card {
+        background: var(--card-bg);
+        border-radius: var(--radius-lg);
+        padding: var(--spacing-lg);
+        box-shadow: var(--shadow-sm);
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-md);
+      }
+
+      .stat-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: var(--radius-md);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+      }
+
+      .stat-icon.blue {
+        background: #dbeafe;
+        color: #3b82f6;
+      }
+      .stat-icon.green {
+        background: #d1fae5;
+        color: #10b981;
+      }
+      .stat-icon.orange {
+        background: #fed7aa;
+        color: #f59e0b;
+      }
+      .stat-icon.purple {
+        background: #e9d5ff;
+        color: #8b5cf6;
+      }
+
+      .stat-details {
+        flex: 1;
+      }
+
+      .stat-label {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+        margin-bottom: var(--spacing-xs);
+      }
+
+      .stat-value {
+        color: var(--text-primary);
+        font-size: var(--h1-font-size);
+        font-weight: var(--font-semi-bold);
+        margin-bottom: var(--spacing-xs);
+      }
+
+      .section {
+        display: none;
+      }
+
+      .section.active {
+        display: block;
+      }
+
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--spacing-lg);
+      }
+
+      .table-container {
+        background: var(--card-bg);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <h2>لوحة التحكم</h2>
+          <button class="sidebar-toggle" id="sidebarToggle">☰</button>
+        </div>
+        <nav class="sidebar-nav">
+          <a href="#" class="nav-item active" data-section="dashboard">
+            <i class="ri-dashboard-line"></i>
+            <span>لوحة المعلومات</span>
+          </a>
+          <a href="#" class="nav-item" data-section="products">
+            <i class="ri-shopping-bag-line"></i>
+            <span>المنتجات</span>
+          </a>
+          <a href="#" class="nav-item" data-section="customers">
+            <i class="ri-user-line"></i>
+            <span>العملاء</span>
+          </a>
+          <a href="#" class="nav-item" data-section="orders">
+            <i class="ri-shopping-cart-line"></i>
+            <span>الطلبات</span>
+          </a>
+          <a href="#" class="nav-item" data-section="categories">
+            <i class="ri-folder-line"></i>
+            <span>التصنيفات</span>
+          </a>
+          <a href="#" class="nav-item" data-section="offers">
+            <i class="ri-price-tag-3-line"></i>
+            <span>العروض</span>
+          </a>
+          <a href="#" class="nav-item" data-section="coupons">
+            <i class="ri-coupon-line"></i>
+            <span>الكوبونات</span>
+          </a>
+          <a href="#" class="nav-item" data-section="inventory">
+            <i class="ri-archive-line"></i>
+            <span>المخزون</span>
+          </a>
+          <a href="/auth/logout" class="nav-item">
+            <i class="ri-logout-box-line"></i>
+            <span>تسجيل الخروج</span>
+          </a>
+        </nav>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar">
+          <div class="topbar-left">
+            <button class="mobile-toggle" id="mobileToggle">☰</button>
+            <h1 id="pageTitle">لوحة المعلومات</h1>
+          </div>
+          <div class="topbar-right">
+            <div class="search-box">
+              <input
+                type="text"
+                placeholder="بحث..."
+                id="searchInput"
+                class="form-control"
+                style="width: 300px"
+              />
+            </div>
+            <div class="user-menu">
+              <span class="user-name"><%= user.name %></span>
+              <div
+                class="user-avatar"
+                style="
+                  width: 40px;
+                  height: 40px;
+                  border-radius: 50%;
+                  background: var(--main-color);
+                  color: white;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  font-weight: bold;
+                "
+              >
+                <%= user.name.charAt(0) %>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <div class="content">
+          <section id="dashboard-section" class="section active">
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-icon blue">💰</div>
+                <div class="stat-details">
+                  <p class="stat-label">إجمالي الإيرادات</p>
+                  <h3 class="stat-value" id="totalRevenue">0.00</h3>
+                  <span class="stat-change" style="color: var(--success-color)"
+                    >جنيه</span
+                  >
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon green">🛍️</div>
+                <div class="stat-details">
+                  <p class="stat-label">إجمالي الطلبات</p>
+                  <h3 class="stat-value" id="totalOrders">0</h3>
+                  <span class="stat-change" style="color: var(--success-color)"
+                    >طلب</span
+                  >
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon orange">📦</div>
+                <div class="stat-details">
+                  <p class="stat-label">إجمالي المنتجات</p>
+                  <h3 class="stat-value" id="totalProducts">0</h3>
+                  <span class="stat-change" style="color: var(--text-secondary)"
+                    >منتج</span
+                  >
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon purple">👥</div>
+                <div class="stat-details">
+                  <p class="stat-label">إجمالي العملاء</p>
+                  <h3 class="stat-value" id="totalCustomers">0</h3>
+                  <span class="stat-change" style="color: var(--success-color)"
+                    >عميل</span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="charts-grid"
+              style="
+                display: grid;
+                grid-template-columns: 2fr 1fr;
+                gap: var(--spacing-lg);
+              "
+            >
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">نظرة عامة على الإيرادات</h3>
+                </div>
+                <div class="card-body">
+                  <div
+                    class="period-selector"
+                    style="
+                      display: flex;
+                      gap: var(--spacing-sm);
+                      margin-bottom: var(--spacing-md);
+                    "
+                  >
+                    <button
+                      class="btn btn-outline period-btn active"
+                      data-period="daily"
+                    >
+                      يومي
+                    </button>
+                    <button
+                      class="btn btn-outline period-btn"
+                      data-period="weekly"
+                    >
+                      أسبوعي
+                    </button>
+                    <button
+                      class="btn btn-outline period-btn"
+                      data-period="monthly"
+                    >
+                      شهري
+                    </button>
+                  </div>
+                  <canvas id="revenueChart" style="max-height: 300px"></canvas>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">الطلبات الأخيرة</h3>
+                </div>
+                <div class="card-body">
+                  <div class="recent-orders" id="recentOrdersList"></div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="products-section" class="section">
+            <div class="section-header">
+              <h2>إدارة المنتجات</h2>
+              <button class="btn btn-primary" id="addProductBtn">
+                <i class="ri-add-line"></i> إضافة منتج
+              </button>
+            </div>
+            <div class="table-container">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>المعرف</th>
+                    <th>اسم المنتج</th>
+                    <th>الفئة</th>
+                    <th>السعر</th>
+                    <th>خصم (%)</th>
+                    <th>المخزون</th>
+                    <th>الحالة</th>
+                    <th>الإجراءات</th>
+                  </tr>
+                </thead>
+                <tbody id="productsTableBody"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section id="customers-section" class="section">
+            <div class="section-header">
+              <h2>إدارة العملاء</h2>
+            </div>
+            <div class="table-container">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>المعرف</th>
+                    <th>الاسم</th>
+                    <th>البريد الإلكتروني</th>
+                    <th>الهاتف</th>
+                    <th>إجمالي الطلبات</th>
+                    <th>إجمالي الإنفاق</th>
+                    <th>الإجراءات</th>
+                  </tr>
+                </thead>
+                <tbody id="customersTableBody"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section id="orders-section" class="section">
+            <div class="section-header">
+              <h2>إدارة الطلبات</h2>
+            </div>
+            <div class="table-container">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>رقم الطلب</th>
+                    <th>العميل</th>
+                    <th>التاريخ</th>
+                    <th>الإجمالي</th>
+                    <th>الحالة</th>
+                    <th>الإجراءات</th>
+                  </tr>
+                </thead>
+                <tbody id="ordersTableBody"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section id="categories-section" class="section">
+            <div class="section-header">
+              <h2>إدارة التصنيفات</h2>
+              <button class="btn btn-primary" id="addCategoryBtn">
+                <i class="ri-add-line"></i> إضافة تصنيف
+              </button>
+            </div>
+            <div class="table-container">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>المعرف</th>
+                    <th>اسم التصنيف</th>
+                    <th>الوصف</th>
+                    <th>عدد المنتجات</th>
+                    <th>الإجراءات</th>
+                  </tr>
+                </thead>
+                <tbody id="categoriesTableBody"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section id="offers-section" class="section">
+            <div class="section-header">
+              <h2>إدارة العروض</h2>
+              <button class="btn btn-primary" id="addOfferBtn">
+                <i class="ri-add-line"></i> إضافة عرض
+              </button>
+            </div>
+            <div class="table-container">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>المعرف</th>
+                    <th>اسم العرض</th>
+                    <th>الوصف</th>
+                    <th>نوع الخصم</th>
+                    <th>قيمة الخصم</th>
+                    <th>الحالة</th>
+                    <th>الإجراءات</th>
+                  </tr>
+                </thead>
+                <tbody id="offersTableBody"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section id="coupons-section" class="section">
+            <div class="section-header">
+              <h2>إدارة الكوبونات</h2>
+              <button class="btn btn-primary" id="addCouponBtn">
+                <i class="ri-add-line"></i> إضافة كوبون
+              </button>
+            </div>
+            <div class="table-container">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>الكود</th>
+                    <th>نوع الخصم</th>
+                    <th>قيمة الخصم</th>
+                    <th>تاريخ الانتهاء</th>
+                    <th>عدد الاستخدامات</th>
+                    <th>الحالة</th>
+                    <th>الإجراءات</th>
+                  </tr>
+                </thead>
+                <tbody id="couponsTableBody"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section id="inventory-section" class="section">
+            <div class="section-header">
+              <h2>إدارة المخزون</h2>
+            </div>
+            <div
+              style="
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: var(--spacing-lg);
+              "
+            >
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">تنبيه المخزون المنخفض</h3>
+                </div>
+                <div class="card-body">
+                  <div id="lowStockList"></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">مستويات المخزون</h3>
+                </div>
+                <div class="card-body">
+                  <div id="stockLevelsList"></div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <div
+      id="modal"
+      class="modal"
+    >
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="modalTitle">عنوان النافذة</h2>
+          <button class="modal-close" id="modalClose">&times;</button>
+        </div>
+        <div class="modal-body" id="modalBody"></div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/dashboard.script.js"></script>
+    <script>
+      // Navigation functionality
+      document.querySelectorAll(".nav-item[data-section]").forEach((item) => {
+        item.addEventListener("click", function (e) {
+          e.preventDefault();
+          const section = this.dataset.section;
+
+          // Update active nav
+          document
+            .querySelectorAll(".nav-item")
+            .forEach((nav) => nav.classList.remove("active"));
+          this.classList.add("active");
+
+          // Show section
+          document
+            .querySelectorAll(".section")
+            .forEach((sec) => sec.classList.remove("active"));
+          document.getElementById(section + "-section").classList.add("active");
+
+          // Update page title
+          const titles = {
+            dashboard: "لوحة المعلومات",
+            products: "المنتجات",
+            customers: "العملاء",
+            orders: "الطلبات",
+            categories: "التصنيفات",
+            offers: "العروض",
+            coupons: "الكوبونات",
+            inventory: "المخزون",
+          };
+          document.getElementById("pageTitle").textContent =
+            titles[section] || "لوحة التحكم";
+        });
+      });
+
+      // Modal functionality
+      const modal = document.getElementById("modal");
+      const modalClose = document.getElementById("modalClose");
+
+      modalClose.addEventListener("click", () => {
+        modal.classList.remove("active");
+      });
+
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+          modal.classList.remove("active");
+        }
+      });
+    </script>
+  </body>
+</html>

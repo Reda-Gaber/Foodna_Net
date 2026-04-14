@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>طلباتي - فودنا شوب</title>
+    <link rel="stylesheet" href="/css/all.min.css">
+    <link rel="stylesheet" href="/css/design-system.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .orders-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .page-title {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .orders-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .order-card {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .order-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .order-id {
+            font-weight: bold;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .order-status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .status-shipped {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .status-delivered {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-cancelled {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .order-info {
+            margin: 12px 0;
+            font-size: 14px;
+        }
+
+        .order-info label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .order-info span {
+            color: #333;
+        }
+
+        .order-amount {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2196F3;
+            margin-top: 10px;
+        }
+
+        .order-date {
+            font-size: 12px;
+            color: #999;
+            margin-top: 10px;
+        }
+
+        .order-items {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #f0f0f0;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            padding: 5px 0;
+            color: #666;
+        }
+
+        .item-name {
+            flex: 1;
+        }
+
+        .item-qty {
+            width: 50px;
+            text-align: center;
+        }
+
+        .item-price {
+            width: 60px;
+            text-align: left;
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn-detail {
+            background-color: #2196F3;
+            color: white;
+        }
+
+        .btn-detail:hover {
+            background-color: #1976D2;
+        }
+
+        .btn-cancel {
+            background-color: var(--text-color);
+            color: white;
+        }
+
+        .btn-cancel:hover {
+            background-color: #da190b;
+        }
+
+        .btn-cancel:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-state i {
+            font-size: 64px;
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            color: #999;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            color: #bbb;
+            margin-bottom: 20px;
+        }
+
+        .empty-state a {
+            display: inline-block;
+            padding: 10px 30px;
+            background-color: #2196F3;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        .empty-state a:hover {
+            background-color: #1976D2;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #2196F3;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .success-message {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .orders-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-title {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <%- include('parts/navbar.ejs') %>
+
+    <div class="orders-container">
+        <h1 class="page-title">
+            <i class="fas fa-shopping-bag"></i> طلباتي
+        </h1>
+
+        <div id="successMessage" class="success-message" style="display: none;"></div>
+        <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+        <div id="loadingState" class="loading">
+            <div class="spinner"></div>
+            <p>جاري تحميل الطلبات...</p>
+        </div>
+
+        <div id="ordersContainer" style="display: none;">
+            <div class="orders-grid" id="ordersGrid"></div>
+        </div>
+
+        <div id="emptyState" style="display: none;">
+            <div class="empty-state">
+                <i class="fas fa-inbox"></i>
+                <h3>لا توجد طلبات حتى الآن</h3>
+                <p>ابدأ بطلب منتجاتك المفضلة الآن</p>
+                <a href="/menu">
+                    <i class="fas fa-shopping-cart"></i> تصفح القائمة
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <%- include('parts/footer.ejs') %>
+
+    <script>
+        // حالات الطلب
+        const statusMap = {
+            'Pending': { ar: 'قيد الانتظار', class: 'status-pending' },
+            'Processing': { ar: 'تحت المعالجة', class: 'status-pending' },
+            'Shipped': { ar: 'تم الشحن', class: 'status-shipped' },
+            'Delivered': { ar: 'تم التسليم', class: 'status-delivered' },
+            'Cancelled': { ar: 'ملغى', class: 'status-cancelled' }
+        };
+
+        async function loadOrders() {
+            try {
+                console.log('Loading orders...');
+                const response = await fetch('/api/orders', {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                console.log('Response status:', response.status);
+
+                if (response.status === 401) {
+                    console.log('Redirecting to register');
+                    window.location.href = '/register';
+                    return;
+                }
+
+                const data = await response.json();
+                console.log('Orders data:', data);
+
+                if (data.success && Array.isArray(data.data) && data.data.length > 0) {
+                    displayOrders(data.data);
+                } else if (data.success && Array.isArray(data.data)) {
+                    showEmptyState();
+                } else {
+                    console.error('Unexpected response format:', data);
+                    showErrorMessage('صيغة البيانات غير صحيحة');
+                }
+            } catch (error) {
+                console.error('Error loading orders:', error);
+                showErrorMessage(`حدث خطأ في تحميل الطلبات: ${error.message}`);
+            }
+        }
+
+        function displayOrders(orders) {
+            const ordersGrid = document.getElementById('ordersGrid');
+            if (!ordersGrid) {
+                console.error('Orders grid element not found');
+                return;
+            }
+            
+            ordersGrid.innerHTML = '';
+
+            orders.forEach(order => {
+                const statusInfo = statusMap[order.Order_Status] || { ar: order.Order_Status, class: '' };
+                const orderDate = new Date(order.Created_At || order.Order_Date);
+                const formattedDate = orderDate.toLocaleDateString('ar-EG');
+
+                const orderHTML = `
+                    <div class="order-card">
+                        <div class="order-header">
+                            <div class="order-id">
+                                <i class="fas fa-receipt"></i> طلب #${order.Order_ID}
+                            </div>
+                            <div class="order-status ${statusInfo.class}">
+                                ${statusInfo.ar}
+                            </div>
+                        </div>
+
+                        <div class="order-info">
+                            <label>العنوان:</label>
+                            <span>${order.Delivery_Address || 'في المتجر'}</span>
+                        </div>
+
+                        <div class="order-info">
+                            <label>طريقة الدفع:</label>
+                            <span>${getPaymentMethodAr(order.Payment_Method)}</span>
+                        </div>
+
+                        <div class="order-amount">
+                            المجموع: ${parseFloat(order.Total_Amount).toFixed(2)} جنيه
+                        </div>
+
+                        <div class="order-date">
+                            <i class="fas fa-calendar-alt"></i> ${formattedDate}
+                        </div>
+
+                        <div class="order-actions">
+                            <button class="btn-action btn-detail" onclick="viewOrderDetails(${order.Order_ID})">
+                                <i class="fas fa-eye"></i> التفاصيل
+                            </button>
+                            ${order.Order_Status === 'Pending' ? `
+                                <button class="btn-action btn-cancel" onclick="cancelOrder(${order.Order_ID})">
+                                    <i class="fas fa-times"></i> إلغاء
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+
+                ordersGrid.innerHTML += orderHTML;
+            });
+
+            const loadingState = document.getElementById('loadingState');
+            const ordersContainer = document.getElementById('ordersContainer');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (loadingState) loadingState.style.display = 'none';
+            if (ordersContainer) ordersContainer.style.display = 'block';
+            if (emptyState) emptyState.style.display = 'none';
+        }
+
+        function getPaymentMethodAr(method) {
+            const methods = {
+                'cash': 'دفع عند الاستلام',
+                'card': 'بطاقة ائتمان',
+                'online': 'محفظة إلكترونية'
+            };
+            return methods[method] || method;
+        }
+
+        function showEmptyState() {
+            const loadingState = document.getElementById('loadingState');
+            const ordersContainer = document.getElementById('ordersContainer');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (loadingState) loadingState.style.display = 'none';
+            if (ordersContainer) ordersContainer.style.display = 'none';
+            if (emptyState) emptyState.style.display = 'block';
+        }
+
+        function showSuccessMessage(message) {
+            const successDiv = document.getElementById('successMessage');
+            if (successDiv) {
+                successDiv.textContent = message;
+                successDiv.style.display = 'block';
+            }
+        }
+
+        function showErrorMessage(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            if (errorDiv) {
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+            }
+            const loadingState = document.getElementById('loadingState');
+            if (loadingState) loadingState.style.display = 'none';
+        }
+
+        function clearMessages() {
+            const successDiv = document.getElementById('successMessage');
+            const errorDiv = document.getElementById('errorMessage');
+            if (successDiv) successDiv.style.display = 'none';
+            if (errorDiv) errorDiv.style.display = 'none';
+        }
+
+        function viewOrderDetails(orderId) {
+            alert(`عرض تفاصيل الطلب #${orderId}`);
+            // TODO: implement order details page
+        }
+
+        async function cancelOrder(orderId) {
+            if (!confirm('هل تريد فعلاً إلغاء هذا الطلب؟')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/orders/${orderId}`, {
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'فشل إلغاء الطلب');
+                }
+
+                // أعد تحميل الطلبات
+                loadOrders();
+                alert('تم إلغاء الطلب بنجاح');
+            } catch (error) {
+                alert('خطأ: ' + error.message);
+            }
+        }
+
+        function showNewOrderSuccess() {
+            const params = new URLSearchParams(window.location.search);
+            const newOrderId = params.get('new');
+            if (newOrderId) {
+                showSuccessMessage(`تم إنشاء الطلب بنجاح رقم ${newOrderId}`);
+                params.delete('new');
+                const newUrl = `${window.location.pathname}${params.toString() ? '?' + params.toString() : ''}`;
+                window.history.replaceState({}, '', newUrl);
+            }
+        }
+
+        // تحميل الطلبات عند فتح الصفحة
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                showNewOrderSuccess();
+                loadOrders();
+            });
+        } else {
+            showNewOrderSuccess();
+            loadOrders();
+        }
+    </script>
+</body>
+</html>

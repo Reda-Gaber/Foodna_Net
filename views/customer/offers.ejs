@@ -1,0 +1,66 @@
+<%- include("parts/head.ejs") %>
+<!-- <link rel="stylesheet" href="/css/product-page.css"> -->
+<%- include("parts/navbar.ejs") %>
+
+    <div class="my-account sub-pages">
+        <div class="heading-of-sub-pages">
+            <div class="head-of-page">
+             القائمة
+        </div>    
+        <div class="content-of-sub-pages">
+     <a href="/"><span>الرئيسية</span></a>
+     <a href="menu"><span>القائمة</span></a>
+     <a href="#"><span>المقبلات</span></a>
+     <a href="#"><span>الحلويات</span></a>
+     <a href="#"><span>المشروبات</span></a>
+     <a href="#"><span>نصف ونصف</span></a>
+     <a id="Offers" href="#Offers"><span>العروض</span></a>
+     <a href="#"><span>البيتزا</span></a>
+     <a href="#"><span>الصلصات</span></a>
+     <a href="#"><span>يانكي</span></a>
+</div>
+ </div>
+ <div class="category-one">
+ <div class="container">
+ <div class="products-card">
+ <div class="products-grid_1">
+    </div>
+   </div>
+  </div>
+</div>
+
+ <script src="/js/customer.offers.js?t=<%= Date.now() %>"></script>
+ <script>
+    // Fallback: Display offers if customer.offers.js doesn't load
+    if (window.apiass === undefined) {
+        console.log('⚠️ customer.offers.js fallback بدأ');
+        const container = document.querySelector('.products-grid_1');
+        if (container) {
+            fetch('/api/products?discounted=1&limit=100')
+                .then(r => r.json())
+                .then(products => {
+                    console.log('✅ تم جلب', products.length, 'منتج');
+                    container.innerHTML = '';
+                    products.forEach(p => {
+                        const oldPrice = Number(p.Price);
+                        const discount = Number(p.Discount || 0);
+                        const newPrice = oldPrice * (1 - discount / 100);
+                        const el = document.createElement('div');
+                        el.className = 'product product_only';
+                        el.innerHTML = `<img src="/images/products/${p.Image}" alt="${p.Product_Name}" style="width:100%;border-radius:8px;">
+                            <div class="product-info">
+                                <h4>${p.Product_Name}</h4>
+                                <div class="price-block">
+                                    <span style="text-decoration:line-through;color:#999;margin-right:8px">${oldPrice.toFixed(2)} جنيه</span>
+                                    <span style="color:#e62a32;font-weight:700">${newPrice.toFixed(2)} جنيه</span>
+                                </div>
+                            </div>
+                            <div class="button__actions"><button class="Product__actions"><a href="/product-page?id=${p.Product_ID}">اختر الخيارات</a></button></div>`;
+                        container.appendChild(el);
+                    });
+                })
+                .catch(e => console.error('❌ Fallback error:', e));
+        }
+    }
+ </script>
+<%- include("parts/footer.ejs") %>

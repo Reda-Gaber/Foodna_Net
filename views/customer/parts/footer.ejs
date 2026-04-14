@@ -1,0 +1,123 @@
+<!-- start footer -->
+   <footer>
+     <div class="container">
+      <div class="footer-column">
+        <span>روابط سريعة</span>
+        <hr>
+        <div class="footer-container">
+          <ul class="footer-nav">
+            <li><a href="/" aria-current="page">الرئيسية</a></li>
+            <li><a href="/offers">العروض</a></li>
+            <li><a href="/menu">القائمة</a></li>
+            <li><a href="/contact">اتصل بنا</a></li>
+            <li><a href="/about">من نحن</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-column">
+          <span>الفئات</span>
+        <hr>
+            <div class="footer-container">
+            <ul class="footer-nav">
+            <li><a href="/menu?category=chicken">دجاج</a></li>
+            <li><a href="/menu?category=meat">لحوم</a></li>
+            <li><a href="/menu?category=vegetables">جبن وخضار</a></li>
+            <li><a href="/menu?category=seafood">مأكولات بحرية</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-column">
+        <span>تحتاج مساعدة؟</span>
+        <hr>
+         <div class="footer-container">
+        <span>ساعات العمل</span>
+        <span><i class="far fa-clock"></i>التوصيل: 11:00 صباحاً - 3:00 صباحاً</span>
+        <span><i class="far fa-clock"></i> تناول في المطعم والاستلام: 11:00 صباحاً - 3:00 صباحاً</span>
+        <div class="footer-politics">
+          <ul>
+            <li><a href="/privacy-policy">سياسة الخصوصية</a></li>
+            <li><a href="/refund-policy">سياسة الاسترجاع</a></li>
+            <li><a href="/delivery-policy">سياسة التوصيل</a></li>
+          </ul>
+        </div>
+      </div>
+      </div>
+
+      <div class="footer-column">
+      <span>تواصل معنا</span>
+          <hr>
+          <div class="footer-container1">
+          <a href=""><i class="fas fa-phone"></i><span>19999</span></a>
+ <div class="social-icons">
+  <div class="icon-container">
+    <a href="#" class="icon facebook">
+      <i class="fab fa-facebook-f"></i>
+    </a>
+    <span class="icon-name">Facebook</span>
+  </div>
+
+  <div class="icon-container">
+    <a href="#" class="icon instagram">
+      <i class="fab fa-instagram"></i>
+    </a>
+    <span class="icon-name">Instagram</span>
+  </div>
+
+  <div class="icon-container">
+    <a href="#" class="icon tiktok">
+      <i class="fab fa-tiktok"></i>
+    </a>
+    <span class="icon-name">TikTok</span>
+  </div>
+      </div>
+    </div>
+</div>
+      </div>      
+      <p>جميع الحقوق محفوظة لـ Foodna Shop &copy; <%= new Date().getFullYear() %></p>
+    </footer>
+    
+<!-- end footer -->
+
+<!-- start cart -->
+<div class="cart">
+  <div class="top_cart">
+    <h3>عناصر السلة: <span class="count_item_cart"></span></h3>
+    <span class="close_cart"><i class="ri-close-line"></i></span>
+  </div>
+
+  <div class="items_in_cart" id="cart_items">
+  </div>
+  <div class="bottom_cart">
+    <div class="total">
+      <p>اجمالي السعر: </p>
+      <p class="price_cart_total"></p>
+
+    </div>
+    <div class="button_cart" style="display: flex; align-items: center; flex-direction: column;">
+      <button style="background: #e62a32; width: 90%; padding: 18px; color: white; border-radius: 10px;" type="button" id="checkout-btn" class="btn_cart">إتمام الطلب</button>
+      <span class="btn_cart trans_bg">تسوق أكثر</span>
+    </div>
+  </div>
+</div>  
+<!-- end cart -->
+ <!-- scroll button -->
+ <a href="#" class="scrollup" id="scroll-up">
+   <i class="ri-arrow-up-line"></i>
+ </a>
+ <!-- script js -->
+
+ <script src="js/customer.api.js"></script>
+  <script src="js/customer.swiper-bundle.min.js"></script>
+  <script src="/js/customer.front.js"></script>
+  <script src="/js/cart-state.js"></script>
+  <script src="/js/customer.cart.js"></script>
+  <script src="/js/checkout.js"></script>
+  <script src="/js/dark-mode.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="/js/chatbot-widget.js"></script>
+</body>
+
+
+</html>

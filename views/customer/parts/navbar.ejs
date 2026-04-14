@@ -1,0 +1,86 @@
+</head>
+<body>
+  <!-- start header -->
+  <header class="header" id="header">
+    <nav class="nav container">
+    <a href="#" class="nav__logo">
+        <img src="images/logo.png" alt="">
+    </a>
+
+    <div class="nav__menu">
+<ul class="nav__list">
+      <li class="nav__item">
+         <a href="/" class="nav__link">
+            <i class="ri-home-line"></i>
+             <span>الرئيسية</span>
+         </a>
+      </li>
+      <li class="nav__item">
+         <a href="/offers" id="offers_page" class="nav__link">
+            <i class="ri-store-2-line"></i>
+             <span>العروض</span>
+         </a>
+      </li>
+      <li class="nav__item">
+         <a href="/menu" class="nav__link">
+            <i class="ri-restaurant-line"></i>
+             <span>القائمة</span>
+         </a>
+      </li>
+      <li class="nav__item">
+         <a href="/contact" class="nav__link">
+          <i class="ri-phone-line"></i>
+             <span>اتصل بنا</span>
+         </a>
+      </li>
+      <li class="nav__item">
+         <a href="/about" class="nav__link">
+            <i class="ri-information-line"></i>
+             <span>من نحن</span>
+         </a>
+      </li>
+     </ul>
+   </div> 
+   <div class="nav__actions">
+    <i class="ri-search-line search-button" id="search-button"></i>
+    <a href="#" id="user-icon-link"><i class="ri-user-line login-button" id="login-button"></i></a>
+    <i class="ri-moon-line chang-theme" id="theme-button"></i>
+    <i class="ri-shopping-cart-line" id="cart-button"></i>
+   </div>
+   <style>
+     /* green when authenticated */
+     /* .user-logged { color: #22c55e !important; } */
+   </style>
+   <script>
+     // Check auth status and update user icon and global auth object
+     (async function(){
+       try{
+         const res = await fetch('/auth/api/auth/check', { credentials: 'include' });
+         const data = await res.json();
+         window.auth = { authenticated: !!data.authenticated, user: data.user || null };
+
+         const userIcon = document.getElementById('login-button');
+         const userLink = document.getElementById('user-icon-link');
+         if (!userIcon || !userLink) return;
+
+        if (window.auth.authenticated) {
+          userIcon.classList.add('user-logged');
+          // link to user profile (public profile page)
+          userLink.href = '/profile';
+       } else {
+          // go to client registration page (mounted under /user)
+          userLink.href = '/user/register';
+        }
+
+         // expose simple event for other scripts to listen to auth changes
+         window.dispatchEvent(new CustomEvent('auth.changed', { detail: window.auth }));
+       } catch (e) {
+         console.error('Auth check failed', e);
+       }
+     })();
+   </script>
+   <script src="/js/feature-user-search.js"></script>
+  </nav>
+</header>
+<!-- search drawer is injected by feature-user-search.js -->
+  <!-- end header -->

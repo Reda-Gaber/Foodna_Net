@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول - Foodna Shop</title>
+    <link rel="stylesheet" href="/css/design-system.css">
+    <link rel="stylesheet" href="/css/rtl-fix.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600&family=Montserrat:wght@400;500;600&family=Oswald:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/sweetalert-config.js"></script>
+    <style>
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--section-background) 0%, var(--body-color) 100%);
+            padding: var(--spacing-lg);
+        }
+        
+        .login-card {
+            background: var(--white-color);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            padding: var(--spacing-xl);
+            max-width: 450px;
+            width: 100%;
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .login-header h1 {
+            color: var(--main-color);
+            font-size: var(--biggest-font-size);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .login-header p {
+            color: var(--text-color);
+            font-size: var(--h3-font-size);
+        }
+        
+        .role-selector {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .role-option {
+            padding: var(--spacing-md);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            background: var(--white-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-family: var(--font-1);
+            font-weight: var(--font-medium);
+        }
+        
+        .role-option:hover {
+            border-color: var(--main-color);
+            background: var(--section-background);
+        }
+        
+        .role-option.active {
+            border-color: var(--main-color);
+            background: var(--main-color);
+            color: var(--white-color);
+        }
+        
+        .role-option input[type="radio"] {
+            display: none;
+        }
+        
+        .form-group {
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: var(--spacing-xs);
+            color: var(--title-color);
+            font-weight: var(--font-medium);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: var(--spacing-md);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: var(--h3-font-size);
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--main-color);
+            box-shadow: 0 0 0 3px rgba(230, 42, 50, 0.1);
+        }
+        
+        .form-control.error {
+            border-color: #ef4444;
+        }
+        
+        .error-message {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: var(--spacing-xs);
+            display: none;
+        }
+        
+        .error-message.show {
+            display: block;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: var(--spacing-lg);
+        }
+        
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            font-size: 0.875rem;
+        }
+        
+        .forgot-password {
+            color: var(--main-color);
+            text-decoration: none;
+            font-size: 0.875rem;
+        }
+        
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+        
+        .register-link {
+            text-align: center;
+            margin-top: var(--spacing-lg);
+            padding-top: var(--spacing-lg);
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .register-link a {
+            color: var(--main-color);
+            text-decoration: none;
+            font-weight: var(--font-medium);
+        }
+        
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <h1>Foodna Shop</h1>
+                <p>تسجيل الدخول</p>
+            </div>
+
+            <form method="POST" action="/auth/login" id="loginForm">
+                <!-- اختيار الدور -->
+                <div class="role-selector">
+                    <label class="role-option active" data-role="Client">
+                        <input type="radio" name="role" value="Client" checked>
+                        <i class="ri-user-line"></i><br>
+                        عميل
+                    </label>
+                    <label class="role-option" data-role="Admin">
+                        <input type="radio" name="role" value="Admin">
+                        <i class="ri-admin-line"></i><br>
+                        إداري
+                    </label>
+                    <label class="role-option" data-role="Cashier">
+                        <input type="radio" name="role" value="Cashier">
+                        <i class="ri-cash-register-line"></i><br>
+                        كاشير
+                    </label>
+                    <label class="role-option" data-role="Kitchen">
+                        <input type="radio" name="role" value="Chef">
+                        <i class="ri-restaurant-line"></i><br>
+                        مطبخ
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label for="email" class="form-label">البريد الإلكتروني</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        class="form-control" 
+                        placeholder="example@email.com"
+                        autocomplete="email"
+                    >
+                    <span class="error-message" id="emailError"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">كلمة المرور</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        class="form-control" 
+                        placeholder="••••••••"
+                        autocomplete="current-password"
+                    >
+                    <span class="error-message" id="passwordError"></span>
+                </div>
+
+                <div class="form-actions">
+                    <label class="remember-me">
+                        <input type="checkbox" name="remember">
+                        تذكرني
+                    </label>
+                    <a href="#" class="forgot-password">نسيت كلمة المرور؟</a>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: var(--spacing-lg);">
+                    تسجيل الدخول
+                </button>
+            </form>
+
+            <div class="register-link">
+                <p>ليس لديك حساب؟ <a href="/auth/register">سجل الآن</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Role selector functionality
+        document.querySelectorAll('.role-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.role-option').forEach(opt => {
+                    opt.classList.remove('active');
+                });
+                this.classList.add('active');
+                this.querySelector('input[type="radio"]').checked = true;
+            });
+        });
+
+        // Validation Rules
+        const validationRules = {
+            email: {
+                required: true,
+                pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message: 'البريد الإلكتروني غير صحيح'
+            },
+            password: {
+                required: true,
+                minLength: 6,
+                message: 'كلمة المرور يجب أن تكون 6 أحرف على الأقل'
+            }
+        };
+
+        // Clear error on input
+        document.getElementById('email').addEventListener('input', function() {
+            clearError('email');
+        });
+
+        document.getElementById('password').addEventListener('input', function() {
+            clearError('password');
+        });
+
+        function clearError(fieldName) {
+            const field = document.getElementById(fieldName);
+            const errorElement = document.getElementById(fieldName + 'Error');
+            
+            field.classList.remove('error');
+            errorElement.classList.remove('show');
+            errorElement.textContent = '';
+        }
+
+        function showFieldError(fieldName, message) {
+            const field = document.getElementById(fieldName);
+            const errorElement = document.getElementById(fieldName + 'Error');
+            
+            field.classList.add('error');
+            errorElement.textContent = message;
+            errorElement.classList.add('show');
+        }
+
+        function validateField(fieldName, value) {
+            const rules = validationRules[fieldName];
+            if (!rules) return true;
+
+            // Check required
+            if (rules.required && !value.trim()) {
+                showFieldError(fieldName, `${fieldName === 'email' ? 'البريد الإلكتروني' : 'كلمة المرور'} مطلوب`);
+                return false;
+            }
+
+            // Check email pattern
+            if (fieldName === 'email' && value && !rules.pattern.test(value)) {
+                showFieldError(fieldName, rules.message);
+                return false;
+            }
+
+            // Check password min length
+            if (fieldName === 'password' && value && value.length < rules.minLength) {
+                showFieldError(fieldName, rules.message);
+                return false;
+            }
+
+            clearError(fieldName);
+            return true;
+        }
+
+        function validateForm() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            let isValid = true;
+
+            if (!validateField('email', email)) {
+                isValid = false;
+            }
+
+            if (!validateField('password', password)) {
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        // Form submission with validation
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            // Clear previous errors
+            clearError('email');
+            clearError('password');
+
+            // Validate form
+            if (!validateForm()) {
+                showError('يرجى تصحيح الأخطاء في النموذج', 'خطأ في التحقق');
+                return false;
+            }
+
+            const formData = new FormData(this);
+            const role = document.querySelector('input[name="role"]:checked').value;
+            formData.append('role', role);
+
+            // append optional next param so server can redirect back
+            const params = new URLSearchParams(window.location.search);
+            const next = params.get('next');
+            if (next) formData.append('next', next);
+
+            // Show loading
+            showLoading('جاري تسجيل الدخول...');
+
+            try {
+                const response = await fetch('/auth/login', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                closeSwal();
+
+                if (data.success) {
+                    showSuccess('تم تسجيل الدخول بنجاح', 'نجح', 1).then(() => {
+                        // Redirect based on server-provided redirect (honors next if provided)
+                        const redirectTo = data.redirect || '/';
+                        window.location.href = redirectTo;
+                    });
+                } else {
+                    showError(data.message || 'فشل تسجيل الدخول', 'خطأ في تسجيل الدخول');
+                }
+            } catch (error) {
+                closeSwal();
+                showError('حدث خطأ في الاتصال بالخادم', 'خطأ في الاتصال');
+                console.error('Login error:', error);
+            }
+
+            return false;
+        });
+    </script>
+</body>
+</html>

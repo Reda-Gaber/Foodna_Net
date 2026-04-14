@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="/css/registration.css">
+</head>
+<body>
+
+      <!-- start login -->
+  <main class="main-containers-1">
+    <div class="containers">
+      <section class="card" aria-labelledby="login-heading">
+        <h2 id="login-heading">LOGIN</h2>
+
+        <form class="myform_one" method="POST" action="/emp/login">
+          <div class="field">
+          <label for="login-email">Email <span>*</span></label>
+          <input class="input login_username login_email" type="email" id="login-email" name="email" autocomplete="email" required>
+          <p class="drol"></p>
+        </div>
+        <div class="field eye">
+          <label for="login-password">Password <span>*</span></label>
+          <input class="input login_pas" type="password" id="login-password" name="password" autocomplete="current-password" required>
+          <button type="button" id="eye-1"><i class="ri-eye-line"></i></button>
+          <p class="drol"></p>
+        </div>
+        <button class="button__submit" type="submit">LOG IN</button>
+        <div class="actions">
+          <label class="remember">
+            <input type="checkbox" name="remember"> Remember me
+          </label>
+          <a href="#" class="link">Lost Your Password?</a>
+        </div>
+        </form>
+      </section>
+    </div>
+  </main> 
+   <!-- end login -->
+    
+</body>
+</html>

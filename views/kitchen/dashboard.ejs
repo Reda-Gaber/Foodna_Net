@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم المطبخ - Foodna Shop</title>
+    <link rel="stylesheet" href="/css/design-system.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600&family=Montserrat:wght@400;500;600&family=Oswald:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.css">
+    <style>
+        body {
+            background: var(--section-background);
+            min-height: 100vh;
+        }
+        
+        .kitchen-header {
+            background: var(--main-color);
+            color: var(--white-color);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-md);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .kitchen-header h1 {
+            color: var(--white-color);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .kitchen-header p {
+            color: var(--white-color);
+            opacity: 0.9;
+        }
+        
+        .orders-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: var(--spacing-lg);
+            padding: var(--spacing-lg);
+        }
+        
+        .order-card {
+            background: var(--white-color);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--main-color);
+        }
+        
+        .order-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+        
+        .order-card.completed {
+            opacity: 0.6;
+            border-left-color: var(--border-color);
+        }
+        
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+            padding-bottom: var(--spacing-md);
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .order-number {
+            font-size: var(--h2-font-size);
+            font-weight: var(--font-semi-bold);
+            color: var(--title-color);
+        }
+        
+        .order-time {
+            font-size: 0.875rem;
+            color: var(--text-color);
+        }
+        
+        .order-items {
+            margin: var(--spacing-md) 0;
+        }
+        
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--spacing-sm) 0;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        
+        .order-item:last-child {
+            border-bottom: none;
+        }
+        
+        .order-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: var(--spacing-md);
+            padding-top: var(--spacing-md);
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .order-total {
+            font-size: var(--h2-font-size);
+            font-weight: var(--font-semi-bold);
+            color: var(--main-color);
+        }
+        
+        .no-orders {
+            text-align: center;
+            padding: var(--spacing-xl);
+            color: var(--text-color);
+        }
+        
+        .no-orders i {
+            font-size: 4rem;
+            color: var(--border-color);
+            margin-bottom: var(--spacing-md);
+        }
+    </style>
+</head>
+<body>
+    <div class="kitchen-header">
+        <div class="container">
+            <h1><i class="ri-restaurant-line"></i> مطبخ Foodna Shop</h1>
+            <p>مرحباً، <%= user.name %> | <span id="currentTime"></span></p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div id="ordersContainer" class="orders-grid">
+            <!-- الطلبات سيتم إضافتها هنا -->
+        </div>
+
+        <div id="noOrders" class="no-orders" style="display: none;">
+            <i class="ri-checkbox-circle-line"></i>
+            <h2>لا توجد طلبات حالياً</h2>
+            <p>جميع الطلبات مكتملة</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // Helper functions for Swal
+        function showConfirm(message, title = 'تأكيد') {
+            return Swal.fire({
+                title: title,
+                text: message,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'نعم',
+                cancelButtonText: 'إلغاء'
+            });
+        }
+
+        function showLoading(message = 'جاري التحميل...') {
+            Swal.fire({
+                title: message,
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+        }
+
+        function showSuccess(message, title = 'نجح', timer = 1500) {
+            return Swal.fire({
+                title: title,
+                text: message,
+                icon: 'success',
+                timer: timer,
+                timerProgressBar: true,
+                showConfirmButton: false
+            });
+        }
+
+        function showError(message, title = 'خطأ') {
+            return Swal.fire({
+                title: title,
+                text: message,
+                icon: 'error',
+                confirmButtonText: 'حسناً'
+            });
+        }
+
+        function closeSwal() {
+            Swal.close();
+        }
+
+        const ordersContainer = document.getElementById('ordersContainer');
+        const noOrdersMsg = document.getElementById('noOrders');
+        let orders = [];
+    </script>
+
+        // تحديث الوقت
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('currentTime').textContent = now.toLocaleTimeString('ar-EG');
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        // عرض الطلبات
+        function renderOrders() {
+            if (orders.length === 0) {
+                noOrdersMsg.style.display = 'block';
+                ordersContainer.innerHTML = '';
+                return;
+            }
+
+            noOrdersMsg.style.display = 'none';
+            ordersContainer.innerHTML = orders.map(order => {
+                const isCompleted = order.status === 'Completed' || order.status === 'Delivered';
+                const statusText = {
+                    'Pending': 'جديد',
+                    'Processing': 'قيد التحضير',
+                    'Ready': 'جاهز',
+                    'Completed': 'مكتمل',
+                    'Delivered': 'تم التسليم'
+                }[order.status] || order.status;
+
+                return `
+                    <div class="order-card ${isCompleted ? 'completed' : ''}">
+                        <div class="order-header">
+                            <div>
+                                <div class="order-number">${order.orderNumber}</div>
+                                <div class="order-time">
+                                    <i class="ri-time-line"></i> 
+                                    ${new Date(order.createdAt).toLocaleString('ar-EG')}
+                                </div>
+                            </div>
+                            <span class="badge badge-${order.status === 'Pending' ? 'warning' : order.status === 'Ready' ? 'success' : 'info'}">
+                                ${statusText}
+                            </span>
+                        </div>
+
+                        <div class="order-items">
+                            ${order.items.map(item => `
+                                <div class="order-item">
+                                    <span>${item.quantity} × ${item.name}</span>
+                                    <span>${(item.price * item.quantity).toFixed(2)} جنيه</span>
+                                </div>
+                            `).join('')}
+                        </div>
+
+                        <div class="order-footer">
+                            <div class="order-total">${order.total.toFixed(2)} جنيه</div>
+                            ${!isCompleted ? `
+                                <button class="btn btn-success" onclick="completeOrder(${order.id})">
+                                    <i class="ri-check-line"></i> تم الانتهاء
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // جلب الطلبات
+        async function fetchOrders() {
+            try {
+                const res = await fetch('/kitchen/api/orders');
+                const data = await res.json();
+                
+                if (data.success) {
+                    orders = data.data.orders.filter(o => 
+                        o.status !== 'Completed' && o.status !== 'Delivered'
+                    );
+                    renderOrders();
+                }
+            } catch (err) {
+                console.error('Error fetching orders:', err);
+            }
+        }
+
+        // إكمال الطلب
+        async function completeOrder(orderId) {
+            console.log('🔵 completeOrder called with orderId:', orderId, typeof orderId);
+            const confirmResult = await showConfirm('هل أنت متأكد من إكمال هذا الطلب؟', 'تأكيد');
+            if (!confirmResult.isConfirmed) {
+                return;
+            }
+
+            showLoading('جاري تحديث حالة الطلب...');
+
+            try {
+                const payload = { orderId: Number(orderId), status: 'Completed' };
+                console.log('📤 Sending payload:', payload);
+                
+                const res = await fetch('/kitchen/api/update', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify(payload)
+                });
+                
+                console.log('📥 Response status:', res.status);
+                const data = await res.json();
+                console.log('📥 Response data:', data);
+                
+                closeSwal();
+                
+                if (data.success) {
+                    showSuccess('تم تحديث حالة الطلب بنجاح', 'نجح', 1);
+                    // إزالة الطلب من القائمة فوراً
+                    orders = orders.filter(o => o.id !== orderId);
+                    renderOrders();
+                } else {
+                    showError(data.message || 'فشل تحديث حالة الطلب', 'خطأ');
+                }
+            } catch (err) {
+                console.error('❌ Error:', err);
+                closeSwal();
+                showError('حدث خطأ أثناء تحديث حالة الطلب: ' + err.message, 'خطأ في الاتصال');
+            }
+        }
+
+        // جلب الطلبات كل 3 ثوان
+        fetchOrders();
+        setInterval(fetchOrders, 3000);
+    </script>
+</body>
+</html>
+

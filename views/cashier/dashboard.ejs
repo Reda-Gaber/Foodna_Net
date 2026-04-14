@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نقاط البيع - Foodna Shop</title>
+    <link rel="stylesheet" href="/css/design-system.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600&family=Montserrat:wght@400;500;600&family=Oswald:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/sweetalert-config.js"></script>
+    <style>
+        body {
+            background: var(--section-background);
+            min-height: 100vh;
+        }
+        
+        .cashier-header {
+            background: var(--main-color);
+            color: var(--white-color);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-md);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .cashier-header h1 {
+            color: var(--white-color);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: var(--spacing-lg);
+            padding: var(--spacing-lg);
+        }
+        
+        .products-section {
+            background: var(--white-color);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .search-bar {
+            width: 100%;
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: var(--h3-font-size);
+        }
+        
+        .search-bar:focus {
+            border-color: var(--main-color);
+            outline: none;
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: var(--spacing-md);
+            max-height: 70vh;
+            overflow-y: auto;
+            padding: var(--spacing-sm);
+        }
+        
+        .product-card {
+            background: var(--white-color);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .product-card:hover {
+            border-color: var(--main-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .product-name {
+            font-weight: var(--font-semi-bold);
+            color: var(--title-color);
+            margin-bottom: var(--spacing-xs);
+            font-size: var(--h3-font-size);
+        }
+        
+        .product-price {
+            color: var(--main-color);
+            font-weight: var(--font-semi-bold);
+            font-size: var(--h2-font-size);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .cart-section {
+            background: var(--white-color);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: var(--spacing-lg);
+            max-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 0;
+            max-height: 460px;
+        }
+        
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-md);
+            border-bottom: 1px dashed var(--border-color);
+        }
+        
+        .cart-item-info {
+            flex: 1;
+        }
+        
+        .cart-item-name {
+            font-weight: var(--font-medium);
+            color: var(--title-color);
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .cart-item-price {
+            color: var(--text-color);
+            font-size: 0.875rem;
+        }
+        
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            margin: var(--spacing-sm) 0;
+        }
+        
+        .qty-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--border-color);
+            background: var(--section-background);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: var(--font-semi-bold);
+        }
+        
+        .qty-btn:hover {
+            background: var(--border-color);
+        }
+        
+        .quantity {
+            min-width: 40px;
+            text-align: center;
+            font-weight: var(--font-semi-bold);
+        }
+        
+        .cart-summary {
+            border-top: 2px solid var(--border-color);
+            padding-top: 0;
+            margin-top: 0;
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .summary-total {
+            font-size: var(--h1-font-size);
+            font-weight: var(--font-semi-bold);
+            color: var(--main-color);
+            border-top: 2px solid var(--main-color);
+            padding-top: var(--spacing-sm);
+            margin-top: var(--spacing-sm);
+        }
+        
+        .coupon-section {
+            margin: var(--spacing-md) 0;
+            padding: var(--spacing-md);
+            background: var(--section-background);
+            border-radius: var(--radius-md);
+        }
+        
+        .coupon-input-group {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+        
+        .coupon-input {
+            flex: 1;
+            padding: var(--spacing-sm);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+        }
+        
+        .discount-badge {
+            background: var(--main-color);
+            color: var(--white-color);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            font-size: 0.875rem;
+            margin-top: var(--spacing-xs);
+        }
+        
+        .payment-section {
+            margin-top: 0;
+        }
+        
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .payment-method {
+            padding: 0;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .payment-method:hover {
+            border-color: var(--main-color);
+        }
+        
+        .payment-method.active {
+            border-color: var(--main-color);
+            background: var(--section-background);
+        }
+        
+        .payment-method input {
+            display: none;
+        }
+        
+        .empty-cart {
+            text-align: center;
+            padding: var(--spacing-xl);
+            color: var(--text-color);
+        }
+        
+        @media (max-width: 992px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .cart-section {
+                position: static;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cashier-header">
+        <div class="container">
+            <h1><i class="ri-cash-register-line"></i> نقاط البيع - Foodna Shop</h1>
+            <p>مرحباً، <%= user.name %> | <span id="currentTime"></span></p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="main-layout">
+            <!-- قسم المنتجات -->
+            <section class="products-section">
+                <h2 class="card-title">المنتجات</h2>
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    class="search-bar" 
+                    placeholder="ابحث عن منتج..."
+                />
+                <div id="productsGrid" class="products-grid">
+                    <div class="spinner"></div>
+                </div>
+            </section>
+
+            <!-- قسم السلة -->
+            <aside class="cart-section">
+                <h2 class="card-title">سلة الطلبات</h2>
+                
+                <div id="cartItems" class="cart-items">
+                    <div class="empty-cart">
+                        <i class="ri-shopping-cart-line" style="font-size: 3rem; color: var(--border-color);"></i>
+                        <p>السلة فارغة</p>
+                    </div>
+                </div>
+
+                <!-- قسم الكوبون -->
+                <!-- <div class="coupon-section">
+                    <label class="form-label">كود الكوبون</label>
+                    <div class="coupon-input-group">
+                        <input 
+                            type="text" 
+                            id="couponCode" 
+                            class="coupon-input" 
+                            placeholder="أدخل كود الكوبون"
+                        />
+                        <button class="btn btn-outline" id="applyCouponBtn">
+                            تطبيق
+                        </button>
+                    </div>
+                    <div id="couponResult"></div>
+                </div> -->
+
+                <!-- ملخص الطلب -->
+                <div class="cart-summary">
+                   
+                    <!-- <div class="summary-row" id="discountRow" style="display: none;">
+                        <span>الخصم:</span>
+                        <span id="discountAmount" style="color: var(--main-color);">0.00</span> جنيه
+                    </div> -->
+                    <div class="summary-row summary-total">
+                        <span>الإجمالي:</span>
+                        <span id="totalAmount">0.00</span> جنيه
+                    </div>
+                </div>
+
+                <!-- طريقة الدفع -->
+                <div class="payment-section">
+                    <label class="form-label">طريقة الدفع</label>
+                    <div class="payment-methods">
+                        <label class="payment-method active">
+                            <input type="radio" name="paymentMethod" value="cash" checked>
+                            <i class="ri-money-dollar-circle-line" style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;"></i>
+                            نقدي
+                        </label>
+                        <label class="payment-method">
+                            <input type="radio" name="paymentMethod" value="card">
+                            <i class="ri-bank-card-line" style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;"></i>
+                            بطاقة
+                        </label>
+                    </div>
+                </div>
+
+                <button 
+                    id="checkoutBtn" 
+                    class="btn btn-primary" 
+                    style="width: 100%; margin-top: var(--spacing-lg);"
+                    onclick="checkout()"
+                    disabled
+                >
+                    <i class="ri-check-line"></i> إتمام الدفع
+                </button>
+            </aside>
+        </div>
+    </div>
+
+    <script>
+        let products = [];
+        let cart = [];
+        let appliedCoupon = null;
+        let discount = 0;
+
+        // تحديث الوقت
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('currentTime').textContent = now.toLocaleTimeString('ar-EG');
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        // جلب المنتجات
+        async function fetchProducts() {
+            try {
+                const res = await fetch('/cashier/api/products');
+                const data = await res.json();
+                
+                console.log('✅ Products API Response:', data);
+                
+                if (data.success && data.data) {
+                    products = data.data;
+                    renderProducts();
+                    updateSummary();
+                } else {
+                    console.error('❌ Failed to fetch products:', data.message);
+                    showError(data.message || 'فشل في جلب المنتجات', 'خطأ');
+                }
+            } catch (err) {
+                console.error('❌ Error fetching products:', err);
+                showError('حدث خطأ في الاتصال بالسيرفر', 'خطأ في الاتصال');
+            }
+        }
+
+        // عرض المنتجات
+        function renderProducts(filter = '') {
+            const grid = document.getElementById('productsGrid');
+            
+            if (!products || products.length === 0) {
+                grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-color); padding: 2rem;">لا توجد منتجات متاحة</p>';
+                return;
+            }
+            
+            const filtered = products.filter(p => 
+                p.Product_Name?.toLowerCase().includes(filter.toLowerCase()) ||
+                p.Product_ID?.toString().includes(filter)
+            );
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-color); padding: 2rem;">لا توجد منتجات مطابقة للبحث</p>';
+                return;
+            }
+
+            grid.innerHTML = filtered.map(product => `
+                <div class="product-card" data-product-id="${product.Product_ID}" title="انقر للإضافة للسلة">
+                    <img 
+                        src="/images/products/${product.Image || 'default.png'}" 
+                        alt="${product.Product_Name}"
+                        class="product-image"
+                        onerror="this.src='/images/default-product.png'"
+                    />
+                    <div class="product-name">${product.Product_Name || 'منتج بدون اسم'}</div>
+                    <div class="product-price">${parseFloat(product.Price || 0).toFixed(2)} جنيه</div>
+                </div>
+            `).join('');
+            
+            // استخدام event delegation بدلاً من onclick
+            grid.querySelectorAll('.product-card').forEach(card => {
+                card.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const productId = parseInt(this.getAttribute('data-product-id'));
+                    console.log('🖱️ Product clicked:', productId);
+                    addToCart(productId);
+                });
+            });
+        }
+
+        // إضافة للسلة
+        function addToCart(productId) {
+            console.log('🛒 addToCart called with productId:', productId, 'Type:', typeof productId);
+            console.log('📦 Current products array length:', products.length);
+            console.log('📋 Current cart:', cart);
+            
+            // تأكد من أن productId رقم
+            if (typeof productId !== 'number') {
+                productId = parseInt(productId);
+                if (isNaN(productId)) {
+                    console.error('❌ Invalid product ID:', productId);
+                    showError('معرف المنتج غير صالح', 'خطأ');
+                    return;
+                }
+            }
+
+            // تحقق من وجود المنتج في القائمة
+            const product = products.find(p => {
+                console.log('🔍 Comparing:', p.Product_ID, 'with', productId, 'Equal?', p.Product_ID === productId);
+                return p.Product_ID === productId;
+            });
+            
+            if (!product) {
+                console.error('❌ Product not found! ID:', productId);
+                console.error('Available product IDs:', products.map(p => p.Product_ID));
+                showError('المنتج غير موجود أو تم حذفه', 'خطأ');
+                return;
+            }
+
+            console.log('✅ Product found:', product.Product_Name, 'Price:', product.Price);
+
+            const existing = cart.find(item => item.productId === productId);
+            if (existing) {
+                existing.quantity += 1;
+                console.log('📈 Updated quantity for:', product.Product_Name, 'to:', existing.quantity);
+            } else {
+                cart.push({
+                    productId: product.Product_ID,
+                    name: product.Product_Name,
+                    price: parseFloat(product.Price || 0),
+                    quantity: 1
+                });
+                console.log('✨ New item added to cart:', product.Product_Name);
+            }
+
+            console.log('📊 Cart after adding:', cart);
+            renderCart();
+            showSuccess(`تمت إضافة ${product.Product_Name} إلى السلة`, 'تمت الإضافة بنجاح', 1);
+        }
+
+        // تحديث الكمية
+        function updateQuantity(productId, change) {
+            const item = cart.find(i => i.productId === productId);
+            if (item) {
+                item.quantity = Math.max(1, item.quantity + change);
+                if (item.quantity === 0) {
+                    removeFromCart(productId);
+                    return;
+                }
+                console.log('📝 Updated quantity:', item.name, item.quantity);
+            }
+            renderCart();
+        }
+
+        // حذف من السلة
+        function removeFromCart(productId) {
+            const item = cart.find(i => i.productId === productId);
+            console.log('🗑️ Removing from cart:', item?.name);
+            cart = cart.filter(item => item.productId !== productId);
+            renderCart();
+        }
+
+        // عرض السلة
+        function renderCart() {
+            const container = document.getElementById('cartItems');
+            const checkoutBtn = document.getElementById('checkoutBtn');
+
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-cart">
+                        <i class="ri-shopping-cart-line" style="font-size: 3rem; color: var(--border-color);"></i>
+                        <p>السلة فارغة</p>
+                    </div>
+                `;
+                checkoutBtn.disabled = true;
+                updateSummary();
+                return;
+            }
+
+            container.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-price">${item.price.toFixed(2)} جنيه × ${item.quantity}</div>
+                    </div>
+                    <div class="quantity-controls">
+                        <button class="qty-btn qty-minus" data-product-id="${item.productId}" title="تقليل الكمية">-</button>
+                        <span class="quantity">${item.quantity}</span>
+                        <button class="qty-btn qty-plus" data-product-id="${item.productId}" title="زيادة الكمية">+</button>
+                    </div>
+                    <button class="btn btn-danger remove-btn" data-product-id="${item.productId}" style="padding: var(--spacing-xs) var(--spacing-sm);" title="حذف من السلة">
+                        <i class="ri-delete-bin-line"></i>
+                    </button>
+                </div>
+            `).join('');
+
+            // استخدام event delegation للأزرار
+            container.querySelectorAll('.qty-minus').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const productId = parseInt(btn.getAttribute('data-product-id'));
+                    console.log('➖ Decreasing quantity for:', productId);
+                    updateQuantity(productId, -1);
+                });
+            });
+
+            container.querySelectorAll('.qty-plus').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const productId = parseInt(btn.getAttribute('data-product-id'));
+                    console.log('➕ Increasing quantity for:', productId);
+                    updateQuantity(productId, 1);
+                });
+            });
+
+            container.querySelectorAll('.remove-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const productId = parseInt(btn.getAttribute('data-product-id'));
+                    console.log('🗑️ Removing from cart:', productId);
+                    removeFromCart(productId);
+                });
+            });
+
+            checkoutBtn.disabled = false;
+            updateSummary();
+        }
+
+        // تحديث الملخص
+        function updateSummary() {
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const finalDiscount = discount;
+            const total = subtotal - finalDiscount;
+
+            document.getElementById('subtotal').textContent = subtotal.toFixed(2);
+            document.getElementById('totalAmount').textContent = total.toFixed(2);
+
+            if (finalDiscount > 0) {
+                document.getElementById('discountRow').style.display = 'flex';
+                document.getElementById('discountAmount').textContent = finalDiscount.toFixed(2);
+            } else {
+                document.getElementById('discountRow').style.display = 'none';
+            }
+        }
+
+        // تطبيق الكوبون
+        async function applyCoupon() {
+            const code = document.getElementById('couponCode').value;
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+            if (!code) {
+                showError('يرجى إدخال كود الكوبون', 'حقل مطلوب');
+                return;
+            }
+
+            try {
+                const res = await fetch('/cashier/api/coupon/validate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code, totalAmount: subtotal })
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    appliedCoupon = data.data.coupon;
+                    discount = data.data.discount;
+                    document.getElementById('couponResult').innerHTML = `
+                        <div class="discount-badge">
+                            تم تطبيق الخصم: ${discount.toFixed(2)} جنيه
+                        </div>
+                    `;
+                    updateSummary();
+                } else {
+                    showError(data.message || 'الكوبون غير صالح', 'كوبون غير صالح');
+                    document.getElementById('couponResult').innerHTML = '';
+                }
+            } catch (err) {
+                showError('حدث خطأ أثناء التحقق من الكوبون', 'خطأ في الاتصال');
+            }
+        }
+
+        // إتمام الدفع
+        async function checkout() {
+            if (cart.length === 0) {
+                showWarning('السلة فارغة', 'لا يمكن إتمام الطلب');
+                return;
+            }
+
+            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const total = subtotal - discount;
+
+            // تأكيد الدفع
+            const confirmResult = await Swal.fire({
+                title: 'تأكيد الدفع',
+                text: `إتمام الدفع بقيمة ${total.toFixed(2)} جنيه؟`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'نعم، تأكيد',
+                cancelButtonText: 'إلغاء',
+                confirmButtonColor: '#50c878',
+                cancelButtonColor: '#e94e77'
+            });
+
+            if (!confirmResult.isConfirmed) {
+                return;
+            }
+
+            try {
+                console.log('📤 Sending order data:', {
+                    items: cart,
+                    totalAmount: subtotal,
+                    paymentMethod: paymentMethod
+                });
+
+                const res = await fetch('/cashier/api/orders', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        items: cart.map(item => ({
+                            productId: item.productId,
+                            quantity: item.quantity,
+                            price: item.price
+                        })),
+                        totalAmount: subtotal,
+                        couponCode: appliedCoupon?.Code || null,
+                        discount: discount,
+                        paymentMethod: paymentMethod,
+                        customerId: null,
+                        notes: ''
+                    })
+                });
+
+                const data = await res.json();
+                console.log('📥 Checkout Response:', data);
+
+                if (data.success && data.data) {
+                    const orderId = data.data.orderId;
+                    
+                    // عرض الإيصال
+                    const receiptWindow = window.open(`/cashier/receipt/${orderId}`, '_blank');
+                    
+                    // مسح السلة
+                    cart = [];
+                    appliedCoupon = null;
+                    discount = 0;
+                    document.getElementById('couponCode').value = '';
+                    document.getElementById('couponResult').innerHTML = '';
+                    renderCart();
+                    
+                    // رسالة نجاح
+                    showSuccess(
+                        `تم إنشاء الطلب بنجاح! رقم الطلب: ${data.data.orderNumber}\\nالإجمالي: ${total.toFixed(2)} جنيه`,
+                        'تم إنشاء الطلب بنجاح',
+                        2
+                    );
+                } else {
+                    const errorMsg = data.message || 'فشل في إنشاء الطلب';
+                    console.error('❌ Order creation failed:', errorMsg);
+                    showError(errorMsg, 'خطأ في إنشاء الطلب');
+                }
+            } catch (err) {
+                console.error('❌ Error during checkout:', err);
+                showError('حدث خطأ أثناء إنشاء الطلب', 'خطأ في الاتصال');
+            }
+        }
+
+        // البحث
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                console.log('🔍 Search input:', e.target.value);
+                renderProducts(e.target.value);
+            });
+        }
+
+        // Payment method selection
+        document.querySelectorAll('.payment-method').forEach(method => {
+            method.addEventListener('click', function() {
+                document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('active'));
+                this.classList.add('active');
+                this.querySelector('input').checked = true;
+                const selectedMethod = this.querySelector('input').value;
+                console.log('💳 Payment method selected:', selectedMethod);
+            });
+        });
+
+        // Coupon button
+        const couponBtn = document.getElementById('applyCouponBtn');
+        if (couponBtn) {
+            couponBtn.addEventListener('click', applyCoupon);
+        }
+
+        // Checkout button
+        const checkoutBtn = document.getElementById('checkoutBtn');
+        if (checkoutBtn) {
+            checkoutBtn.addEventListener('click', checkout);
+        }
+
+        // Initialize - load products when page loads
+        console.log('🚀 Initializing Cashier POS System (v2.0)...');
+        console.log('✅ DOM Elements loaded');
+        
+        // تأكد من اختيار أول طريقة دفع
+        const firstPaymentMethod = document.querySelector('.payment-method');
+        if (firstPaymentMethod) {
+            firstPaymentMethod.classList.add('active');
+            const radioInput = firstPaymentMethod.querySelector('input[type="radio"]');
+            if (radioInput) {
+                radioInput.checked = true;
+                console.log('💳 Default payment method set to:', radioInput.value);
+            }
+        }
+        
+        console.log('📥 Fetching products...');
+        fetchProducts();
+        console.log('✅ Cashier POS System Ready!');
+    </script>
+</body>
+</html>
+

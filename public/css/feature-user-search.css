@@ -1,0 +1,198 @@
+/* Feature-scoped CSS for search drawer and profile page (fsd- prefix) */
+
+/* Overlay */
+.fsd-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0);
+  opacity:1;
+  visibility:hidden;
+  transition:background 0.36s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s linear 0.36s;
+  z-index:1200;
+  cursor:pointer;
+  pointer-events:none;
+  backdrop-filter: blur(0px);
+}
+.fsd-overlay.active{
+  background:rgba(0,0,0,0.46);
+  visibility:visible;
+  pointer-events:all;
+  backdrop-filter: blur(3px);
+  transition:background 0.36s cubic-bezier(0.22, 1, 0.36, 1), backdrop-filter 0.36s ease;
+}
+
+/* Drawer — يطلع من الشمال مثل السلة من اليمين */
+.fsd-drawer{
+  position:fixed;
+  left:0;
+  top:0;
+  bottom:0;
+  width: min(420px, 95vw);
+  height:100vh;
+  background:var(--white-color, #fff);
+  box-shadow: 8px 0 32px rgba(0,0,0,0.12);
+  transform:translateX(-100%);
+  transition:transform 0.36s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease;
+  will-change:transform;
+  z-index:1250;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  border-radius: 0 12px 12px 0;
+}
+.fsd-drawer.active{
+  transform:translateX(0);
+  box-shadow: 12px 0 40px rgba(0,0,0,0.16);
+}
+
+/* Header */
+.fsd-header{
+  display:flex;
+  align-items:center;
+  padding: 20px 16px 16px;
+  gap:12px;
+  border-bottom:1px solid var(--border-color, rgba(0,0,0,0.08));
+  flex-shrink:0;
+}
+.fsd-close{
+  background:transparent;
+  border:0;
+  font-size:24px;
+  cursor:pointer;
+  color:var(--title-color, #333);
+  padding:4px;
+  line-height:1;
+  border-radius:6px;
+  transition: color 0.2s, background 0.2s;
+  order: 2; /* يكون على اليمين في الـ RTL */
+}
+.fsd-close:hover{ background: rgba(0,0,0,0.06); }
+.fsd-search-wrap{ flex:1; order:1; }
+.fsd-input{
+  width:100%;
+  padding:10px 14px;
+  border-radius:8px;
+  border:1px solid var(--border-color, rgba(0,0,0,0.1));
+  font-size:1rem;
+  font-family:inherit;
+  background: var(--container-color, #f8f8f8);
+  color: var(--text-color, #333);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.fsd-input:focus{
+  outline:none;
+  border-color:var(--main-color, #0ea5a4);
+  box-shadow:0 0 0 3px rgba(14,165,164,0.12);
+}
+
+/* Results */
+.fsd-results{ overflow:auto; padding:12px; display:flex; flex-direction:column; gap:10px; }
+.fsd-item{ display:flex; align-items:center; gap:10px; padding:8px; border-radius:6px; background:transparent; }
+.fsd-item-media img{ width:60px; height:60px; object-fit:cover; border-radius:6px; }
+.fsd-item-body{ flex:1; }
+.fsd-item-title{ font-weight:600; margin-bottom:6px; }
+.fsd-item-sub{ color:var(--muted-color, #666); font-size:0.95rem }
+.fsd-item-action{ margin-left:6px }
+.fsd-add-btn{ background:var(--main-color, #007bff); color:#fff; border:0; padding:6px 10px; border-radius:6px; cursor:pointer }
+
+.fsd-empty{ padding:30px; text-align:center; color:var(--muted-color, #666); }
+
+/* Dark mode support (uses existing body[data-theme]) */
+body[data-theme='dark'] .fsd-drawer{ background: #111827; color:#e5e7eb; }
+body[data-theme='dark'] .fsd-input{ background:#0f172a; border-color:rgba(255,255,255,0.06); color:#e5e7eb }
+body[data-theme='dark'] .fsd-item-sub{ color:#9ca3af }
+body[data-theme='dark'] .fsd-add-btn{ background:#10b981 }
+
+/* Profile page styles (scoped) */
+.fsd-profile{ max-width:900px; margin:30px auto; padding:20px; display:flex; gap:20px; align-items:flex-start }
+.fsd-card{ flex:1; background:var(--white-color,#fff); border-radius:10px; padding:18px; box-shadow:var(--shadow-sm, 0 1px 2px rgba(0,0,0,0.06)); }
+.fsd-avatar{ width:120px; height:120px; border-radius:999px; object-fit:cover; display:block; margin-bottom:10px }
+.fsd-profile h2{ margin:0 0 6px 0 }
+.fsd-profile p{ margin:0 0 6px 0 }
+.fsd-logout{ margin-top:12px; display:inline-block; background:#ef4444; color:#fff; padding:8px 12px; border-radius:8px; text-decoration:none }
+
+/* form fields used on profile page (scoped) */
+.fsd-input-field{ display:block; width:100%; padding:10px 12px; margin:8px 0 12px 0; border-radius:8px; border:1px solid rgba(0,0,0,0.08); font-size:1rem; font-family:inherit }
+.fsd-input-field:focus{ outline:none; border-color:var(--main-color, #0ea5a4); box-shadow:0 0 0 3px rgba(14,165,164,0.1) }
+.fsd-profile label{ display:block; margin-top:12px; margin-bottom:6px; font-weight:600; font-size:0.95rem }
+.fsd-form{ margin-top:16px }
+
+.button__submit{ background:var(--main-color,#0ea5a4); color:#fff; border:0; padding:10px 14px; border-radius:8px; cursor:pointer; font-size:1rem; font-weight:600; margin:0 6px 0 0 }
+.button__submit:hover{ opacity:0.9 }
+
+/* Address Confirmation Modal */
+.fsd-modal-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.5);
+  opacity:0;
+  visibility:hidden;
+  transition:opacity .2s ease, visibility .2s ease;
+  z-index:1300;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.fsd-modal-overlay.active{
+  opacity:1;
+  visibility:visible;
+}
+
+.fsd-modal{
+  position:fixed;
+  inset:0;
+  z-index:1301;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  pointer-events:none;
+}
+
+.fsd-modal-content{
+  background:#fff;
+  border-radius:10px;
+  padding:24px;
+  max-width:500px;
+  width:90%;
+  box-shadow:0 10px 40px rgba(0,0,0,0.2);
+  pointer-events:auto;
+  max-height:90vh;
+  overflow-y:auto;
+}
+
+.fsd-product-info{
+  margin:0 0 16px 0;
+  padding:12px;
+  background:#f3f4f6;
+  border-radius:6px;
+  font-weight:500;
+}
+
+/* Dark mode for modal */
+body[data-theme='dark'] .fsd-modal-content{
+  background:#1f2937;
+  color:#e5e7eb;
+}
+body[data-theme='dark'] .fsd-product-info{
+  background:#374151;
+}
+body[data-theme='dark'] .fsd-input-field{
+  background:#0f172a;
+  color:#e5e7eb;
+  border-color:rgba(255,255,255,0.06);
+}
+
+@media (max-width:600px){
+  .fsd-drawer{ width:100%; }
+  .fsd-profile{ padding:10px; margin:10px; flex-direction:column; gap:12px }
+  .fsd-profile h2{ font-size:1.3rem }
+  .fsd-modal-content{ width:95%; padding:16px }
+}
+
+/* Loading state */
+.fsd-empty {
+  padding: 30px;
+  text-align: center;
+  color: var(--muted-color, #666);
+  font-size: 0.95rem;
+}

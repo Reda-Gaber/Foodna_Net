@@ -1,0 +1,109 @@
+<%- include("../customer/parts/head.ejs") %>
+<link rel="stylesheet" href="/css/registration.css">
+<%- include("../customer/parts/navbar.ejs") %>
+
+<!-- start register header-->
+ <div class="my-account sub-pages">
+        <div class="heading-of-sub-pages">
+            <div class="head-of-page">
+              حسابي
+        </div>      
+        <div class="content-of-sub-pages">
+    <a href="/"><span>الرئيسية / </span></a>
+    <a href="#"><span>My Account</span></a>
+</div>
+ </div>
+ </div>
+<!-- end register header-->
+<!-- LOGIN -->
+<main class="main-containers-1">
+  <div class="containers">
+    <section class="card" aria-labelledby="login-heading">
+      <h2 id="login-heading">تسجيل الدخول</h2>
+      <form class="myform_one" method="POST" action="/user/login">
+        <div class="field">
+          <label for="login-email">البريد الالكتروني <span>*</span></label>
+          <input class="input login_username login_email" type="email" id="login-email" name="email" autocomplete="email" required>
+          <p class="drol"></p>
+        </div>
+        <div class="field eye">
+          <label for="login-password">كلمة المرور <span>*</span></label>
+          <input class="input login_pas" type="password" id="login-password" name="password" autocomplete="current-password" required>
+          <button type="button" id="eye-1"><i class="ri-eye-line"></i></button>
+          <p class="drol"></p>
+        </div>
+        <button class="button__submit" type="submit">تسجيل الدخول</button>
+        <div class="actions">
+          <label class="remember">
+            <input type="checkbox" name="remember"> تذكرني
+          </label>
+          <a href="#" class="link">هل نسيت كلمة المرور؟</a>
+        </div>
+      </form>
+    </section>
+    <section class="card text-conten">
+      <div class="texts">
+        <h2>حساب جديد</h2>
+        <p>سجل الآن للاستمتاع بخصومات وعروض خاصة </p>
+        <button class="button-id-1">تسجيل حساب جديد</button>
+      </div>
+    </section>
+  </div>
+</main>
+
+<!-- REGISTER -->
+<main class="main-containers-2 ach">
+  <div class="containers">
+    <section class="card" aria-labelledby="register-heading">
+      <h2 id="register-heading">انشاء حساب جديد</h2>
+      <form class="myform" method="POST" action="/user/register">
+        <div class="field">
+          <label for="reg-username">الاسم الكامل <span aria-hidden="true">*</span></label>
+          <input class="input" type="text" id="reg-username" name="username" autocomplete="username" required>
+          <p class="drol"></p>
+        </div>
+        <div class="field">
+          <label for="reg-email">البريد الالكتروني <span aria-hidden="true">*</span></label>
+          <input class="input" type="email" id="reg-email" name="email" autocomplete="email" required>
+          <p class="drol"></p>
+        </div>
+        <div class="field">
+          <label for="reg-phone">رقم الهاتف <span aria-hidden="true">*</span></label>
+          <input class="input" type="text" id="reg-phone" name="phone" autocomplete="phone" required>
+          <p class="drol"></p>
+        </div>
+        <div class="field eye">
+          <label for="reg-password">كلمة المرور <span aria-hidden="true">*</span></label>
+          <input class="input input--password" type="password" id="reg-password" name="password" autocomplete="new-password" required>
+          <button type="button" aria-label="Toggle password visibility" id="eye-2"><i class="ri-eye-line"></i></button>
+          <p class="drol"></p>
+        </div>
+        <div class="field eye">
+          <label for="reg-confirm-password">تأكيد كلمة المرور <span aria-hidden="true">*</span></label>
+          <input class="input input--password" type="password" id="reg-confirm-password" name="confirmPassword" autocomplete="new-password" required>
+          <button type="button" aria-label="Toggle password visibility" id="eye-3"><i class="ri-eye-line"></i></button>
+          <p class="drol"></p>
+        </div>
+        
+        <button class="button__submit" type="submit">تسجيل حساب جديد</button>
+      </form>
+    </section>
+    <section class="card text-conten">
+      <div class="texts">
+        <h2>تسجيل دخول</h2>
+        <p>التسجيل في هذا الموقع يتيح لك الوصول إلى حالة طلبك وتاريخ طلباتك. فقط قم بملء الحقول أدناه، وسنقوم بإعداد حساب جديد لك في وقت قياسي. سنطلب منك فقط المعلومات الضرورية لتسهيل وتسريع عملية الشراء.</p>
+        <button class="button-id-2">تسجيل الدخول</button>
+      </div>
+    </section>
+  </div>
+</main>
+
+<div id="errorModal" class="modal">
+  <div class="modal-content">
+    <span id="closeModal" class="close">&times;</span>
+    <p id="modalMessage"></p>
+  </div>
+</div>
+
+<script src="/js/customer.registration2.js"></script>
+<%- include("../customer/parts/footer.ejs") %>

@@ -1,0 +1,543 @@
+/* ====== متغيرات التصميم (Variables) ====== */
+:root {
+ 
+/* الخطوط والألوان الأساسية */
+  --section-background: #F6F6F6;
+  --font-1: "Cairo", sans-serif;
+  --font-2: "Oswald", sans-serif;
+  --font-product: "Oswald", sans-serif;
+  --header-height: 3.5rem;
+
+  /* نظام الألوان */
+  /*Color mode HSL(hue, saturation, lightness)*/
+  --first-color: hsl(0, 24%, 8%);
+  --title-color: hsl(230, 70%, 16%);
+  /* --text-color: hsl(230, 16%, 45%); */
+    --text-color: #e62a32;
+  --border-color: hsl(230, 50%, 90%);
+  --white-color: hsl(0, 0%, 100%);
+  /* --body-color: hsl(230, 100%, 96%); */
+    --body-color: #FFF;
+  --heading-offer-color: #000;
+
+  --container-color: hsl(230, 100%, 99%);
+  --main-color: #e62a32;
+  /* --footer-color: #b03f3f; */
+  --footer-color: #dc000a;
+  --text-footer-color: #FFF;
+  --hover-color: #000;
+  --background-of-header-for-pages: #000;
+  
+  /* أحجام الخطوط وأوزانها */
+  /*(.5rem = 8px | 1rem = 16px)*/
+  --body-font: "Montserrat", sans-serif;
+  --second-font: "Montagu Slab", serif;
+  --biggest-font-size: 2rem;
+  --h1-font-size: 1.5rem;
+  --h2-font-size: 1.25rem;
+  --h3-font-size: 1rem;
+  --special-size: 3.5rem;
+  
+  /* أوزان الخطوط */
+  --font-regular: 400;
+  --font-medium: 500;
+  --font-semi-bold: 600;
+  
+  /* ترتيب الطبقات */
+  --z-tooltip: 10;
+  --z-fixed: 100;
+    
+  /* المسافات الافتراضية */
+  --padding-for-head-of-pages: 50px;
+}
+/* نهاية المتغيرات */
+
+/* ====== الوضع الليلي (Dark Theme) ====== */
+.dark-theme .sub-pages .heading-of-sub-pages{
+  background-color: hsl(240, 22%, 95%);
+  color: #1E1E1E;
+}
+.dark-theme .sub-pages .heading-of-sub-pages .content-of-sub-pages a,
+.dark-theme .sub-pages .heading-of-sub-pages .content-of-sub-pages a span{
+   color: #1E1E1E;
+}
+.dark-theme .input{
+  background-color: hsl(231, 11%, 88%);
+}
+.dark-theme .field label{
+  color: #FFF;
+}
+.dark-theme #login-heading,
+.dark-theme #register-heading{
+  color: #FFF;
+}
+.dark-theme .text-conten h2,
+.dark-theme .text-conten .texts p,
+.dark-theme .helper{
+  color: #FFF;
+}
+
+
+body{
+    margin: 0px;
+    padding: 0px;
+}
+
+/* ====== صفحة التسجيل والدخول ====== */
+/* رأس الصفحة - العنوان الرئيسي */
+.sub-pages .heading-of-sub-pages {
+  position: relative;
+  background-color: var(--background-of-header-for-pages);
+  width: 100%;
+  height: 35vh;
+  align-items: center;
+  color: var(--white-color);
+  font-weight: var(--font-medium);
+  font-size: var(--special-size);
+  margin-top: 50px;
+}
+
+/* محتوى الرأس - العنوان في المنتصف */
+.sub-pages .heading-of-sub-pages .head-of-page {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+}
+
+.sub-pages .content-of-sub-pages {
+  position: absolute;
+  top: 80%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  padding: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.sub-pages .content-of-sub-pages a {
+  font-weight: var(--font-regular);
+  font-size: var(--h3-font-size);
+  color: #FFF;
+  text-decoration: none;
+ 
+}
+
+.sub-pages .heading-of-sub-pages .content-of-sub-pages a:first-child {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* end head of register page  */
+
+
+/* start login & register */
+.main-containers-1{
+  padding:48px 0;
+}
+.containers{
+ max-width:700px;
+ margin:auto;
+ padding-inline:20px;
+ display: flex;
+ justify-content: center;
+ align-self: center;
+ column-gap: 10px;
+}
+
+.card{
+  min-width: 480px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+   margin: 0px 10px;
+}
+
+
+.card h2{
+  color: var(--footer-color);
+  margin: 0px 0px 20px;
+  width: 100%;
+  font-weight: 800;
+  font-family: var(--font-1);
+}
+form{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.field{
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  max-width: 100%;
+}
+
+.field label{
+  color: var(--footer-color);
+  font-size: 15px;
+  font-family: var(--font-1);
+  font-weight: 600;
+}
+
+.input{
+ padding: 10px;
+ background-color: white;
+ border: 2px solid silver;
+ border-radius: 6px;
+}
+
+.eye{
+  position: relative;
+}
+
+.eye button{
+  width: 20px;
+  height: 20px;
+  background: transparent;
+  border: none;
+  text-align: center;
+  position: absolute;
+  left: 12px;
+  top: 40px;
+  outline: none;
+}
+
+.eye button i{
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.remember{
+  font-weight: 800;
+  font-size: 15px;
+  font-family: var(--font-1);
+}
+
+label.remember input {
+  cursor: pointer;
+}
+
+.button__submit{
+  padding: 15px;
+  color: white;
+  background-color: var(--footer-color);
+  border: 1px solid white;
+  border-radius: 6px;
+  font-family: var(--font-1);
+  cursor: pointer;
+}
+.actions{
+  display: flex;
+  justify-content: space-between;
+}
+.actions a{
+  color: var(--main-color);
+  text-decoration: none;
+  font-family: var(--font-1);
+}
+.text-conten{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 90%;
+  border-left: 1px solid silver;
+  padding-right: 30px;
+  position: relative;
+  margin-top: 30px;
+}
+
+.text-conten .texts{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  position: absolute;
+  top: 0px;
+  padding-left: 20px;
+}
+
+.text-conten .texts h2{
+  text-align: center;
+  margin: 0px 0px 5px;
+  font-family: var(--font-1);
+}
+
+.text-conten .texts p{
+  font-size: 15px;
+  text-align: center;
+  font-family: var(--font-1);
+  line-height: 25px;
+  color: var(--background-of-header-for-pages);
+  padding: 0px 20px;
+}
+
+.text-conten button{
+  padding: 10px 15px;
+  border: none;
+  border-radius: 15px;
+  margin: 20px;
+  font-family: var(--font-1);
+  cursor: pointer;
+}
+
+.main-containers-2{
+  padding: 48px 0;
+}
+
+.main-containers-2 .eye button{
+  left: 12px;
+  top: 40px;
+}
+
+.helper{
+  font-size: 15px;
+  color: black;
+  margin: 0px;
+  line-height: 25px;
+}
+
+.arror_on{
+  margin-top: 5px;
+  display: block;
+}
+
+.drol{
+  display: none;
+}
+
+.arror_one{
+  border: 2px solid red;
+}
+/* End login & register */
+/* Start media queries */
+
+/* Lerge screens */
+@media (max-width: 1200px) {
+ .containers{
+    min-width: 430px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+ }
+    .text-conten{
+    margin: 30px 0px 160px 0px;
+    border: none;
+    border-top: 2px solid silver;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    
+ }
+ .main-containers-1 .text-conten .texts{
+  margin: 0px;
+ }
+ .text-conten .texts h2{
+  margin-top: 40px;
+ }
+ .hero{
+    width: 100%; 
+ }
+ .heading-of-sub-pages .head-of-page{
+font-size: 30px;
+ }
+ .content-of-sub-pages{
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  flex-wrap: wrap;
+ }
+ .content-of-sub-pages a span{
+  font-size: 12px;
+ }
+ 
+}
+
+/* small screens */
+
+@media (max-width: 628px) {
+  .containers{
+   min-width: 230px;
+  }
+  .card{
+    min-width: 300px;
+    margin: 0px;
+    padding: 0px;
+  }
+  .containers .myform{
+    max-width: 300px;
+    margin: 0px;
+    padding: 0px;
+  }
+  .text-conten{
+    margin-bottom: 290px;
+    margin-top: 50px;
+    font-size: 10px;
+  }
+}
+.ach{
+   display: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ========== Error Modal Styles ========== */
+#errorModal {
+  display: none;
+  position: fixed;
+  z-index: 10000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: 10% auto;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  max-width: 500px;
+  animation: slideDown 0.3s ease-out;
+  direction: rtl;
+  text-align: right;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.close {
+  color: #aaa;
+  float: left;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+}
+
+#modalMessage {
+  color: #d32f2f;
+  font-size: 16px;
+  line-height: 1.6;
+  margin: 15px 0 0 0;
+  white-space: pre-line;
+  font-family: 'Cairo', sans-serif;
+}
