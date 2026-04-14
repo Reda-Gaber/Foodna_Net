@@ -1,0 +1,130 @@
+[2026-02-02T20:02:09.526Z] WARN: GEMINI_API_KEY not configured in environment
+[2026-02-02T20:16:01.749Z] WARN: GEMINI_API_KEY not configured in environment
+[2026-02-15T18:18:06.742Z] WARN: Failed to delete old image {
+  "errno": -2,
+  "code": "ENOENT",
+  "syscall": "unlink",
+  "path": "/home/reda/programming/projects/Foodna_Shob/public/images/products/1769624344055-241878066.jpg"
+}
+[2026-02-15T18:31:21.326Z] WARN: Failed to delete old image {
+  "errno": -2,
+  "code": "ENOENT",
+  "syscall": "unlink",
+  "path": "/home/reda/programming/projects/Foodna_Shob/public/images/products/1769624344055-241878066.jpg"
+}
+[2026-02-15T18:33:35.350Z] WARN: Failed to delete old image {
+  "errno": -2,
+  "code": "ENOENT",
+  "syscall": "unlink",
+  "path": "/home/reda/programming/projects/Foodna_Shob/public/images/products/1769624344055-241878066.jpg"
+}
+[2026-02-15T18:34:27.480Z] WARN: Failed to delete old image {
+  "errno": -2,
+  "code": "ENOENT",
+  "syscall": "unlink",
+  "path": "/home/reda/programming/projects/Foodna_Shob/public/images/products/1769624344055-241878066.jpg"
+}
+[2026-02-15T18:42:11.703Z] WARN: Failed to delete old image {
+  "errno": -2,
+  "code": "ENOENT",
+  "syscall": "unlink",
+  "path": "/home/reda/programming/projects/Foodna_Shob/public/images/products/1769624344055-241878066.jpg"
+}
+[2026-02-15T18:45:52.823Z] WARN: Failed to delete old image {
+  "errno": -2,
+  "code": "ENOENT",
+  "syscall": "unlink",
+  "path": "/home/reda/programming/projects/Foodna_Shob/public/images/products/1762909185861-969414054.png"
+}
+[2026-02-15T18:52:35.235Z] WARN: Failed to delete old image {
+  "errno": -2,
+  "code": "ENOENT",
+  "syscall": "unlink",
+  "path": "/home/reda/programming/projects/Foodna_Shob/public/images/products/1762909185861-969414054.png"
+}
+[2026-02-15T18:53:27.406Z] WARN: Failed to delete old image {
+  "errno": -2,
+  "code": "ENOENT",
+  "syscall": "unlink",
+  "path": "/home/reda/programming/projects/Foodna_Shob/public/images/products/1769624344055-241878066.jpg"
+}
+[2026-02-15T18:54:23.147Z] WARN: Failed to delete old image {
+  "errno": -2,
+  "code": "ENOENT",
+  "syscall": "unlink",
+  "path": "/home/reda/programming/projects/Foodna_Shob/public/images/products/1762909185861-969414054.png"
+}
+[2026-02-23T23:33:43.878Z] WARN: Failed to delete image {
+  "errno": -2,
+  "code": "ENOENT",
+  "syscall": "unlink",
+  "path": "/home/reda/programming/projects/Foodna_Shob/public/images/products/1762935312969-229292621.png"
+}
+[2026-02-23T23:33:47.464Z] WARN: Failed to delete image {
+  "errno": -2,
+  "code": "ENOENT",
+  "syscall": "unlink",
+  "path": "/home/reda/programming/projects/Foodna_Shob/public/images/products/1762935250639-132375204.png"
+}
+[2026-02-23T23:33:54.487Z] WARN: Failed to delete image {
+  "errno": -2,
+  "code": "ENOENT",
+  "syscall": "unlink",
+  "path": "/home/reda/programming/projects/Foodna_Shob/public/images/products/1762935250639-132375204.png"
+}
+[2026-02-23T23:34:03.379Z] WARN: Failed to delete image {
+  "errno": -2,
+  "code": "ENOENT",
+  "syscall": "unlink",
+  "path": "/home/reda/programming/projects/Foodna_Shob/public/images/products/1762935312969-229292621.png"
+}
+[2026-02-23T23:34:18.918Z] WARN: Failed to delete image {
+  "errno": -2,
+  "code": "ENOENT",
+  "syscall": "unlink",
+  "path": "/home/reda/programming/projects/Foodna_Shob/public/images/products/1762935250639-132375204.png"
+}
+[2026-02-24T16:27:44.212Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T18:11:47.483Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T18:12:12.380Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T18:12:30.190Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T18:14:04.146Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T18:17:00.535Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T18:18:40.358Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T18:33:09.217Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T18:33:28.393Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T18:34:12.653Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T18:34:18.487Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T18:34:40.096Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T18:34:41.979Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T18:34:44.261Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T18:34:49.740Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T18:35:03.279Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T18:35:10.259Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T18:36:26.830Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T18:37:13.569Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T18:37:20.793Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T18:37:30.447Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T18:37:37.195Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T18:38:21.166Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T18:48:37.074Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T18:48:39.388Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T18:48:49.778Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T18:48:56.821Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T18:49:01.314Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T18:50:39.726Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T18:51:24.908Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T18:51:53.483Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T19:05:27.299Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T19:05:43.677Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T20:21:18.795Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T20:35:01.757Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T20:35:41.543Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T20:37:10.797Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T20:46:15.587Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T20:46:25.245Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T20:47:16.052Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T21:51:53.079Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T21:54:30.901Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T21:57:11.415Z] WARN: GROQ_API_KEY not configured in environment
+[2026-02-24T22:00:33.903Z] WARN: GROQ_API_KEY not configured in environment
