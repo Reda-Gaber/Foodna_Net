@@ -64,20 +64,20 @@
           
           breakpoints: {
             320: {
-              slidesPerView: 1.2,
-              spaceBetween: 12,
+              slidesPerView: 1.3,
+              spaceBetween: 10,
             },
             480: {
-              slidesPerView: 1.5,
-              spaceBetween: 14,
+              slidesPerView: 2,
+              spaceBetween: 10,
             },
             640: {
-              slidesPerView: 2,
-              spaceBetween: 16,
+              slidesPerView: 2.3,
+              spaceBetween: 12,
             },
             992: {
               slidesPerView: 3,
-              spaceBetween: 16,
+              spaceBetween: 14,
             },
             1200: {
               slidesPerView: 3,

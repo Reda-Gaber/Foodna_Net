@@ -11,7 +11,7 @@ const { requireEmployee, authorizeRole } = require('../../core/middlewares/authM
 router.get('/', (req, res) => {
   // التحقق من تسجيل الدخول
   if (!req.session.user) {
-    return res.redirect('/auth/login');
+    return res.redirect('/login');
   }
   
   // التحقق من الدور

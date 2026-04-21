@@ -94,7 +94,9 @@ function requireEmployee(req, res, next) {
         message: 'يجب تسجيل الدخول كموظف'
       });
     }
-    return res.redirect('/auth/login');
+    // حفظ المسار الحالي في next عشان بعد login يرجع تاني
+    const nextPath = encodeURIComponent(req.originalUrl || '/');
+    return res.redirect(`/auth/login?next=${nextPath}`);
   }
   next();
 }

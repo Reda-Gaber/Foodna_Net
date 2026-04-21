@@ -541,3 +541,19 @@ font-size: 30px;
   white-space: pre-line;
   font-family: 'Cairo', sans-serif;
 }
+
+/* ======= تحسين مودال الخطأ ======= */
+.modal-content {
+  border-top: 4px solid #e62a32;
+}
+.modal-content p#modalMessage {
+  color: #333;
+  font-family: var(--font-1, 'Kufam', sans-serif);
+  font-size: 15px;
+  line-height: 1.8;
+  white-space: pre-line;
+}
+/* بانر خطأ تسجيل الدخول */
+#login-error-banner {
+  font-family: var(--font-1, 'Kufam', sans-serif) !important;
+}

@@ -1,39 +1,32 @@
 <%- include("parts/head.ejs") %>
-<!-- <link rel="stylesheet" href="/css/product-page.css"> -->
 <%- include("parts/navbar.ejs") %>
 
- <!-- start Menu header-->
-    <div class="my-account sub-pages"> <!-- Menu -->
-        <div class="heading-of-sub-pages">
-            <div class="head-of-page">
-             القائمة
-        </div> 
-        <div class="content-of-sub-pages">
-      <a href="../index.html"><span>الرئيسية / </span></a>
-     <a href="menu.html"><span>القائمة</span></a>
-     <a href="#"><span>المقبلات</span></a>
-     <a href="#"><span>الحلويات</span></a>
-     <a href="#"><span>المشروبات</span></a>
-     <a href="#"><span>نصف ونصف</span></a>
-     <a id="Offers" href="offers.html"><span>العروض</span></a>
-     <a href="#"><span>البيتزا</span></a>
-     <a href="#"><span>الصلصات</span></a>
-     <a href="#"><span>يانكي</span></a>
-</div>
- </div>
- <!-- end Menu header-->
- <!-- start Menu-->
- <div class="category-one">
- <div class="container">
- <div class="productss">
- <div class="products-grid_1">
+<!-- start Menu header -->
+<div class="my-account sub-pages">
+  <div class="heading-of-sub-pages">
+    <div class="head-of-page">القائمة</div>
+    <div class="content-of-sub-pages" id="menu-categories-nav">
+      <a href="/"><span>الرئيسية</span></a>
+      <a href="/menu" id="cat-all-link"><span>الكل</span></a>
+      <!-- الفئات الديناميكية من JS -->
     </div>
-   </div>
   </div>
 </div>
+<!-- end Menu header -->
+
+<!-- شريط اسم الفئة المختارة -->
+<div id="category-title-bar" style="display:none; background:var(--section-background,#f6f6f6); padding:14px 20px; text-align:center; border-bottom:2px solid var(--main-color,#e62a32);">
+  <h2 id="category-title-text" style="font-family:var(--font-1,'Kufam',sans-serif); color:var(--title-color,#1a1a4e); font-size:1.3rem; margin:0;"></h2>
 </div>
-<!-- end Menu-->
- <!-- جميع المنتجات - عرض شامل لجميع المنتجات -->
- <!-- نهاية قسم جميع المنتجات -->
- <script src="/js/customer.menu.js"></script>
+
+<!-- شبكة المنتجات -->
+<div class="category-one">
+  <div class="container">
+    <div class="productss">
+      <div class="products-grid_1" id="menu-products-grid"></div>
+    </div>
+  </div>
+</div>
+
+<script src="/js/customer.menu.js"></script>
 <%- include("parts/footer.ejs") %>

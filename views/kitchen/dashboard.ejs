@@ -120,6 +120,53 @@
             color: var(--border-color);
             margin-bottom: var(--spacing-md);
         }
+        
+        .badge {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-md);
+            font-size: 0.75rem;
+            font-weight: var(--font-medium);
+            text-transform: uppercase;
+        }
+        
+        .badge-warning {
+            background: #f59e0b;
+            color: var(--white-color);
+        }
+        
+        .badge-success {
+            background: #10b981;
+            color: var(--white-color);
+        }
+        
+        .badge-info {
+            background: #3b82f6;
+            color: var(--white-color);
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: var(--h3-font-size);
+            font-weight: var(--font-medium);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .btn-success {
+            background: var(--main-color);
+            color: var(--white-color);
+        }
+        
+        .btn-success:hover {
+            background: var(--main-color-dark);
+            transform: translateY(-1px);
+        }
     </style>
 </head>
 <body>
@@ -196,7 +243,6 @@
         const ordersContainer = document.getElementById('ordersContainer');
         const noOrdersMsg = document.getElementById('noOrders');
         let orders = [];
-    </script>
 
         // تحديث الوقت
         function updateTime() {
@@ -265,17 +311,25 @@
         // جلب الطلبات
         async function fetchOrders() {
             try {
+                console.log('🔵 Fetching orders...');
                 const res = await fetch('/kitchen/api/orders');
+                console.log('📥 Response status:', res.status);
                 const data = await res.json();
+                console.log('📥 Response data:', data);
                 
                 if (data.success) {
                     orders = data.data.orders.filter(o => 
                         o.status !== 'Completed' && o.status !== 'Delivered'
                     );
+                    console.log('✅ Filtered orders:', orders);
                     renderOrders();
+                } else {
+                    console.error('❌ API error:', data.message);
+                    showError(data.message || 'فشل في جلب الطلبات', 'خطأ');
                 }
             } catch (err) {
-                console.error('Error fetching orders:', err);
+                console.error('❌ Error fetching orders:', err);
+                showError('حدث خطأ في جلب الطلبات: ' + err.message, 'خطأ في الاتصال');
             }
         }
 

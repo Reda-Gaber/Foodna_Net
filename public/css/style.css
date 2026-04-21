@@ -393,6 +393,31 @@ body.dark-theme {
   font-weight: bold;
 }
 
+.category-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.category-heading .special-heading {
+  text-align: left;
+  margin-bottom: 0;
+}
+
+.view-more-link {
+  color: var(--primary-color);
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.view-more-link:hover {
+  text-decoration: underline;
+}
+
 /* Slider container */
 .slider-for-offers {
   width: 100%;
@@ -546,6 +571,57 @@ body.dark-theme {
   font-size: 18px;
   font-weight: bold;
   color: var(--first-color);
+}
+
+.product .price-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 10px 0 16px;
+}
+
+.price__old {
+  font-size: 14px;
+  text-decoration: line-through;
+  color: #999;
+}
+
+.price__new {
+  font-size: 17px;
+  color: var(--main-color);
+  font-weight: 700;
+}
+
+.product-discount-badge {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: var(--main-color);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 50px;
+  z-index: 2;
+}
+
+.product-img-link,
+.product-img-link img {
+  display: block;
+  width: 100%;
+}
+
+.product-placeholder {
+  width: 100%;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f8f8;
+  font-size: 40px;
+  color: #aaa;
 }
 
 .Product__actions {
@@ -2424,31 +2500,131 @@ footer p:last-child {
   flex-direction: column;
   transition: transform 0.3s ease;
   position: relative;
-  width: 270px;
-  height: 483px;
+  width: min(85vw, 250px);
+  max-width: 250px;
+  height: auto;
+  min-height: 420px;
+  margin: 0 auto;
 }
 
 /* تثبيت مساحة الصورة بنسبة ثابتة */
 .product img {
   width: 100%;
-  height: 315px;
+  height: 300px;
   min-width: 100%;
   max-width: 100%;
-  min-height: 315px;
-  max-height: 315px;
+  min-height: 300px;
+  max-height: 300px;
   object-fit: cover;
   object-position: center;
   display: block;
   background: #f2f2f2;
 }
 
-.bottom_cart{
-  position: absolute;
-  bottom: 0;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  margin-bottom: 10px;
+@media (max-width: 992px) {
+  .product {
+    width: min(80vw, 230px);
+    max-width: 230px;
+    min-height: 400px;
+  }
+
+  .product img {
+    height: 270px;
+    min-height: 270px;
+    max-height: 270px;
+  }
+}
+
+@media (max-width: 768px) {
+  .product {
+    width: min(80vw, 200px);
+    max-width: 200px;
+    min-height: 360px;
+  }
+
+  .product img {
+    height: 220px;
+    min-height: 220px;
+    max-height: 220px;
+  }
+
+  .product-info {
+    padding: 10px;
+  }
+
+  .product-info h3 {
+    font-size: 14px;
+    min-height: 32px;
+  }
+
+  .product .price {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 640px) {
+  .product {
+    width: min(46vw, 180px);
+    max-width: 180px;
+    min-height: 340px;
+  }
+
+  .product img {
+    height: 200px;
+    min-height: 200px;
+    max-height: 200px;
+  }
+
+  .product-info {
+    padding: 8px;
+  }
+
+  .product-info h3 {
+    font-size: 13px;
+    min-height: 30px;
+  }
+
+  .product .price {
+    font-size: 14px;
+  }
+
+  .product .points {
+    font-size: 12px;
+    padding: 2px 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .product {
+    width: min(44vw, 160px);
+    max-width: 160px;
+    min-height: 320px;
+  }
+
+  .product img {
+    height: 180px;
+    min-height: 180px;
+    max-height: 180px;
+  }
+
+  .product-info {
+    padding: 8px;
+  }
+
+  .product-info h3 {
+    font-size: 12px;
+    min-height: 28px;
+    margin-bottom: 4px;
+  }
+
+  .product .price {
+    font-size: 13px;
+  }
+
+  .product .points {
+    font-size: 11px;
+    padding: 2px 5px;
+  }
 }
 .top_cart{
   display: flex;
@@ -2472,4 +2648,216 @@ footer p:last-child {
 }
 *{
    font-family: "Kufam", sans-serif;
+}
+/* ============================================================
+   توحيد بوكسات المنتجات - تأكد أن product_only = product
+   ============================================================ */
+.product_only {
+  background: var(--container-color);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  font-family: var(--font-1);
+  width: 100%;
+}
+.product_only:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+.product_only img, .product_only .product-img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+}
+.product_only .product-info {
+  padding: 12px 10px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: center;
+}
+.product_only .product-info h3 {
+  font-size: 14px;
+  margin-bottom: 8px;
+  font-weight: bold;
+  font-family: var(--font-1);
+  color: var(--title-color);
+  line-height: 1.4;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.product_only .button__actions {
+  width: 100%;
+  position: absolute;
+  bottom: -45px;
+  transition: bottom 0.3s ease;
+  cursor: pointer;
+  z-index: 2;
+}
+.product_only .button__actions button {
+  width: 100%;
+  padding: 10px;
+  background-color: #444;
+  border: none;
+  cursor: pointer;
+  height: auto;
+}
+.product_only .button__actions a {
+  width: 100%;
+  color: var(--section-background);
+  font-size: 1rem;
+  padding: 10px;
+  font-weight: bold;
+  font-family: var(--font-1);
+  text-decoration: none;
+  display: block;
+}
+.product_only:hover .button__actions {
+  bottom: 0;
+}
+
+/* بادج الخصم */
+.product-discount-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: var(--main-color);
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  z-index: 3;
+}
+
+/* سعر قبل وبعد الخصم */
+.price-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 6px 0;
+}
+.price__old {
+  text-decoration: line-through;
+  color: #999;
+  font-size: 13px;
+}
+.price__new {
+  color: var(--main-color);
+  font-weight: bold;
+  font-size: 15px;
+}
+
+/* placeholder للصور الفارغة */
+.product-placeholder {
+  width: 100%;
+  height: 220px;
+  background: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+}
+
+/* ============================================================
+   زر "عرض المزيد" في الرئيسية
+   ============================================================ */
+.category-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 5px;
+  margin-bottom: 10px;
+}
+.view-more-link {
+  background: var(--main-color);
+  color: #fff !important;
+  padding: 6px 18px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: bold;
+  text-decoration: none !important;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+.view-more-link:hover {
+  background: #b71c1c;
+}
+
+/* بطاقة "عرض المزيد" داخل السويبر */
+.swiper-viewmore-slide {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  min-width: 160px;
+  width: 160px;
+}
+.viewmore-card {
+  width: 140px;
+  height: 220px;
+  border-radius: 12px;
+  border: 2px dashed var(--main-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--main-color);
+  font-weight: bold;
+  font-family: var(--font-1);
+  font-size: 14px;
+  transition: background 0.2s, transform 0.2s;
+  text-align: center;
+  padding: 10px;
+}
+.viewmore-card:hover {
+  background: rgba(230, 42, 50, 0.07);
+  transform: scale(1.03);
+}
+.viewmore-card i {
+  font-size: 2rem;
+}
+
+/* ============================================================
+   موبايل - تأكيد بوكسين جانب بعض في جميع الصفحات
+   ============================================================ */
+@media (max-width: 600px) {
+  .products-grid_1,
+  .products-grid_2,
+  .products-grid-all,
+  .offers_only {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+  .products-grid_1 .product,
+  .products-grid_2 .product,
+  .products-grid-all .product,
+  .offers_only .product,
+  .products-grid_1 .product_only,
+  .offers_only .product_only {
+    width: 100% !important;
+    min-width: unset !important;
+    max-width: 100% !important;
+  }
+  .products-grid_1 .product img,
+  .products-grid_2 .product img,
+  .products-grid-all .product img,
+  .offers_only .product img,
+  .products-grid_1 .product_only img,
+  .offers_only .product_only img {
+    height: 150px !important;
+    min-height: 150px !important;
+  }
 }

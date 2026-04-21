@@ -47,40 +47,6 @@
             font-size: var(--h3-font-size);
         }
         
-        .role-selector {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: var(--spacing-sm);
-            margin-bottom: var(--spacing-lg);
-        }
-        
-        .role-option {
-            padding: var(--spacing-md);
-            border: 2px solid var(--border-color);
-            border-radius: var(--radius-md);
-            background: var(--white-color);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-            font-family: var(--font-1);
-            font-weight: var(--font-medium);
-        }
-        
-        .role-option:hover {
-            border-color: var(--main-color);
-            background: var(--section-background);
-        }
-        
-        .role-option.active {
-            border-color: var(--main-color);
-            background: var(--main-color);
-            color: var(--white-color);
-        }
-        
-        .role-option input[type="radio"] {
-            display: none;
-        }
-        
         .form-group {
             margin-bottom: var(--spacing-md);
         }
@@ -172,31 +138,7 @@
                 <p>تسجيل الدخول</p>
             </div>
 
-            <form method="POST" action="/auth/login" id="loginForm">
-                <!-- اختيار الدور -->
-                <div class="role-selector">
-                    <label class="role-option active" data-role="Client">
-                        <input type="radio" name="role" value="Client" checked>
-                        <i class="ri-user-line"></i><br>
-                        عميل
-                    </label>
-                    <label class="role-option" data-role="Admin">
-                        <input type="radio" name="role" value="Admin">
-                        <i class="ri-admin-line"></i><br>
-                        إداري
-                    </label>
-                    <label class="role-option" data-role="Cashier">
-                        <input type="radio" name="role" value="Cashier">
-                        <i class="ri-cash-register-line"></i><br>
-                        كاشير
-                    </label>
-                    <label class="role-option" data-role="Kitchen">
-                        <input type="radio" name="role" value="Chef">
-                        <i class="ri-restaurant-line"></i><br>
-                        مطبخ
-                    </label>
-                </div>
-
+            <form method="POST" action="/login" id="loginForm">
                 <div class="form-group">
                     <label for="email" class="form-label">البريد الإلكتروني</label>
                     <input 
@@ -243,17 +185,6 @@
     </div>
 
     <script>
-        // Role selector functionality
-        document.querySelectorAll('.role-option').forEach(option => {
-            option.addEventListener('click', function() {
-                document.querySelectorAll('.role-option').forEach(opt => {
-                    opt.classList.remove('active');
-                });
-                this.classList.add('active');
-                this.querySelector('input[type="radio"]').checked = true;
-            });
-        });
-
         // Validation Rules
         const validationRules = {
             email: {
@@ -352,9 +283,9 @@
                 return false;
             }
 
-            const formData = new FormData(this);
-            const role = document.querySelector('input[name="role"]:checked').value;
-            formData.append('role', role);
+            const formData = new URLSearchParams();
+            formData.append('email', document.getElementById('email').value);
+            formData.append('password', document.getElementById('password').value);
 
             // append optional next param so server can redirect back
             const params = new URLSearchParams(window.location.search);
@@ -365,8 +296,11 @@
             showLoading('جاري تسجيل الدخول...');
 
             try {
-                const response = await fetch('/auth/login', {
+                const response = await fetch('/login', {
                     method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
                     body: formData
                 });
 
@@ -376,8 +310,10 @@
 
                 if (data.success) {
                     showSuccess('تم تسجيل الدخول بنجاح', 'نجح', 1).then(() => {
-                        // Redirect based on server-provided redirect (honors next if provided)
-                        const redirectTo = data.redirect || '/';
+                        // لو في next في URL استخدمه، غير كده استخدم redirect من السيرفر
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const nextParam = urlParams.get('next');
+                        const redirectTo = nextParam ? decodeURIComponent(nextParam) : (data.redirect || '/');
                         window.location.href = redirectTo;
                     });
                 } else {

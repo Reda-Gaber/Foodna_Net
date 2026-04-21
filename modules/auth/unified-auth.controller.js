@@ -12,7 +12,7 @@ const Logger = require('../../core/utils/logger');
  */
 exports.unifiedLogin = async (req, res) => {
   try {
-    const { email, password, role } = req.body;
+    const { email, password } = req.body;
 
     if (!email || !password) {
       return res.status(400).json({ 
@@ -21,37 +21,40 @@ exports.unifiedLogin = async (req, res) => {
       });
     }
 
-    // تحديد الجدول حسب الدور
-    let tableName, idField, nameField, roleField;
-    
-    if (role === 'Client' || !role) {
-      // تسجيل دخول عميل
-      tableName = 'Customers';
-      idField = 'Customer_Id';
-      nameField = 'Customer_Name';
-      roleField = 'Client';
-    } else {
-      // تسجيل دخول موظف (Admin, Kitchen, Cashier)
-      tableName = 'Employees';
-      idField = 'Employee_ID';
-      nameField = 'Employee_Name';
-      roleField = 'Role';
-    }
+    let user, tableName, idField, nameField, userRole;
 
-    // البحث عن المستخدم
-    const [rows] = await db.query(
-      `SELECT * FROM ${tableName} WHERE Email = ?`,
+    // البحث أولاً في جدول الموظفين
+    const [employeeRows] = await db.query(
+      `SELECT * FROM Employees WHERE Email = ?`,
       [email]
     );
 
-    if (rows.length === 0) {
-      return res.status(401).json({ 
-        success: false,
-        message: 'البريد الإلكتروني أو كلمة المرور غير صحيحة' 
-      });
-    }
+    if (employeeRows.length > 0) {
+      user = employeeRows[0];
+      tableName = 'Employees';
+      idField = 'Employee_ID';
+      nameField = 'Employee_Name';
+      userRole = user.Role;
+    } else {
+      // البحث في جدول العملاء
+      const [customerRows] = await db.query(
+        `SELECT * FROM Customers WHERE Email = ?`,
+        [email]
+      );
 
-    const user = rows[0];
+      if (customerRows.length > 0) {
+        user = customerRows[0];
+        tableName = 'Customers';
+        idField = 'Customer_Id';
+        nameField = 'Customer_Name';
+        userRole = 'Client';
+      } else {
+        return res.status(401).json({ 
+          success: false,
+          message: 'البريد الإلكتروني أو كلمة المرور غير صحيحة' 
+        });
+      }
+    }
 
     // التحقق من كلمة المرور
     const isMatch = await bcrypt.compare(password, user.Password);
@@ -60,17 +63,6 @@ exports.unifiedLogin = async (req, res) => {
         success: false,
         message: 'البريد الإلكتروني أو كلمة المرور غير صحيحة' 
       });
-    }
-
-    // التحقق من الدور إذا كان محدداً
-    if (role && role !== 'Client') {
-      const userRole = tableName === 'Employees' ? user.Role : 'Client';
-      if (userRole !== role) {
-        return res.status(403).json({ 
-          success: false,
-          message: 'ليس لديك صلاحية للوصول بهذا الدور' 
-        });
-      }
     }
 
     // حفظ Session
@@ -82,18 +74,17 @@ exports.unifiedLogin = async (req, res) => {
       req.session.user = {
         id: user[idField],
         name: user[nameField],
-        role: user[roleField]
+        role: userRole
       };
-      req.session.role = user[roleField];
+      req.session.role = userRole;
     }
 
     Logger.audit('USER_LOGIN', user[idField], { 
       email, 
-      role: tableName === 'Customers' ? 'Client' : user[roleField] 
+      role: userRole 
     });
 
     // إرجاع JSON response دائماً (سيتم التعامل معه في Frontend)
-    const userRole = tableName === 'Customers' ? 'Client' : user[roleField];
     
     return res.json({
       success: true,
@@ -153,13 +144,19 @@ exports.unifiedLogout = (req, res) => {
  * التحقق من حالة تسجيل الدخول
  */
 exports.checkAuth = (req, res) => {
-  const isAuthenticated = !!(req.session.user || req.session.userId);
+  // التحقق من أي من الطرق الممكنة لتخزين الـ session
+  const isAuthenticated = !!(
+    req.session.user ||
+    req.session.userId ||
+    req.session.authenticated
+  );
   
   if (isAuthenticated) {
     const user = req.session.user || {
-      id: req.session.userId,
-      email: req.session.email,
-      role: req.session.role || 'Client'
+      id:    req.session.userId,
+      name:  req.session.name || '',
+      email: req.session.email || '',
+      role:  req.session.role || 'Client'
     };
     
     return res.json({
@@ -174,4 +171,3 @@ exports.checkAuth = (req, res) => {
     authenticated: false
   });
 };
-

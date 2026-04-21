@@ -52,13 +52,7 @@
             </div>
               <div class="check_box">
               ${ (product.Discount && Number(product.Discount) > 0) ? (`<h2 class="price_product"><span class="old-price" style="text-decoration:line-through;color:#999;margin-right:8px">${Number(product.Price).toFixed(2)} جنيه</span><span class="new-price" style="color:#e62a32;font-weight:700">${(Number(product.Price)*(1-Number(product.Discount)/100)).toFixed(2)} جنيه</span></h2>`) : (`<h2 class="price_product">${Number(product.Price).toFixed(2)} جنيه</h2>`) }
-              <div class="combo_product box_product">
-                <h2 class="chek_combo">كومبو</h2>
-                <div class="combo-chek check_product">
-                  <button class="button_combo">بيتزا فقط</button>
-                  <button class="button_combo">مشروب بارد + سلطة ملفوف<span>(+60 جنيه)</span></button>
-                </div>
-              </div>
+              <!-- قسم الكومبو محذوف -->
               <div class="sauce_product box_product">
                 <h2 class="chek_sauce">الصلصة</h2>
                 <div class="sauce-chek check_product">
@@ -90,6 +84,45 @@
     const addButton = document.querySelector('.button-data-id');
     if (!addButton) return;
 
+    // دالة تحكم في حالة الزر
+    function setButtonAdded(added) {
+      if (added) {
+        addButton.classList.add('activess');
+        addButton.classList.add('btn-added');
+        addButton.textContent = '✓ تم الإضافة للسلة';
+        addButton.disabled = true;
+        addButton.style.background = '#9e9e9e';
+        addButton.style.cursor = 'not-allowed';
+        addButton.style.opacity = '0.75';
+      } else {
+        addButton.classList.remove('activess');
+        addButton.classList.remove('btn-added');
+        addButton.textContent = 'إضافة للسلة';
+        addButton.disabled = false;
+        addButton.style.background = '';
+        addButton.style.cursor = '';
+        addButton.style.opacity = '';
+      }
+    }
+
+    // تحقق من حالة المنتج في السلة عند التحميل
+    function syncButtonWithCart() {
+      if (!window.cartState) return;
+      const items = window.cartState.getItems();
+      const inCart = items.some(item => item.id === product.Product_ID);
+      setButtonAdded(inCart);
+    }
+
+    // مراقبة السلة — لو المنتج اتشال يرجع الزر
+    if (window.cartState) {
+      window.cartState.onItemsChange(function(items) {
+        const inCart = items.some(item => item.id === product.Product_ID);
+        setButtonAdded(inCart);
+      });
+      // تحقق فوري عند التحميل
+      syncButtonWithCart();
+    }
+
     addButton.addEventListener('click', function(e) {
       e.preventDefault();
       
@@ -108,17 +141,8 @@
         window.cartState.addItem(cartProduct);
         showAddedMessage('تم إضافة المنتج للسلة بنجاح!');
         
-        // Update button state
-        this.classList.add('activess');
-        this.textContent = '✓ تم الإضافة';
-        this.disabled = true;
-        
-        // Reset button after 2 seconds
-        setTimeout(() => {
-          this.classList.remove('activess');
-          this.textContent = 'إضافة للسلة';
-          this.disabled = false;
-        }, 2000);
+        // الزر يبقى رمادي ومعطّل بعد الإضافة
+        setButtonAdded(true);
       } else {
         console.error('Cart state not available');
         showAddedMessage('خطأ: لم يتم تحميل السلة', true);

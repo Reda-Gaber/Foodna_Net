@@ -69,54 +69,28 @@ window.apiass = true;
 
     const card = document.createElement('div');
     card.className = 'product product_only';
-    card.style.cssText = 'position:relative;border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 2px 12px rgba(0,0,0,0.08);transition:transform .2s,box-shadow .2s;cursor:pointer;';
 
     card.innerHTML = `
-      <!-- شارة الخصم -->
-      <div style="position:absolute;top:10px;right:10px;background:#e62a32;color:#fff;font-size:12px;font-weight:700;padding:4px 8px;border-radius:20px;z-index:2;">
-        خصم ${discount.toFixed(0)}%
-      </div>
-
-      <!-- صورة المنتج -->
-      <a href="/product-page?id=${pid}" style="display:block;text-decoration:none;">
+      <div class="product-discount-badge">خصم ${discount.toFixed(0)}%</div>
+      <a href="/product-page?id=${pid}" class="product-img-link">
         ${imgSrc
-          ? `<img src="${imgSrc}" alt="${escOffer(name)}"
-              style="width:100%;height:180px;object-fit:cover;display:block;"
-              onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">`
+          ? `<img src="${imgSrc}" alt="${escOffer(name)}" class="product-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">`
           : ''
         }
-        <div style="${imgSrc ? 'display:none;' : 'display:flex;'}width:100%;height:180px;align-items:center;justify-content:center;background:#f8f8f8;font-size:52px;">
+        <div class="product-placeholder" style="${imgSrc ? 'display:none;' : 'display:flex;'}">
           🍽️
         </div>
       </a>
-
-      <!-- بيانات المنتج -->
-      <div style="padding:12px 14px 14px;">
-        <a href="/product-page?id=${pid}" style="text-decoration:none;color:inherit;">
-          <h4 style="margin:0 0 8px;font-size:15px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escOffer(name)}</h4>
+      <div class="product-info">
+        <a href="/product-page?id=${pid}" class="product-title-link">
+          <h3>${escOffer(name)}</h3>
         </a>
-
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
-          <span style="text-decoration:line-through;color:#bbb;font-size:13px;">${oldPrice.toFixed(2)} جنيه</span>
-          <span style="color:#e62a32;font-weight:700;font-size:16px;">${newPrice.toFixed(2)} جنيه</span>
-        </div>
-
-        <div style="display:flex;gap:8px;">
-          <button
-            data-pid="${pid}"
-            data-name="${escOffer(name)}"
-            data-price="${newPrice.toFixed(2)}"
-            data-img="${imgSrc}"
-            class="offer-add-btn"
-            style="flex:1;background:var(--text-color);color:#fff;border:none;border-radius:8px;padding:9px 0;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .2s;">
-            🛒 أضف للسلة
-          </button>
-          <a href="/product-page?id=${pid}"
-            style="padding:9px 12px;border:1.5px solid var(--text-color);color:var(--text-color);border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;">
-            التفاصيل
-          </a>
+        <div class="price-row">
+          <span class="price price__old">${oldPrice.toFixed(2)} جنيه</span>
+          <span class="price price__new">${newPrice.toFixed(2)} جنيه</span>
         </div>
       </div>
+      <div class="button__actions"><button class="Product__actions"><a href="/product-page?id=${pid}">اختر الخيارات</a></button></div>
     `;
 
     // hover effect

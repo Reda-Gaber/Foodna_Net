@@ -1,0 +1,224 @@
+<%- include("parts/head.ejs") %>
+<link rel="stylesheet" href="/css/checkout-page.css">
+<%- include("parts/navbar.ejs") %>
+
+<main class="main checkout-main">
+  <!-- رأس صفحة الدفع -->
+  <div class="checkout-hero">
+    <div class="container">
+      <h1 class="checkout-title"><i class="ri-secure-payment-line"></i> إتمام الطلب</h1>
+      <div class="checkout-breadcrumb">
+        <a href="/">الرئيسية</a>
+        <i class="ri-arrow-left-s-line"></i>
+        <span>إتمام الطلب</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="container checkout-container">
+    <div class="checkout-grid">
+
+      <!-- العمود الأيمن: ملخص الطلب -->
+      <div class="checkout-summary">
+        <h2 class="section-label"><i class="ri-shopping-bag-line"></i> ملخص الطلب</h2>
+        <div id="checkout-items-list" class="checkout-items-list">
+          <!-- سيتم حقن المنتجات هنا بالـ JS -->
+          <div class="empty-cart-msg">
+            <i class="ri-shopping-cart-line"></i>
+            <p>لا توجد منتجات في السلة</p>
+            <a href="/" class="back-to-shop-btn">ارجع للتسوق</a>
+          </div>
+        </div>
+
+        <!-- الكوبون -->
+        <div class="coupon-section">
+          <h3><i class="ri-coupon-line"></i> كوبون الخصم</h3>
+          <div class="coupon-input-row">
+            <input type="text" id="coupon-input" placeholder="أدخل كود الخصم..." />
+            <button id="apply-coupon-btn" onclick="applyCoupon()">تطبيق</button>
+          </div>
+          <div id="coupon-msg" class="coupon-msg"></div>
+        </div>
+
+        <!-- الإجماليات -->
+        <div class="checkout-totals">
+          <div class="totals-row">
+            <span>إجمالي المنتجات</span>
+            <span id="subtotal-val">0.00 جنيه</span>
+          </div>
+          <div class="totals-row discount-row" id="discount-row" style="display:none">
+            <span>خصم الكوبون</span>
+            <span id="discount-val" style="color:var(--main-color)">- 0.00 جنيه</span>
+          </div>
+          <div class="totals-row delivery-row">
+            <span>رسوم التوصيل</span>
+            <span id="delivery-val">مجاني</span>
+          </div>
+          <div class="totals-row grand-total">
+            <span>الإجمالي النهائي</span>
+            <span id="grand-total-val">0.00 جنيه</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- العمود الأيسر: تفاصيل الدفع -->
+      <div class="checkout-payment">
+
+        <!-- عنوان التوصيل -->
+        <div class="payment-section">
+          <h2 class="section-label"><i class="ri-map-pin-line"></i> عنوان التوصيل</h2>
+          <div class="form-group">
+            <label>الاسم الكامل</label>
+            <input type="text" id="full-name" placeholder="اسمك الكامل" />
+          </div>
+          <div class="form-group">
+            <label>رقم الهاتف</label>
+            <input type="tel" id="phone-number" placeholder="01xxxxxxxxx" />
+          </div>
+          <div class="form-group">
+            <label>العنوان التفصيلي</label>
+            <textarea id="delivery-address" rows="3" placeholder="الشارع، المبنى، الدور، الشقة..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>ملاحظات إضافية</label>
+            <input type="text" id="order-notes" placeholder="أي طلبات خاصة للمطبخ؟" />
+          </div>
+        </div>
+
+        <!-- طريقة الدفع -->
+        <div class="payment-section">
+          <h2 class="section-label"><i class="ri-bank-card-line"></i> طريقة الدفع</h2>
+          <div class="payment-methods">
+            <label class="payment-method-card active" data-method="cash">
+              <input type="radio" name="payment" value="cash" checked hidden>
+              <i class="ri-money-dollar-circle-line"></i>
+              <span>الدفع عند الاستلام</span>
+              <div class="method-check"><i class="ri-check-line"></i></div>
+            </label>
+            <label class="payment-method-card" data-method="card">
+              <input type="radio" name="payment" value="card" hidden>
+              <i class="ri-bank-card-2-line"></i>
+              <span>بطاقة ائتمان / خصم</span>
+              <div class="method-check"><i class="ri-check-line"></i></div>
+            </label>
+            <label class="payment-method-card" data-method="online">
+              <input type="radio" name="payment" value="online" hidden>
+              <i class="ri-smartphone-line"></i>
+              <span>دفع إلكتروني</span>
+              <div class="method-check"><i class="ri-check-line"></i></div>
+            </label>
+          </div>
+        </div>
+
+        <!-- نموذج البطاقة البنكية (محاكاة) -->
+        <div class="card-form-section" id="card-form-section" style="display:none">
+          <h3 class="section-label" style="font-size:1rem;margin-bottom:15px">
+            <i class="ri-shield-check-line"></i> بيانات البطاقة
+          </h3>
+          <div class="credit-card-preview" id="card-preview">
+            <div class="card-chip"></div>
+            <div class="card-number-display" id="card-num-display">•••• •••• •••• ••••</div>
+            <div class="card-info-row">
+              <div>
+                <div class="card-label">اسم حامل البطاقة</div>
+                <div class="card-holder-display" id="card-holder-display">اسمك هنا</div>
+              </div>
+              <div>
+                <div class="card-label">تاريخ الانتهاء</div>
+                <div class="card-expiry-display" id="card-expiry-display">MM/YY</div>
+              </div>
+              <div class="card-logo-area">
+                <i class="ri-visa-line" id="card-brand-icon" style="font-size:2rem"></i>
+              </div>
+            </div>
+          </div>
+          <div class="card-inputs">
+            <div class="form-group">
+              <label>رقم البطاقة</label>
+              <input type="text" id="card-number" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCardNumber(this)" />
+            </div>
+            <div class="form-row-two">
+              <div class="form-group">
+                <label>تاريخ الانتهاء</label>
+                <input type="text" id="card-expiry" placeholder="MM/YY" maxlength="5" oninput="formatExpiry(this)" />
+              </div>
+              <div class="form-group">
+                <label>CVV</label>
+                <input type="text" id="card-cvv" placeholder="•••" maxlength="3" oninput="this.value=this.value.replace(/\D/g,'')" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>اسم حامل البطاقة</label>
+              <input type="text" id="card-holder" placeholder="الاسم كما على البطاقة" oninput="document.getElementById('card-holder-display').textContent=this.value||'اسمك هنا'" />
+            </div>
+          </div>
+        </div>
+
+        <!-- نموذج الدفع الإلكتروني -->
+        <div class="online-form-section" id="online-form-section" style="display:none">
+          <h3 class="section-label" style="font-size:1rem;margin-bottom:15px">
+            <i class="ri-smartphone-line"></i> بيانات المحفظة الإلكترونية
+          </h3>
+          <div class="form-group">
+            <label>رقم الهاتف المرتبط بالمحفظة</label>
+            <input type="tel" id="wallet-phone" placeholder="01xxxxxxxxx" maxlength="11" />
+          </div>
+          <div class="wallet-options">
+            <label class="wallet-opt active" data-wallet="vodafone">
+              <input type="radio" name="wallet" value="vodafone" checked hidden>
+              <span class="wallet-dot" style="background:#e60000"></span>
+              فودافون كاش
+            </label>
+            <label class="wallet-opt" data-wallet="etisalat">
+              <input type="radio" name="wallet" value="etisalat" hidden>
+              <span class="wallet-dot" style="background:#f90"></span>
+              اتصالات كاش
+            </label>
+            <label class="wallet-opt" data-wallet="orange">
+              <input type="radio" name="wallet" value="orange" hidden>
+              <span class="wallet-dot" style="background:#ff6600"></span>
+              أورنج موني
+            </label>
+            <label class="wallet-opt" data-wallet="instapay">
+              <input type="radio" name="wallet" value="instapay" hidden>
+              <span class="wallet-dot" style="background:#1a73e8"></span>
+              إنستاباي
+            </label>
+          </div>
+        </div>
+
+        <!-- زر تأكيد الطلب -->
+        <div id="checkout-msg" class="checkout-msg-bar" style="display:none"></div>
+        <button class="confirm-order-btn" id="confirm-order-btn" onclick="submitCheckoutOrder()">
+          <i class="ri-check-double-line"></i>
+          تأكيد الطلب
+        </button>
+        <p class="secure-note"><i class="ri-shield-check-line"></i> جميع بياناتك محمية وآمنة</p>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<!-- مودال نجاح الطلب -->
+<div class="order-success-modal" id="order-success-modal" style="display:none">
+  <div class="success-modal-content">
+    <div class="success-animation">
+      <div class="success-circle">
+        <i class="ri-check-line"></i>
+      </div>
+    </div>
+    <h2>تم تأكيد طلبك! 🎉</h2>
+    <p>رقم طلبك: <strong id="success-order-num"></strong></p>
+    <p>سيصلك خلال 30-45 دقيقة</p>
+    <div class="success-btns">
+      <a href="/orders" class="track-btn">تتبع طلبي</a>
+      <a href="/" class="home-btn">الرئيسية</a>
+    </div>
+  </div>
+</div>
+<div class="modal-overlay" id="modal-overlay" style="display:none" onclick="closeSuccessModal()"></div>
+
+<script src="/js/checkout-page.js"></script>
+
+<%- include("parts/footer.ejs") %>

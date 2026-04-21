@@ -30,80 +30,101 @@ async function apia () {
     }
 }
 
-
-
+let swiperSliderInstance = null;
+let swiperOffersInstance = null;
 
 //============================ Slider ============================
 const mySwiper = document.querySelector(".slides_matc");
- function slider (actev) {
- // التحقق من وجود العنصر قبل الاستخدام
- if (!mySwiper) {
-  console.log('⚠️ .slides_matc غير موجود في الصفحة الحالية');
-  return;
- }
- // clear previous slides to avoid duplicates on re-render
- mySwiper.innerHTML = '';
- for (let i = 0; i < 4; i++) {
-     const createDiv = document.createElement("div");
-     createDiv.classList.add("swiper-slide");
-     createDiv.innerHTML = `<img src="${actev.slider[i].imgs}" alt="">`;
-     mySwiper.appendChild(createDiv);
- }
-    let swiperSlider = new Swiper('.mySwiper', {
-  spaceBetween: 20,
-  grabCursor: true,
-  slidesPerView: 1,
-  loop: true,
-  speed: 1000,
-  autoplay: {
-    delay: 3000,
-    disableOnInteraction: false,
-  },
-  navigation: {
-    nextEl: ".swiper-button-next",
-    prevEl: ".swiper-button-prev",
-  },
-  pagination: {
-    el: ".swiper-pagination",
-    clickable: true,
+function slider(actev) {
+  if (!mySwiper) {
+    console.log('⚠️ .slides_matc غير موجود في الصفحة الحالية');
+    return;
   }
-});
+
+  const sliderContainer = document.querySelector('.mySwiper');
+  const prevButton = sliderContainer ? sliderContainer.querySelector('.swiper-button-prev') : null;
+  const nextButton = sliderContainer ? sliderContainer.querySelector('.swiper-button-next') : null;
+
+  // destroy previous swiper instance if it exists
+  if (swiperSliderInstance && typeof swiperSliderInstance.destroy === 'function') {
+    swiperSliderInstance.destroy(true, true);
+    swiperSliderInstance = null;
+  }
+
+  mySwiper.innerHTML = '';
+  const slideCount = Math.min((actev?.slider?.length || 0), 4);
+  for (let i = 0; i < slideCount; i++) {
+    const createDiv = document.createElement('div');
+    createDiv.classList.add('swiper-slide');
+    createDiv.innerHTML = `<img src="${actev.slider[i].imgs}" alt="">`;
+    mySwiper.appendChild(createDiv);
+  }
+
+  swiperSliderInstance = new Swiper('.mySwiper', {
+    spaceBetween: 20,
+    grabCursor: true,
+    slidesPerView: 1,
+    loop: slideCount > 1,
+    speed: 1000,
+    autoplay: {
+      delay: 3000,
+      disableOnInteraction: false,
+    },
+    navigation: {
+      nextEl: nextButton || '.mySwiper .swiper-button-next',
+      prevEl: prevButton || '.mySwiper .swiper-button-prev',
+    },
+    pagination: {
+      el: '.mySwiper .swiper-pagination',
+      clickable: true,
+    }
+  });
 }
+
 //============================ Offers ============================
 const OffersSlide = document.querySelector(".Offers_slide");
-function  offers (data) {
- // التحقق من وجود العنصر قبل الاستخدام
- if (!OffersSlide) {
-  console.log('⚠️ .Offers_slide غير موجود في الصفحة الحالية');
-  return;
- }
- // clear previous offers to avoid duplicates on re-render
- OffersSlide.innerHTML = '';
- for (let i = 0;  i < 3; i++) {
-  const createEle = document.createElement("div");
-  createEle.classList.add("swiper-slide");
-  createEle.classList.add("slide");
-  createEle.innerHTML = `<img src="${data.Offers[i].imgs_1}" alt="Image 1">
-            <img src="${data.Offers[i].imgs_2}" alt="Image 2">`;
-     OffersSlide.appendChild(createEle); 
- }
- let swiperOffers= new Swiper('.slider-for-offers', {
-loop: true,
-spaceBetween: 20,
-slidesPerView: 1,
-grabCursor: true,
-speed: 2000,
- autoplay: {
-    delay: 3000,
-    disableOnInteraction: false,
-   
-},
- navigation: {
-    nextEl: '.swiper-button-next',
-    prevEl: '.swiper-button-prev',
-  },
-});
+function offers(data) {
+  if (!OffersSlide) {
+    console.log('⚠️ .Offers_slide غير موجود في الصفحة الحالية');
+    return;
+  }
 
+  const offersContainer = document.querySelector('.slider-for-offers');
+  const prevButton = offersContainer ? offersContainer.querySelector('.swiper-button-prev') : null;
+  const nextButton = offersContainer ? offersContainer.querySelector('.swiper-button-next') : null;
+
+  if (swiperOffersInstance && typeof swiperOffersInstance.destroy === 'function') {
+    swiperOffersInstance.destroy(true, true);
+    swiperOffersInstance = null;
+  }
+
+  OffersSlide.innerHTML = '';
+  const offerCount = Math.min((data?.Offers?.length || 0), 3);
+  for (let i = 0; i < offerCount; i++) {
+    const createEle = document.createElement('div');
+    createEle.classList.add('swiper-slide', 'slide');
+    createEle.innerHTML = `
+      <img src="${data.Offers[i].imgs_1}" alt="Offer ${i + 1} image 1">
+      <img src="${data.Offers[i].imgs_2}" alt="Offer ${i + 1} image 2">
+    `;
+    OffersSlide.appendChild(createEle);
+  }
+
+  swiperOffersInstance = new Swiper('.slider-for-offers', {
+    loop: offerCount > 1,
+    spaceBetween: 20,
+    slidesPerView: 1,
+    grabCursor: true,
+    speed: 2000,
+    autoplay: {
+      delay: 3000,
+      disableOnInteraction: false,
+    },
+    navigation: {
+      nextEl: nextButton || '.slider-for-offers .swiper-button-next',
+      prevEl: prevButton || '.slider-for-offers .swiper-button-prev',
+    },
+  });
 }
 //============================ عرض التصنيفات بشكل ديناميكي ============================
 function displayCategories(requests) {
@@ -141,8 +162,11 @@ function displayCategories(requests) {
         categorySection.className = 'category-dynamic';
         categorySection.innerHTML = `
             <div class="container">
-                <div class="special-heading">
-                    <span>${categoryName}</span>
+                <div class="category-heading">
+                    <div class="special-heading">
+                        <span>${categoryName}</span>
+                    </div>
+                    <a class="view-more-link" href="/menu?category=${encodeURIComponent(categoryName)}">عرض المزيد</a>
                 </div>
                 <div class="products-card swiper">
                     <div class="products-grid swiper-wrapper" data-category="${categoryName}"></div>
@@ -159,17 +183,26 @@ function displayCategories(requests) {
             mainContainer.appendChild(categorySection);
         }
 
-        // ملء المنتجات في القسم
+        // ملء المنتجات في القسم - أقصى 6 منتجات
         const productsGrid = categorySection.querySelector(`[data-category="${categoryName}"]`);
-        products.forEach(product => {
+        const MAX_DISPLAY = 6;
+        const displayProducts = products.slice(0, MAX_DISPLAY);
+        
+        displayProducts.forEach(product => {
+            const oldPrice = Number(product.Price || 0);
+            const discount = Number(product.Discount || 0);
+            const finalPrice = discount > 0 ? Math.max(0, oldPrice * (1 - discount / 100)) : oldPrice;
             const productCard = document.createElement('div');
             productCard.classList.add('product', 'swiper-slide');
             productCard.innerHTML = `
-                <img src="/images/products/${product.Image}" alt="${product.Product_Name}">
+                <img src="/images/products/${product.Image}" alt="${product.Product_Name}" onerror="this.style.background='#f5f5f5'">
                 <div class="product-info">
                     <h3>${product.Product_Name}</h3>
                     <div class="points">${product.Quantity} كمية</div>
-                    <div class="price">${product.Price} جنيه</div>
+                    <div class="price">
+                        ${discount > 0 ? `<span style="text-decoration:line-through;color:#999;font-size:12px;margin-left:5px">${oldPrice.toFixed(2)}</span>` : ''}
+                        <span style="color:var(--main-color);font-weight:bold">${finalPrice.toFixed(2)} جنيه</span>
+                    </div>
                 </div>
                 <div class="button__actions">
                     <button class="Product__actions">
@@ -179,6 +212,20 @@ function displayCategories(requests) {
             `;
             productsGrid.appendChild(productCard);
         });
+
+        // إضافة بطاقة "عرض المزيد" إذا كان عدد المنتجات أكثر من 6
+        if (products.length > MAX_DISPLAY) {
+            const viewMoreSlide = document.createElement('div');
+            viewMoreSlide.classList.add('swiper-slide', 'swiper-viewmore-slide');
+            viewMoreSlide.innerHTML = `
+                <a href="/menu?category=${encodeURIComponent(categoryName)}" class="viewmore-card">
+                    <i class="ri-arrow-left-circle-line"></i>
+                    <span>عرض المزيد</span>
+                    <small>+${products.length - MAX_DISPLAY} منتج</small>
+                </a>
+            `;
+            productsGrid.appendChild(viewMoreSlide);
+        }
     });
 }
 

@@ -69,6 +69,15 @@
         font-weight: var(--font-semi-bold);
       }
 
+      .sidebar-toggle {
+        display: none;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--text-primary);
+      }
+
       .sidebar-nav {
         padding: var(--spacing-md) 0;
       }
@@ -117,7 +126,7 @@
 
       .stats-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         gap: var(--spacing-lg);
         margin-bottom: var(--spacing-xl);
       }
@@ -197,6 +206,175 @@
         overflow: hidden;
         box-shadow: var(--shadow-sm);
       }
+
+      /* Mobile Responsiveness */
+      @media (max-width: 768px) {
+        .sidebar {
+          transform: translateX(100%);
+        }
+
+        .sidebar.show {
+          transform: translateX(0);
+        }
+
+        .sidebar-toggle {
+          display: block;
+        }
+
+        .main-content {
+          margin-right: 0;
+        }
+
+        .topbar {
+          padding: var(--spacing-md);
+        }
+
+        .topbar-left {
+          display: flex;
+          align-items: center;
+          gap: var(--spacing-sm);
+        }
+
+        .mobile-toggle {
+          display: block;
+          background: none;
+          border: none;
+          font-size: 1.5rem;
+          cursor: pointer;
+          color: var(--text-primary);
+        }
+
+        .topbar-right {
+          display: flex;
+          align-items: center;
+          gap: var(--spacing-sm);
+        }
+
+        .search-box {
+          display: none;
+        }
+
+        .user-menu {
+          display: flex;
+          align-items: center;
+          gap: var(--spacing-sm);
+        }
+
+        .user-name {
+          display: none;
+        }
+
+        .stats-grid {
+          grid-template-columns: 1fr;
+          gap: var(--spacing-md);
+        }
+
+        .stat-card {
+          padding: var(--spacing-md);
+        }
+
+        .stat-icon {
+          width: 50px;
+          height: 50px;
+          font-size: 1.5rem;
+        }
+
+        .charts-grid {
+          grid-template-columns: 1fr !important;
+          gap: var(--spacing-md);
+        }
+
+        .section-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: var(--spacing-md);
+        }
+
+        .table-container {
+          overflow-x: auto;
+        }
+
+        .table {
+          min-width: 600px;
+          font-size: 0.875rem;
+        }
+
+        .table th,
+        .table td {
+          padding: var(--spacing-sm);
+          white-space: nowrap;
+        }
+
+        /* Hide less important columns on mobile */
+        .table th.secondary,
+        .table td.secondary {
+          display: none;
+        }
+
+        .table th.actions,
+        .table td.actions {
+          display: table-cell !important;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .topbar {
+          padding: var(--spacing-sm);
+        }
+
+        .content {
+          padding: var(--spacing-sm);
+        }
+
+        .stat-card {
+          flex-direction: column;
+          text-align: center;
+          gap: var(--spacing-sm);
+        }
+
+        .stat-details {
+          text-align: center;
+        }
+
+        .card-header {
+          padding: var(--spacing-sm);
+        }
+
+        .card-body {
+          padding: var(--spacing-sm);
+        }
+
+        .period-selector {
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+
+        .period-btn {
+          flex: 1;
+          min-width: 80px;
+        }
+
+        .table {
+          min-width: 500px;
+          font-size: 0.75rem;
+        }
+
+        .table th,
+        .table td {
+          padding: var(--spacing-xs);
+        }
+
+        /* Hide more columns on very small screens */
+        .table th:not(.important):not(.actions),
+        .table td:not(.important):not(.actions) {
+          display: none;
+        }
+
+        .table th.actions,
+        .table td.actions {
+          display: table-cell !important;
+        }
+      }
     </style>
   </head>
   <body>
@@ -254,12 +432,13 @@
           </div>
           <div class="topbar-right">
             <div class="search-box">
+              <i class="ri-search-line" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: #666; font-size: 18px; pointer-events: none;"></i>
               <input
                 type="text"
-                placeholder="بحث..."
+                placeholder="بحث في المنتجات والعملاء والطلبات..."
                 id="searchInput"
                 class="form-control"
-                style="width: 300px"
+                style="width: 300px; padding-right: 40px;"
               />
             </div>
             <div class="user-menu">
@@ -394,14 +573,14 @@
               <table class="table">
                 <thead>
                   <tr>
-                    <th>المعرف</th>
-                    <th>اسم المنتج</th>
-                    <th>الفئة</th>
-                    <th>السعر</th>
-                    <th>خصم (%)</th>
-                    <th>المخزون</th>
-                    <th>الحالة</th>
-                    <th>الإجراءات</th>
+                    <th class="important">المعرف</th>
+                    <th class="important">اسم المنتج</th>
+                    <th class="secondary">الفئة</th>
+                    <th class="important">السعر</th>
+                    <th class="secondary">خصم (%)</th>
+                    <th class="secondary">المخزون</th>
+                    <th class="secondary">الحالة</th>
+                    <th class="actions">الإجراءات</th>
                   </tr>
                 </thead>
                 <tbody id="productsTableBody"></tbody>
@@ -417,13 +596,13 @@
               <table class="table">
                 <thead>
                   <tr>
-                    <th>المعرف</th>
-                    <th>الاسم</th>
-                    <th>البريد الإلكتروني</th>
-                    <th>الهاتف</th>
-                    <th>إجمالي الطلبات</th>
-                    <th>إجمالي الإنفاق</th>
-                    <th>الإجراءات</th>
+                    <th class="important">المعرف</th>
+                    <th class="important">الاسم</th>
+                    <th class="secondary">البريد الإلكتروني</th>
+                    <th class="secondary">الهاتف</th>
+                    <th class="secondary">إجمالي الطلبات</th>
+                    <th class="secondary">إجمالي الإنفاق</th>
+                    <th class="actions">الإجراءات</th>
                   </tr>
                 </thead>
                 <tbody id="customersTableBody"></tbody>
@@ -439,12 +618,12 @@
               <table class="table">
                 <thead>
                   <tr>
-                    <th>رقم الطلب</th>
-                    <th>العميل</th>
-                    <th>التاريخ</th>
-                    <th>الإجمالي</th>
-                    <th>الحالة</th>
-                    <th>الإجراءات</th>
+                    <th class="important">رقم الطلب</th>
+                    <th class="important">العميل</th>
+                    <th class="secondary">التاريخ</th>
+                    <th class="important">الإجمالي</th>
+                    <th class="secondary">الحالة</th>
+                    <th class="actions">الإجراءات</th>
                   </tr>
                 </thead>
                 <tbody id="ordersTableBody"></tbody>
@@ -463,11 +642,11 @@
               <table class="table">
                 <thead>
                   <tr>
-                    <th>المعرف</th>
-                    <th>اسم التصنيف</th>
-                    <th>الوصف</th>
-                    <th>عدد المنتجات</th>
-                    <th>الإجراءات</th>
+                    <th class="important">المعرف</th>
+                    <th class="important">اسم التصنيف</th>
+                    <th class="secondary">الوصف</th>
+                    <th class="secondary">عدد المنتجات</th>
+                    <th class="actions">الإجراءات</th>
                   </tr>
                 </thead>
                 <tbody id="categoriesTableBody"></tbody>
@@ -580,6 +759,9 @@
           e.preventDefault();
           const section = this.dataset.section;
 
+          // Clear search input when navigating
+          document.getElementById('searchInput').value = '';
+
           // Update active nav
           document
             .querySelectorAll(".nav-item")
@@ -619,6 +801,43 @@
       modal.addEventListener("click", (e) => {
         if (e.target === modal) {
           modal.classList.remove("active");
+        }
+      });
+
+      // Search functionality
+      const searchInput = document.getElementById("searchInput");
+      searchInput.addEventListener("input", handleSearch);
+      searchInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+          handleSearch();
+        }
+      });
+
+      // Mobile sidebar functionality
+      const mobileToggle = document.getElementById("mobileToggle");
+      const sidebarToggle = document.getElementById("sidebarToggle");
+      const sidebar = document.getElementById("sidebar");
+
+      function toggleSidebar() {
+        sidebar.classList.toggle("show");
+      }
+
+      mobileToggle.addEventListener("click", toggleSidebar);
+      sidebarToggle.addEventListener("click", toggleSidebar);
+
+      // Close sidebar when clicking outside on mobile
+      document.addEventListener("click", (e) => {
+        if (window.innerWidth <= 768) {
+          if (!sidebar.contains(e.target) && !mobileToggle.contains(e.target)) {
+            sidebar.classList.remove("show");
+          }
+        }
+      });
+
+      // Handle window resize
+      window.addEventListener("resize", () => {
+        if (window.innerWidth > 768) {
+          sidebar.classList.remove("show");
         }
       });
     </script>

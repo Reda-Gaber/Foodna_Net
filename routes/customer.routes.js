@@ -18,5 +18,6 @@ router.get("/customer/orders", (req, res) => res.render("customer/orders"));
 router.get("/privacy-policy", (req, res) => res.render("customer/privacy-policy"));
 router.get("/refund-policy", (req, res) => res.render("customer/refund-policy"));
 router.get("/delivery-policy", (req, res) => res.render("customer/delivery-policy"));
+router.get("/checkout", (req, res) => res.render("customer/checkout"));
 
 module.exports = router;

@@ -272,6 +272,7 @@ img {
 .slider-for-offers .swiper-slide {
   flex: 0 0 auto;
   width: auto;
+  min-width: 100%;
   height: auto;
 }
 
@@ -291,6 +292,7 @@ img {
 .mySwiper .swiper-slide {
   flex: 0 0 auto;
   width: auto;
+  min-width: 100%;
   height: auto;
 }
 
@@ -792,18 +794,21 @@ margin: 10px;
 /* small screens */
 
 @media (max-width: 638px) {
-  .productss .products-grid_1{
-    grid-template-columns: repeat(1, 1fr);
+  .productss .products-grid_1 {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
   }
-   .productss .products-grid_1 .product {
-      width: 315px;
-      height: 443px;
-    }
+
+  .productss .products-grid_1 .product {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+  }
 
   /* استجابة قسم جميع المنتجات للشاشات الصغيرة */
   .products-grid-all {
-    grid-template-columns: repeat(1, 1fr);
-    gap: 15px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
   }
   
   .products-grid-all .product {
@@ -821,12 +826,129 @@ margin: 10px;
     padding: 6px 10px;
   }
 
-.offers_only.products-grid_1 .product{
-      height: 170px;
-      padding-top: 45px;
-    }
+  .offers_only.products-grid_1 .product {
+    height: auto;
+    padding-top: 0;
+  }
 }
-/* End media queries */
+
+/* Override for menu/offers card sizing and image consistency */
+.productss .products-grid_1,
+.offers_only,
+.products-grid_1 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  justify-content: center;
+  align-items: stretch;
+  width: 100%;
+}
+
+.productss .products-grid_1 .product,
+.offers_only .product,
+.products-grid_1 .product,
+.products-grid-all .product {
+  width: 100%;
+  max-width: 260px;
+  min-height: 360px;
+}
+
+.productss .products-grid_1 .product img,
+.offers_only .product img,
+.products-grid_1 .product img,
+.products-grid-all .product img {
+  width: 100%;
+  height: 220px;
+  min-height: 220px;
+  object-fit: cover;
+}
+
+.product-info {
+  padding: 12px 10px;
+}
+
+.product-info h3 {
+  font-size: 14px;
+  min-height: 40px;
+  line-height: 1.3;
+}
+
+.product .price {
+  font-size: 15px;
+}
+
+@media (max-width: 768px) {
+  .productss .products-grid_1,
+  .offers_only,
+  .products-grid_1 {
+    grid-template-columns: repeat(2, minmax(150px, 1fr));
+    gap: 12px;
+  }
+
+  .productss .products-grid_1 .product,
+  .offers_only .product,
+  .products-grid_1 .product,
+  .products-grid-all .product {
+    max-width: 100%;
+    min-height: 340px;
+  }
+
+  .productss .products-grid_1 .product img,
+  .offers_only .product img,
+  .products-grid_1 .product img,
+  .products-grid-all .product img {
+    height: 200px;
+    min-height: 200px;
+  }
+}
+
+@media (max-width: 560px) {
+  .productss .products-grid_1,
+  .offers_only,
+  .products-grid_1 {
+    grid-template-columns: repeat(2, minmax(130px, 1fr));
+    gap: 10px;
+  }
+
+  .productss .products-grid_1 .product,
+  .offers_only .product,
+  .products-grid_1 .product,
+  .products-grid-all .product {
+    min-height: 320px;
+  }
+
+  .productss .products-grid_1 .product img,
+  .offers_only .product img,
+  .products-grid_1 .product img,
+  .products-grid-all .product img {
+    height: 170px;
+    min-height: 170px;
+  }
+}
+
+@media (max-width: 480px) {
+  .productss .products-grid_1,
+  .offers_only,
+  .products-grid_1 {
+    grid-template-columns: repeat(2, minmax(120px, 1fr));
+    gap: 10px;
+  }
+
+  .productss .products-grid_1 .product,
+  .offers_only .product,
+  .products-grid_1 .product,
+  .products-grid-all .product {
+    min-height: 300px;
+  }
+
+  .productss .products-grid_1 .product img,
+  .offers_only .product img,
+  .products-grid_1 .product img,
+  .products-grid-all .product img {
+    height: 150px;
+    min-height: 150px;
+  }
+}
 
 .sub-pages .heading-of-sub-pages .nav_menus_list{
   display: flex;

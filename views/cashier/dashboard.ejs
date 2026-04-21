@@ -371,415 +371,361 @@
         </div>
     </div>
 
-    <script>
-        let products = [];
-        let cart = [];
-        let appliedCoupon = null;
-        let discount = 0;
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let products = [];
+            let cart = [];
+            let appliedCoupon = null;
+            let discount = 0;
 
-        // تحديث الوقت
-        function updateTime() {
-            const now = new Date();
-            document.getElementById('currentTime').textContent = now.toLocaleTimeString('ar-EG');
-        }
-        setInterval(updateTime, 1000);
-        updateTime();
+            // تحديث الوقت
+            function updateTime() {
+                const now = new Date();
+                document.getElementById('currentTime').textContent = now.toLocaleTimeString('ar-EG');
+            }
+            setInterval(updateTime, 1000);
+            updateTime();
 
-        // جلب المنتجات
-        async function fetchProducts() {
-            try {
-                const res = await fetch('/cashier/api/products');
-                const data = await res.json();
+            // جلب المنتجات
+            async function fetchProducts() {
+                try {
+                    const res = await fetch('/cashier/api/products', {
+                        credentials: 'include'
+                    });
+                    const data = await res.json();
+                    
+                    console.log('✅ Products API Response:', data);
+                    
+                    if (data.success && data.data) {
+                        products = data.data;
+                        renderProducts();
+                        updateSummary();
+                    } else {
+                        console.error('❌ Failed to fetch products:', data.message);
+                        showError(data.message || 'فشل في جلب المنتجات', 'خطأ');
+                    }
+                } catch (err) {
+                    console.error('❌ Error fetching products:', err);
+                    showError('حدث خطأ في الاتصال بالسيرفر', 'خطأ في الاتصال');
+                }
+            }
+
+            // عرض المنتجات
+            function renderProducts(filter = '') {
+                const grid = document.getElementById('productsGrid');
                 
-                console.log('✅ Products API Response:', data);
+                if (!products || products.length === 0) {
+                    grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-color); padding: 2rem;">لا توجد منتجات متاحة</p>';
+                    return;
+                }
                 
-                if (data.success && data.data) {
-                    products = data.data;
-                    renderProducts();
-                    updateSummary();
+                const filtered = products.filter(p => 
+                    p.Product_Name?.toLowerCase().includes(filter.toLowerCase()) ||
+                    p.Product_ID?.toString().includes(filter)
+                );
+
+                if (filtered.length === 0) {
+                    grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-color); padding: 2rem;">لا توجد منتجات مطابقة للبحث</p>';
+                    return;
+                }
+
+                grid.innerHTML = filtered.map(product => `
+                    <div class="product-card" data-product-id="${product.Product_ID}" title="انقر للإضافة للسلة">
+                        <img 
+                            src="/images/products/${product.Image || 'default.png'}" 
+                            alt="${product.Product_Name}"
+                            class="product-image"
+                            onerror="this.src='/images/default-product.png'"
+                        />
+                        <div class="product-name">${product.Product_Name || 'منتج بدون اسم'}</div>
+                        <div class="product-price">${parseFloat(product.Price || 0).toFixed(2)} جنيه</div>
+                    </div>
+                `).join('');
+                
+                // استخدام event delegation بدلاً من onclick
+                grid.querySelectorAll('.product-card').forEach(card => {
+                    card.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const productId = parseInt(this.getAttribute('data-product-id'));
+                        console.log('🖱️ Product clicked:', productId);
+                        addToCart(productId);
+                    });
+                });
+            }
+
+            // إضافة للسلة
+            function addToCart(productId) {
+                console.log('🛒 addToCart called with productId:', productId, 'Type:', typeof productId);
+                console.log('📦 Current products array length:', products.length);
+                console.log('📋 Current cart:', cart);
+                
+                // تأكد من أن productId رقم
+                if (typeof productId !== 'number') {
+                    productId = parseInt(productId);
+                    if (isNaS(productId)) {
+                        console.error('❌ Invalid product ID:', productId);
+                        showError('معرف المنتج غير صالح', 'خطأ');
+                        return;
+                    }
+                }
+
+                // تحقق من وجود المنتج في القائمة
+                const product = products.find(p => {
+                    console.log('🔍 Comparing:', p.Product_ID, 'with', productId, 'Equal?', p.Product_ID === productId);
+                    return p.Product_ID === productId;
+                });
+                
+                if (!product) {
+                    console.error('❌ Product not found! ID:', productId);
+                    console.error('Available product IDs:', products.map(p => p.Product_ID));
+                    showError('المنتج غير موجود أو تم حذفه', 'خطأ');
+                    return;
+                }
+
+                console.log('✅ Product found:', product.Product_Name, 'Price:', product.Price);
+
+                const existing = cart.find(item => item.productId === productId);
+                if (existing) {
+                    existing.quantity += 1;
+                    console.log('📈 Updated quantity for:', product.Product_Name, 'to:', existing.quantity);
                 } else {
-                    console.error('❌ Failed to fetch products:', data.message);
-                    showError(data.message || 'فشل في جلب المنتجات', 'خطأ');
+                    cart.push({
+                        productId: product.Product_ID,
+                        name: product.Product_Name,
+                        price: parseFloat(product.Price || 0),
+                        quantity: 1
+                    });
+                    console.log('✨ New item added to cart:', product.Product_Name);
                 }
-            } catch (err) {
-                console.error('❌ Error fetching products:', err);
-                showError('حدث خطأ في الاتصال بالسيرفر', 'خطأ في الاتصال');
-            }
-        }
 
-        // عرض المنتجات
-        function renderProducts(filter = '') {
-            const grid = document.getElementById('productsGrid');
-            
-            if (!products || products.length === 0) {
-                grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-color); padding: 2rem;">لا توجد منتجات متاحة</p>';
-                return;
-            }
-            
-            const filtered = products.filter(p => 
-                p.Product_Name?.toLowerCase().includes(filter.toLowerCase()) ||
-                p.Product_ID?.toString().includes(filter)
-            );
-
-            if (filtered.length === 0) {
-                grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-color); padding: 2rem;">لا توجد منتجات مطابقة للبحث</p>';
-                return;
+                console.log('📊 Cart after adding:', cart);
+                renderCart();
+                showSuccess(`تمت إضافة ${product.Product_Name} إلى السلة`, 'تمت الإضافة بنجاح', 1);
             }
 
-            grid.innerHTML = filtered.map(product => `
-                <div class="product-card" data-product-id="${product.Product_ID}" title="انقر للإضافة للسلة">
-                    <img 
-                        src="/images/products/${product.Image || 'default.png'}" 
-                        alt="${product.Product_Name}"
-                        class="product-image"
-                        onerror="this.src='/images/default-product.png'"
-                    />
-                    <div class="product-name">${product.Product_Name || 'منتج بدون اسم'}</div>
-                    <div class="product-price">${parseFloat(product.Price || 0).toFixed(2)} جنيه</div>
-                </div>
-            `).join('');
-            
-            // استخدام event delegation بدلاً من onclick
-            grid.querySelectorAll('.product-card').forEach(card => {
-                card.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const productId = parseInt(this.getAttribute('data-product-id'));
-                    console.log('🖱️ Product clicked:', productId);
-                    addToCart(productId);
-                });
-            });
-        }
-
-        // إضافة للسلة
-        function addToCart(productId) {
-            console.log('🛒 addToCart called with productId:', productId, 'Type:', typeof productId);
-            console.log('📦 Current products array length:', products.length);
-            console.log('📋 Current cart:', cart);
-            
-            // تأكد من أن productId رقم
-            if (typeof productId !== 'number') {
-                productId = parseInt(productId);
-                if (isNaN(productId)) {
-                    console.error('❌ Invalid product ID:', productId);
-                    showError('معرف المنتج غير صالح', 'خطأ');
-                    return;
-                }
-            }
-
-            // تحقق من وجود المنتج في القائمة
-            const product = products.find(p => {
-                console.log('🔍 Comparing:', p.Product_ID, 'with', productId, 'Equal?', p.Product_ID === productId);
-                return p.Product_ID === productId;
-            });
-            
-            if (!product) {
-                console.error('❌ Product not found! ID:', productId);
-                console.error('Available product IDs:', products.map(p => p.Product_ID));
-                showError('المنتج غير موجود أو تم حذفه', 'خطأ');
-                return;
-            }
-
-            console.log('✅ Product found:', product.Product_Name, 'Price:', product.Price);
-
-            const existing = cart.find(item => item.productId === productId);
-            if (existing) {
-                existing.quantity += 1;
-                console.log('📈 Updated quantity for:', product.Product_Name, 'to:', existing.quantity);
-            } else {
-                cart.push({
-                    productId: product.Product_ID,
-                    name: product.Product_Name,
-                    price: parseFloat(product.Price || 0),
-                    quantity: 1
-                });
-                console.log('✨ New item added to cart:', product.Product_Name);
-            }
-
-            console.log('📊 Cart after adding:', cart);
-            renderCart();
-            showSuccess(`تمت إضافة ${product.Product_Name} إلى السلة`, 'تمت الإضافة بنجاح', 1);
-        }
-
-        // تحديث الكمية
-        function updateQuantity(productId, change) {
-            const item = cart.find(i => i.productId === productId);
-            if (item) {
-                item.quantity = Math.max(1, item.quantity + change);
-                if (item.quantity === 0) {
-                    removeFromCart(productId);
-                    return;
-                }
-                console.log('📝 Updated quantity:', item.name, item.quantity);
-            }
-            renderCart();
-        }
-
-        // حذف من السلة
-        function removeFromCart(productId) {
-            const item = cart.find(i => i.productId === productId);
-            console.log('🗑️ Removing from cart:', item?.name);
-            cart = cart.filter(item => item.productId !== productId);
-            renderCart();
-        }
-
-        // عرض السلة
-        function renderCart() {
-            const container = document.getElementById('cartItems');
-            const checkoutBtn = document.getElementById('checkoutBtn');
-
-            if (cart.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-cart">
-                        <i class="ri-shopping-cart-line" style="font-size: 3rem; color: var(--border-color);"></i>
-                        <p>السلة فارغة</p>
-                    </div>
-                `;
-                checkoutBtn.disabled = true;
-                updateSummary();
-                return;
-            }
-
-            container.innerHTML = cart.map(item => `
-                <div class="cart-item">
-                    <div class="cart-item-info">
-                        <div class="cart-item-name">${item.name}</div>
-                        <div class="cart-item-price">${item.price.toFixed(2)} جنيه × ${item.quantity}</div>
-                    </div>
-                    <div class="quantity-controls">
-                        <button class="qty-btn qty-minus" data-product-id="${item.productId}" title="تقليل الكمية">-</button>
-                        <span class="quantity">${item.quantity}</span>
-                        <button class="qty-btn qty-plus" data-product-id="${item.productId}" title="زيادة الكمية">+</button>
-                    </div>
-                    <button class="btn btn-danger remove-btn" data-product-id="${item.productId}" style="padding: var(--spacing-xs) var(--spacing-sm);" title="حذف من السلة">
-                        <i class="ri-delete-bin-line"></i>
-                    </button>
-                </div>
-            `).join('');
-
-            // استخدام event delegation للأزرار
-            container.querySelectorAll('.qty-minus').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const productId = parseInt(btn.getAttribute('data-product-id'));
-                    console.log('➖ Decreasing quantity for:', productId);
-                    updateQuantity(productId, -1);
-                });
-            });
-
-            container.querySelectorAll('.qty-plus').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const productId = parseInt(btn.getAttribute('data-product-id'));
-                    console.log('➕ Increasing quantity for:', productId);
-                    updateQuantity(productId, 1);
-                });
-            });
-
-            container.querySelectorAll('.remove-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const productId = parseInt(btn.getAttribute('data-product-id'));
-                    console.log('🗑️ Removing from cart:', productId);
-                    removeFromCart(productId);
-                });
-            });
-
-            checkoutBtn.disabled = false;
-            updateSummary();
-        }
-
-        // تحديث الملخص
-        function updateSummary() {
-            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const finalDiscount = discount;
-            const total = subtotal - finalDiscount;
-
-            document.getElementById('subtotal').textContent = subtotal.toFixed(2);
-            document.getElementById('totalAmount').textContent = total.toFixed(2);
-
-            if (finalDiscount > 0) {
-                document.getElementById('discountRow').style.display = 'flex';
-                document.getElementById('discountAmount').textContent = finalDiscount.toFixed(2);
-            } else {
-                document.getElementById('discountRow').style.display = 'none';
-            }
-        }
-
-        // تطبيق الكوبون
-        async function applyCoupon() {
-            const code = document.getElementById('couponCode').value;
-            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-
-            if (!code) {
-                showError('يرجى إدخال كود الكوبون', 'حقل مطلوب');
-                return;
-            }
-
-            try {
-                const res = await fetch('/cashier/api/coupon/validate', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ code, totalAmount: subtotal })
-                });
-
-                const data = await res.json();
-
-                if (data.success) {
-                    appliedCoupon = data.data.coupon;
-                    discount = data.data.discount;
-                    document.getElementById('couponResult').innerHTML = `
-                        <div class="discount-badge">
-                            تم تطبيق الخصم: ${discount.toFixed(2)} جنيه
+            // عرض السلة
+            function renderCart() {
+                const container = document.getElementById('cartItems');
+                
+                if (!cart || cart.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-cart">
+                            <i class="ri-shopping-cart-line" style="font-size: 3rem; color: var(--border-color);"></i>
+                            <p>السلة فارغة</p>
                         </div>
                     `;
+                    document.getElementById('checkoutBtn').disabled = true;
                     updateSummary();
-                } else {
-                    showError(data.message || 'الكوبون غير صالح', 'كوبون غير صالح');
-                    document.getElementById('couponResult').innerHTML = '';
+                    return;
                 }
-            } catch (err) {
-                showError('حدث خطأ أثناء التحقق من الكوبون', 'خطأ في الاتصال');
-            }
-        }
 
-        // إتمام الدفع
-        async function checkout() {
-            if (cart.length === 0) {
-                showWarning('السلة فارغة', 'لا يمكن إتمام الطلب');
-                return;
-            }
+                container.innerHTML = cart.map(item => `
+                    <div class="cart-item">
+                        <div class="cart-item-info">
+                            <div class="cart-item-name">${item.name}</div>
+                            <div class="cart-item-price">${item.price.toFixed(2)} جنيه × ${item.quantity}</div>
+                        </div>
+                        <div class="quantity-controls">
+                            <button class="qty-btn qty-minus" data-product-id="${item.productId}" title="تقليل الكمية">-</button>
+                            <span class="quantity">${item.quantity}</span>
+                            <button class="qty-btn qty-plus" data-product-id="${item.productId}" title="زيادة الكمية">+</button>
+                        </div>
+                        <button class="btn btn-danger remove-btn" data-product-id="${item.productId}" style="padding: var(--spacing-xs) var(--spacing-sm);" title="حذف من السلة">
+                            <i class="ri-delete-bin-line"></i>
+                        </button>
+                    </div>
+                `).join('');
 
-            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
-            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const total = subtotal - discount;
-
-            // تأكيد الدفع
-            const confirmResult = await Swal.fire({
-                title: 'تأكيد الدفع',
-                text: `إتمام الدفع بقيمة ${total.toFixed(2)} جنيه؟`,
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonText: 'نعم، تأكيد',
-                cancelButtonText: 'إلغاء',
-                confirmButtonColor: '#50c878',
-                cancelButtonColor: '#e94e77'
-            });
-
-            if (!confirmResult.isConfirmed) {
-                return;
-            }
-
-            try {
-                console.log('📤 Sending order data:', {
-                    items: cart,
-                    totalAmount: subtotal,
-                    paymentMethod: paymentMethod
+                // استخدام event delegation للأزرار
+                container.querySelectorAll('.qty-minus').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const productId = parseInt(btn.getAttribute('data-product-id'));
+                        console.log('➖ Decreasing quantity for:', productId);
+                        updateQuantity(productId, -1);
+                    });
                 });
 
-                const res = await fetch('/cashier/api/orders', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'include',
-                    body: JSON.stringify({
-                        items: cart.map(item => ({
-                            productId: item.productId,
-                            quantity: item.quantity,
-                            price: item.price
-                        })),
-                        totalAmount: subtotal,
-                        couponCode: appliedCoupon?.Code || null,
-                        discount: discount,
-                        paymentMethod: paymentMethod,
-                        customerId: null,
-                        notes: ''
-                    })
+                container.querySelectorAll('.qty-plus').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const productId = parseInt(btn.getAttribute('data-product-id'));
+                        console.log('➕ Increasing quantity for:', productId);
+                        updateQuantity(productId, 1);
+                    });
                 });
 
-                const data = await res.json();
-                console.log('📥 Checkout Response:', data);
+                container.querySelectorAll('.remove-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const productId = parseInt(btn.getAttribute('data-product-id'));
+                        console.log('🗑️ Removing from cart:', productId);
+                        removeFromCart(productId);
+                    });
+                });
 
-                if (data.success && data.data) {
-                    const orderId = data.data.orderId;
-                    
-                    // عرض الإيصال
-                    const receiptWindow = window.open(`/cashier/receipt/${orderId}`, '_blank');
-                    
-                    // مسح السلة
-                    cart = [];
-                    appliedCoupon = null;
-                    discount = 0;
-                    document.getElementById('couponCode').value = '';
-                    document.getElementById('couponResult').innerHTML = '';
+                document.getElementById('checkoutBtn').disabled = false;
+                updateSummary();
+            }
+
+            // تحديث الكمية
+            function updateQuantity(productId, change) {
+                const item = cart.find(item => item.productId === productId);
+                if (!item) return;
+
+                item.quantity += change;
+                if (item.quantity <= 0) {
+                    removeFromCart(productId);
+                } else {
                     renderCart();
-                    
-                    // رسالة نجاح
-                    showSuccess(
-                        `تم إنشاء الطلب بنجاح! رقم الطلب: ${data.data.orderNumber}\\nالإجمالي: ${total.toFixed(2)} جنيه`,
-                        'تم إنشاء الطلب بنجاح',
-                        2
-                    );
-                } else {
-                    const errorMsg = data.message || 'فشل في إنشاء الطلب';
-                    console.error('❌ Order creation failed:', errorMsg);
-                    showError(errorMsg, 'خطأ في إنشاء الطلب');
+                    showSuccess(`تم تحديث الكمية إلى ${item.quantity}`, 'تم التحديث', 1);
                 }
-            } catch (err) {
-                console.error('❌ Error during checkout:', err);
-                showError('حدث خطأ أثناء إنشاء الطلب', 'خطأ في الاتصال');
             }
-        }
 
-        // البحث
-        const searchInput = document.getElementById('searchInput');
-        if (searchInput) {
-            searchInput.addEventListener('input', (e) => {
+            // حذف من السلة
+            function removeFromCart(productId) {
+                const index = cart.findIndex(item => item.productId === productId);
+                if (index > -1) {
+                    const removedItem = cart.splice(index, 1)[0];
+                    renderCart();
+                    showSuccess(`تم حذف ${removedItem.name} من السلة`, 'تم الحذف', 1);
+                }
+            }
+
+            // تحديث الملخص
+            function updateSummary() {
+                const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                const finalDiscount = discount;
+                const total = subtotal - finalDiscount;
+
+                document.getElementById('totalAmount').textContent = total.toFixed(2);
+
+                if (finalDiscount > 0) {
+                    document.getElementById('discountRow').style.display = 'flex';
+                    document.getElementById('discountAmount').textContent = finalDiscount.toFixed(2);
+                } else {
+                    document.getElementById('discountRow').style.display = 'none';
+                }
+            }
+
+            // إتمام الدفع
+            async function checkout() {
+                if (!cart || cart.length === 0) {
+                    showError('السلة فارغة', 'خطأ');
+                    return;
+                }
+
+                const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
+                if (!paymentMethod) {
+                    showError('يرجى اختيار طريقة الدفع', 'خطأ');
+                    return;
+                }
+
+                const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                const total = subtotal - discount;
+
+                // تأكيد الدفع
+                const confirmResult = await Swal.fire({
+                    title: 'تأكيد الدفع',
+                    text: `إتمام الدفع بقيمة ${total.toFixed(2)} جنيه؟`,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'نعم، تأكيد',
+                    cancelButtonText: 'إلغاء',
+                    confirmButtonColor: '#50c878',
+                    cancelButtonColor: '#e94e77'
+                });
+
+                if (!confirmResult.isConfirmed) {
+                    return;
+                }
+
+                try {
+                    console.log('📤 Sending order data:', {
+                        items: cart,
+                        totalAmount: subtotal,
+                        paymentMethod: paymentMethod.value
+                    });
+
+                    const res = await fetch('/cashier/api/orders', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        credentials: 'include',
+                        body: JSON.stringify({
+                            items: cart.map(item => ({
+                                productId: item.productId,
+                                quantity: item.quantity,
+                                price: item.price
+                            })),
+                            totalAmount: subtotal,
+                            couponCode: appliedCoupon?.Code || null,
+                            discount: discount,
+                            paymentMethod: paymentMethod.value,
+                            customerId: null,
+                            notes: ''
+                        })
+                    });
+
+                    const data = await res.json();
+                    console.log('📥 Checkout Response:', data);
+
+                    if (data.success) {
+                        showSuccess(`تم إنشاء الطلب بنجاح! رقم الطلب: ${data.data.orderNumber}`, 'نجح الدفع', 3).then(() => {
+                            // إعادة تحميل الصفحة أو إعادة توجيه
+                            cart = [];
+                            appliedCoupon = null;
+                            discount = 0;
+                            renderCart();
+                            updateSummary();
+                        });
+                    } else {
+                        showError(data.message || 'فشل في إتمام الطلب', 'خطأ');
+                    }
+                } catch (err) {
+                    console.error('❌ Checkout error:', err);
+                    showError('حدث خطأ في إتمام الطلب', 'خطأ');
+                }
+            }
+
+            // البحث
+            document.getElementById('searchInput').addEventListener('input', function(e) {
                 console.log('🔍 Search input:', e.target.value);
                 renderProducts(e.target.value);
             });
-        }
 
-        // Payment method selection
-        document.querySelectorAll('.payment-method').forEach(method => {
-            method.addEventListener('click', function() {
-                document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('active'));
-                this.classList.add('active');
-                this.querySelector('input').checked = true;
-                const selectedMethod = this.querySelector('input').value;
-                console.log('💳 Payment method selected:', selectedMethod);
+            // Payment method selection
+            document.querySelectorAll('.payment-method').forEach(method => {
+                method.addEventListener('click', function() {
+                    document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('active'));
+                    this.classList.add('active');
+                    this.querySelector('input').checked = true;
+                    const selectedMethod = this.querySelector('input').value;
+                    console.log('💳 Payment method selected:', selectedMethod);
+                });
             });
-        });
 
-        // Coupon button
-        const couponBtn = document.getElementById('applyCouponBtn');
-        if (couponBtn) {
-            couponBtn.addEventListener('click', applyCoupon);
-        }
+            // Checkout button
+            document.getElementById('checkoutBtn').addEventListener('click', checkout);
 
-        // Checkout button
-        const checkoutBtn = document.getElementById('checkoutBtn');
-        if (checkoutBtn) {
-            checkoutBtn.addEventListener('click', checkout);
-        }
-
-        // Initialize - load products when page loads
-        console.log('🚀 Initializing Cashier POS System (v2.0)...');
-        console.log('✅ DOM Elements loaded');
-        
-        // تأكد من اختيار أول طريقة دفع
-        const firstPaymentMethod = document.querySelector('.payment-method');
-        if (firstPaymentMethod) {
-            firstPaymentMethod.classList.add('active');
-            const radioInput = firstPaymentMethod.querySelector('input[type="radio"]');
-            if (radioInput) {
-                radioInput.checked = true;
-                console.log('💳 Default payment method set to:', radioInput.value);
+            console.log('✅ DOM Elements loaded');
+            
+            // تأكد من اختيار أول طريقة دفع
+            const firstPaymentMethod = document.querySelector('.payment-method');
+            if (firstPaymentMethod) {
+                firstPaymentMethod.classList.add('active');
+                const radioInput = firstPaymentMethod.querySelector('input[type="radio"]');
+                if (radioInput) {
+                    radioInput.checked = true;
+                    console.log('💳 Default payment method set to:', radioInput.value);
+                }
             }
-        }
-        
-        console.log('📥 Fetching products...');
-        fetchProducts();
-        console.log('✅ Cashier POS System Ready!');
+
+            console.log('📥 Fetching products...');
+            fetchProducts();
+            console.log('✅ Cashier POS System Ready!');
+        });
     </script>
 </body>
 </html>
+
 

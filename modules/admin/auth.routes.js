@@ -4,7 +4,7 @@ const isAuthenticated = require("../../core/middlewares/isAuth");
 router.get("/dashboard", (req, res) => {
   // التحقق من تسجيل الدخول
   if (!req.session.user) {
-    return res.redirect('/auth/login');
+    return res.redirect('/login');
   }
   
   // التحقق من الدور

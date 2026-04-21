@@ -64,6 +64,8 @@ const dbPool = mysql.createPool({
   queueLimit: 0
 });
 
+
+
 const sessionStore = new MySqlStore({
   expiration: 8 * 60 * 60 * 1000, // 8 ساعات
   createDatabaseTable: true,
@@ -110,7 +112,7 @@ app.use('/api', apiLimiter);
 
 // ==================== Routes ====================
 // Unified Authentication (يجب أن يكون أول route)
-app.use("/auth", unifiedAuth);
+app.use("/", unifiedAuth);
 // PUBLIC API Routes (بدون مصادقة)
 app.use("/api", chatbotRoutes);
 // ملاحظة مهمة: /api/products يجب أن يكون متاح بدون مصادقة (عام)

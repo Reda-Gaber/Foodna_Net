@@ -43,8 +43,16 @@ const createAccount = async (req, res) => {
       Password:      hashedPassword
     });
 
-    req.session.userId = customerId;
-    req.session.email  = email;
+    req.session.userId        = customerId;
+    req.session.email         = email;
+    req.session.role          = 'Client';
+    req.session.authenticated = true;
+    req.session.user = {
+      id:    customerId,
+      name:  username,
+      email: email,
+      role:  'Client'
+    };
 
     const next = req.body?.next || req.query?.next;
     req.session.save((err) => {
@@ -62,24 +70,44 @@ const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await authModel.findUserByEmail(email);
-    if (!user) return res.status(401).json({ message: 'Invalid email or password' });
+
+    if (!user) {
+      // تحقق من نوع الطلب - JSON أو HTML form
+      const wantsJson = req.headers['accept']?.includes('application/json') || req.xhr;
+      if (wantsJson) return res.status(401).json({ success: false, message: 'البريد الإلكتروني أو كلمة المرور غير صحيحة' });
+      return res.status(401).json({ success: false, message: 'البريد الإلكتروني أو كلمة المرور غير صحيحة' });
+    }
 
     const isMatch = await bcrypt.compare(password, user.Password);
-    if (!isMatch) return res.status(401).json({ message: 'Invalid email or password' });
+    if (!isMatch) {
+      return res.status(401).json({ success: false, message: 'البريد الإلكتروني أو كلمة المرور غير صحيحة' });
+    }
 
+    // حفظ بيانات كاملة في الـ session
     req.session.userId        = user.Customer_Id;
     req.session.email         = user.Email;
+    req.session.role          = 'Client';
     req.session.authenticated = true;
+    req.session.user = {
+      id:    user.Customer_Id,
+      name:  user.Customer_Name,
+      email: user.Email,
+      role:  'Client'
+    };
 
     const next = req.body?.next || req.query?.next;
     req.session.save((err) => {
       if (err) console.error('Session save error after login:', err);
-      if (next) return res.redirect(decodeURIComponent(next));
-      return res.redirect('/');
+      // دائماً نرجع JSON للـ fetch handler في الصفحة
+      return res.json({
+        success: true,
+        message: 'تم تسجيل الدخول بنجاح',
+        redirect: next ? decodeURIComponent(next) : '/'
+      });
     });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: 'Server error' });
+    return res.status(500).json({ success: false, message: 'خطأ في الخادم' });
   }
 };
 

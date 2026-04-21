@@ -97,8 +97,87 @@ loginForm.addEventListener('submit', (event) => {
     return;
   }
 
-  loginForm.submit();
+  // إرسال بـ fetch عشان نعرض رسائل الخطأ بشكل منسق بدل JSON خام
+  const submitBtn = loginForm.querySelector('button[type="submit"]');
+  if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'جاري تسجيل الدخول...'; }
+
+  const formData = new FormData(loginForm);
+  fetch('/user/login', {
+    method: 'POST',
+    body: formData,
+    credentials: 'include',
+    headers: { 'Accept': 'application/json' }
+  })
+  .then(async res => {
+    const text = await res.text();
+    // لو الرد مش JSON يعني redirect ناجح
+    try {
+      const data = JSON.parse(text);
+      if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'تسجيل الدخول'; }
+      if (data.message && (data.message.toLowerCase().includes('invalid') || res.status === 401)) {
+        showLoginError('❌ البريد الإلكتروني أو كلمة المرور غير صحيحة');
+      } else if (!res.ok) {
+        showLoginError('❌ ' + (data.message || data.error || 'حدث خطأ، حاول مرة أخرى'));
+      } else {
+        // نجاح
+        window.location.href = data.redirect || '/';
+      }
+    } catch(e) {
+      // مش JSON = redirect ناجح من السيرفر
+      if (res.redirected) {
+        window.location.href = res.url;
+      } else {
+        window.location.href = '/';
+      }
+    }
+  })
+  .catch(err => {
+    if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'تسجيل الدخول'; }
+    showLoginError('❌ خطأ في الاتصال بالخادم، حاول مرة أخرى');
+  });
 });
+
+function showLoginError(message) {
+  // إزالة أي رسالة خطأ قديمة
+  const existing = document.getElementById('login-error-banner');
+  if (existing) existing.remove();
+
+  const banner = document.createElement('div');
+  banner.id = 'login-error-banner';
+  banner.style.cssText = `
+    background: #fff0f0;
+    border: 1.5px solid #e62a32;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin: 12px 0;
+    color: #c62828;
+    font-family: var(--font-1, 'Kufam', sans-serif);
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    animation: shake 0.4s ease;
+  `;
+  banner.innerHTML = '<i class="ri-error-warning-line" style="font-size:18px"></i> ' + message.replace('❌ ','');
+  
+  // إدراج الرسالة فوق زر الإرسال
+  const submitBtn = loginForm.querySelector('button[type="submit"]');
+  loginForm.insertBefore(banner, submitBtn);
+
+  // إزالة الرسالة بعد 5 ثواني
+  setTimeout(() => { banner.style.opacity = '0'; banner.style.transition = 'opacity 0.5s'; setTimeout(() => banner.remove(), 500); }, 5000);
+
+  // CSS أنيميشن للاهتزاز
+  if (!document.getElementById('shake-style')) {
+    const style = document.createElement('style');
+    style.id = 'shake-style';
+    style.textContent = '@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}';
+    document.head.appendChild(style);
+  }
+}
 
 // تحقق من فورم Register
 const registerForm = document.querySelector(".myform");
@@ -122,7 +201,7 @@ registerForm.addEventListener('submit', (event) => {
   passwordError.textContent = '';
   confirmPasswordError.textContent = '';
 
-  const regUsername = /^[a-zA-Z\s]{3,50}$/;
+  const regUsername = /^[\u0600-\u06FFa-zA-Z\s]{3,50}$/; // يقبل عربي وإنجليزي
   const regEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const regPhone = /^[0-9]{10,15}$/;
 

@@ -1,0 +1,556 @@
+/* ============================================================
+   Checkout Page Styles - صفحة إتمام الطلب
+   ============================================================ */
+
+.checkout-main {
+  background: var(--section-background, #f6f6f6);
+  min-height: 100vh;
+  padding-bottom: 60px;
+}
+
+/* Hero رأس الصفحة */
+.checkout-hero {
+  background: #000;
+  color: #fff;
+  padding: 30px 0 20px;
+  margin-top: 0;
+  text-align: center;
+}
+.checkout-hero .container {
+  padding: 10px 20px;
+}
+.checkout-title {
+  color: #fff;
+  font-size: 1.8rem;
+  font-family: var(--font-1, 'Kufam', sans-serif);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.checkout-breadcrumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+}
+.checkout-breadcrumb a {
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+}
+.checkout-breadcrumb a:hover { color: #fff; }
+
+/* Grid الرئيسي */
+.checkout-container {
+  max-width: 1100px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+.checkout-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+@media (max-width: 768px) {
+  .checkout-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---- ملخص الطلب ---- */
+.checkout-summary,
+.checkout-payment {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+}
+
+.section-label {
+  font-size: 1.1rem;
+  font-family: var(--font-1, 'Kufam', sans-serif);
+  font-weight: bold;
+  color: var(--title-color, #1a1a4e);
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 2px solid var(--main-color, #e62a32);
+  padding-bottom: 10px;
+}
+
+/* عناصر السلة */
+.checkout-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 20px;
+  max-height: 380px;
+  overflow-y: auto;
+  padding-left: 4px;
+}
+.checkout-items-list::-webkit-scrollbar { width: 4px; }
+.checkout-items-list::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
+
+.checkout-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px;
+  border-radius: 10px;
+  background: var(--section-background, #f9f9f9);
+  border: 1px solid #eee;
+}
+.checkout-item img {
+  width: 65px;
+  height: 65px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+.checkout-item-info {
+  flex: 1;
+  min-width: 0;
+}
+.checkout-item-name {
+  font-weight: bold;
+  font-family: var(--font-1, 'Kufam', sans-serif);
+  font-size: 14px;
+  color: var(--title-color, #1a1a4e);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 4px;
+}
+.checkout-item-qty {
+  font-size: 12px;
+  color: #888;
+}
+.checkout-item-price {
+  font-weight: bold;
+  color: var(--main-color, #e62a32);
+  font-size: 15px;
+  white-space: nowrap;
+}
+
+.empty-cart-msg {
+  text-align: center;
+  padding: 30px;
+  color: #aaa;
+}
+.empty-cart-msg i { font-size: 3rem; margin-bottom: 10px; display: block; }
+.back-to-shop-btn {
+  display: inline-block;
+  margin-top: 12px;
+  background: var(--main-color, #e62a32);
+  color: #fff;
+  padding: 8px 24px;
+  border-radius: 20px;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+/* قسم الكوبون */
+.coupon-section {
+  border: 1px dashed #ddd;
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 18px;
+}
+.coupon-section h3 {
+  font-size: 14px;
+  margin-bottom: 10px;
+  color: var(--title-color, #1a1a4e);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.coupon-input-row {
+  display: flex;
+  gap: 8px;
+}
+.coupon-input-row input {
+  flex: 1;
+  padding: 9px 12px;
+  border: 1.5px solid #ddd;
+  border-radius: 8px;
+  font-family: var(--font-1, 'Kufam', sans-serif);
+  font-size: 13px;
+  outline: none;
+  transition: border 0.2s;
+  text-align: right;
+  direction: rtl;
+}
+.coupon-input-row input:focus { border-color: var(--main-color, #e62a32); }
+.coupon-input-row button {
+  background: var(--main-color, #e62a32);
+  color: #fff;
+  border: none;
+  padding: 9px 18px;
+  border-radius: 8px;
+  font-family: var(--font-1, 'Kufam', sans-serif);
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background 0.2s;
+}
+.coupon-input-row button:hover { background: #b71c1c; }
+.coupon-msg { font-size: 12px; margin-top: 6px; }
+.coupon-msg.success { color: #4caf50; }
+.coupon-msg.error { color: var(--main-color, #e62a32); }
+
+/* الإجماليات */
+.checkout-totals {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.totals-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #555;
+  padding: 6px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+.grand-total {
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--title-color, #1a1a4e);
+  border-bottom: none;
+  border-top: 2px solid #eee;
+  padding-top: 12px;
+  margin-top: 4px;
+}
+.grand-total span:last-child { color: var(--main-color, #e62a32); }
+
+/* ---- نموذج الدفع ---- */
+.payment-section {
+  margin-bottom: 24px;
+}
+
+.form-group {
+  margin-bottom: 14px;
+}
+.form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: bold;
+  color: var(--title-color, #1a1a4e);
+  margin-bottom: 6px;
+  font-family: var(--font-1, 'Kufam', sans-serif);
+}
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 10px;
+  font-family: var(--font-1, 'Kufam', sans-serif);
+  font-size: 14px;
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+  background: #fafafa;
+  text-align: right;
+  direction: rtl;
+  resize: none;
+}
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: var(--main-color, #e62a32);
+  box-shadow: 0 0 0 3px rgba(230,42,50,0.1);
+  background: #fff;
+}
+
+/* طرق الدفع */
+.payment-methods {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+@media (max-width: 500px) {
+  .payment-methods { grid-template-columns: 1fr 1fr; }
+}
+.payment-method-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 14px 8px;
+  border-radius: 12px;
+  border: 2px solid #e0e0e0;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  text-align: center;
+  font-size: 12px;
+  font-family: var(--font-1, 'Kufam', sans-serif);
+  font-weight: bold;
+  color: #555;
+  background: #fafafa;
+}
+.payment-method-card i {
+  font-size: 1.6rem;
+  color: #888;
+}
+.payment-method-card.active {
+  border-color: var(--main-color, #e62a32);
+  background: rgba(230,42,50,0.05);
+  color: var(--main-color, #e62a32);
+}
+.payment-method-card.active i { color: var(--main-color, #e62a32); }
+.method-check {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--main-color, #e62a32);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 10px;
+}
+.payment-method-card.active .method-check { display: flex; }
+
+/* ---- بطاقة الدفع المرئية ---- */
+.card-form-section,
+.online-form-section {
+  background: var(--section-background, #f9f9f9);
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 16px;
+  border: 1px solid #eee;
+}
+
+.credit-card-preview {
+  background: linear-gradient(135deg, #1a1a4e, #e62a32);
+  border-radius: 16px;
+  padding: 22px 24px;
+  color: #fff;
+  margin-bottom: 18px;
+  min-height: 160px;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  font-family: 'Courier New', monospace;
+}
+.card-chip {
+  width: 38px;
+  height: 28px;
+  background: linear-gradient(135deg, #f5c518, #e0a800);
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+.card-number-display {
+  font-size: 1.25rem;
+  letter-spacing: 3px;
+  margin-bottom: 18px;
+  font-weight: bold;
+}
+.card-info-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
+}
+.card-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin-bottom: 2px;
+}
+.card-holder-display,
+.card-expiry-display {
+  font-size: 13px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+.card-logo-area {
+  margin-right: auto;
+  opacity: 0.9;
+}
+
+.form-row-two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* خيارات المحافظ */
+.wallet-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+.wallet-opt {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: var(--font-1, 'Kufam', sans-serif);
+  transition: all 0.2s;
+  background: #fafafa;
+  color: #555;
+}
+.wallet-opt.active {
+  border-color: var(--main-color, #e62a32);
+  background: rgba(230,42,50,0.05);
+  color: var(--main-color, #e62a32);
+  font-weight: bold;
+}
+.wallet-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* رسالة خطأ/نجاح */
+.checkout-msg-bar {
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-family: var(--font-1, 'Kufam', sans-serif);
+  font-size: 14px;
+  margin-bottom: 14px;
+  text-align: center;
+  font-weight: bold;
+}
+.checkout-msg-bar.success { background: #e8f5e9; color: #2e7d32; border: 1.5px solid #a5d6a7; }
+.checkout-msg-bar.error { background: #ffebee; color: #c62828; border: 1.5px solid #ef9a9a; }
+.checkout-msg-bar.info { background: #e3f2fd; color: #1565c0; border: 1.5px solid #90caf9; }
+
+/* زر تأكيد الطلب */
+.confirm-order-btn {
+  width: 100%;
+  background: var(--main-color, #e62a32);
+  color: #fff;
+  border: none;
+  padding: 16px;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-family: var(--font-1, 'Kufam', sans-serif);
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  box-shadow: 0 4px 15px rgba(230,42,50,0.3);
+}
+.confirm-order-btn:hover {
+  background: #b71c1c;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(230,42,50,0.4);
+}
+.confirm-order-btn:active { transform: translateY(0); }
+.confirm-order-btn:disabled {
+  background: #bbb;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.secure-note {
+  text-align: center;
+  font-size: 12px;
+  color: #aaa;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+/* ---- مودال النجاح ---- */
+.order-success-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  border-radius: 20px;
+  padding: 40px 30px;
+  text-align: center;
+  z-index: 9999;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes popIn {
+  from { transform: translate(-50%, -50%) scale(0.7); opacity: 0; }
+  to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 9998;
+  backdrop-filter: blur(3px);
+}
+.success-animation { margin-bottom: 20px; }
+.success-circle {
+  width: 80px;
+  height: 80px;
+  background: #4caf50;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  animation: bounceIn 0.6s ease;
+}
+@keyframes bounceIn {
+  0% { transform: scale(0); }
+  60% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+.success-circle i { font-size: 2.5rem; color: #fff; }
+.order-success-modal h2 {
+  font-family: var(--font-1, 'Kufam', sans-serif);
+  color: var(--title-color, #1a1a4e);
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+}
+.order-success-modal p {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+.success-btns {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 20px;
+}
+.track-btn, .home-btn {
+  padding: 10px 24px;
+  border-radius: 20px;
+  text-decoration: none;
+  font-family: var(--font-1, 'Kufam', sans-serif);
+  font-weight: bold;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+.track-btn {
+  background: var(--main-color, #e62a32);
+  color: #fff;
+}
+.track-btn:hover { background: #b71c1c; }
+.home-btn {
+  border: 2px solid #ddd;
+  color: #555;
+}
+.home-btn:hover { border-color: var(--main-color, #e62a32); color: var(--main-color, #e62a32); }

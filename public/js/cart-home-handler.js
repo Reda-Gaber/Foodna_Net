@@ -254,10 +254,13 @@
   }
 
   /**
-   * Handle checkout
+   * Handle checkout - يودي لصفحة /checkout
    */
   function handleCheckout() {
-    if (!window.cartState) return;
+    if (!window.cartState) {
+      window.location.href = '/checkout';
+      return;
+    }
 
     const items = window.cartState.getItems();
 
@@ -266,26 +269,19 @@
       return;
     }
 
-    // Check authentication
-    if (typeof window.isAuthenticated !== 'function' || !window.isAuthenticated()) {
-      showMessage('يجب تسجيل الدخول أولاً لإتمام الطلب!', 'error');
-      setTimeout(() => {
-        try {
-          localStorage.setItem('pendingCart', JSON.stringify(items));
-          localStorage.setItem('postAuthRedirect', window.location.pathname);
-          localStorage.setItem('checkoutIntent', 'true');
-        } catch (e) {
-          console.warn('Could not save pending cart');
-        }
-        window.location.href = '/register';
-      }, 800);
+    // لو مش مسجّل دخول، احفظ السلة وودّيه للتسجيل
+    if (window.auth && window.auth.authenticated === false) {
+      try {
+        localStorage.setItem('pendingCart', JSON.stringify(items));
+        localStorage.setItem('checkoutIntent', 'true');
+        localStorage.setItem('postAuthRedirect', '/checkout');
+      } catch (e) {}
+      window.location.href = '/user/register';
       return;
     }
 
-    // Proceed with checkout
-    const totals = window.cartState.getTotals();
-    showMessage(`جاري معالجة الطلب بقيمة ${totals.subtotal.toFixed(2)} جنيه...`, 'info');
-    submitOrder(items, totals.subtotal);
+    // مسجّل دخول → روح لصفحة الـ checkout
+    window.location.href = '/checkout';
   }
 
   /**

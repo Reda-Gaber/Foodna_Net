@@ -449,14 +449,14 @@ function renderProducts() {
         const safeStock = Number.isFinite(Number(product.stock)) ? product.stock : 0;
         return `
         <tr>
-            <td>${product.id}</td>
-            <td>${product.name}</td>
-            <td>${product.category}</td>
-            <td>جنيه ${priceDisplay}</td>
-            <td>${discountDisplay}%</td>
-            <td>${safeStock}</td>
-            <td><span class="status-badge ${product.status}">${product.status}</span></td>
-            <td>
+            <td class="important">${product.id}</td>
+            <td class="important">${product.name}</td>
+            <td class="secondary">${product.category}</td>
+            <td class="important">جنيه ${priceDisplay}</td>
+            <td class="secondary">${discountDisplay}%</td>
+            <td class="secondary">${safeStock}</td>
+            <td class="secondary"><span class="status-badge ${product.status}">${product.status}</span></td>
+            <td class="actions">
                 <div class="action-buttons">
                     <button class="action-btn edit" data-product-id="${product.id}" data-action="edit">تعديل</button>
                     <button class="action-btn delete" data-product-id="${product.id}" data-action="delete">حذف</button>
@@ -907,13 +907,13 @@ function renderCustomers() {
 
     tbody.innerHTML = state.customers.map(customer => `
         <tr>
-            <td>${customer.id}</td>
-            <td>${customer.name}</td>
-            <td>${customer.email}</td>
-            <td>${customer.phone}</td>
-            <td><strong>${customer.orders}</strong></td>
-            <td>جنيه ${customer.totalSpent.toFixed(2)}</td>
-            <td>
+            <td class="important">${customer.id}</td>
+            <td class="important">${customer.name}</td>
+            <td class="secondary">${customer.email}</td>
+            <td class="secondary">${customer.phone}</td>
+            <td class="secondary"><strong>${customer.orders}</strong></td>
+            <td class="secondary">جنيه ${customer.totalSpent.toFixed(2)}</td>
+            <td class="actions">
                 <div class="action-buttons">
                     <button class="action-btn edit" onclick="editCustomer(${customer.id})" style="font-size: 12px; padding: 5px 10px;">تعديل</button>
                 </div>
@@ -987,12 +987,12 @@ function renderOrders() {
 
     tbody.innerHTML = state.orders.map(order => `
         <tr>
-            <td><strong>#${order.id}</strong></td>
-            <td>${order.customer}</td>
-            <td>${order.date}</td>
-            <td><strong>جنيه ${order.total.toFixed(2)}</strong></td>
-            <td><span class="status-badge ${order.status}">${getArabicOrderStatus(order.status)}</span></td>
-            <td>
+            <td class="important"><strong>#${order.id}</strong></td>
+            <td class="important">${order.customer}</td>
+            <td class="secondary">${order.date}</td>
+            <td class="important"><strong>جنيه ${order.total.toFixed(2)}</strong></td>
+            <td class="secondary"><span class="status-badge ${order.status}">${getArabicOrderStatus(order.status)}</span></td>
+            <td class="actions">
                 <div class="action-buttons">
                     <button class="action-btn edit" onclick="updateOrderStatus(${order.id})" style="font-size: 12px; padding: 5px 10px;">تحديث</button>
                 </div>
@@ -1666,6 +1666,224 @@ function openModal(title, body) {
 
 function closeModal() {
     document.getElementById('modal').classList.remove('active');
+}
+
+// =====================================================
+// SEARCH FUNCTIONALITY
+// =====================================================
+let searchTimeout;
+function handleSearch() {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+        const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+        
+        if (!searchTerm) {
+            // If search is empty, return to dashboard
+            showSection('dashboard');
+            return;
+        }
+
+        // Determine search type based on keywords
+        const productKeywords = ['بيتزا', 'برجر', 'مشروب', 'حلوى', 'مقبلات', 'يانكي', 'صلصة', 'نصف ونصف', 'product', 'food', 'meal'];
+        const customerKeywords = ['عميل', 'زبون', 'customer', 'client'];
+        const orderKeywords = ['طلب', 'order', 'invoice'];
+        const offerKeywords = ['عرض', 'خصم', 'discount', 'offer', 'deal'];
+        const couponKeywords = ['كوبون', 'coupon', 'code', 'promo'];
+        const categoryKeywords = ['تصنيف', 'فئة', 'category', 'type'];
+        
+        // Check if search term matches product keywords or contains Arabic/English product names
+        const isProductSearch = productKeywords.some(keyword => searchTerm.includes(keyword)) || 
+                               state.products.some(p => p.name.toLowerCase().includes(searchTerm));
+        
+        // Check if search term matches customer keywords or looks like a name/email
+        const isCustomerSearch = customerKeywords.some(keyword => searchTerm.includes(keyword)) || 
+                                state.customers.some(c => 
+                                    c.name.toLowerCase().includes(searchTerm) || 
+                                    c.email.toLowerCase().includes(searchTerm)
+                                );
+        
+        // Check if search term matches order keywords or order IDs
+        const isOrderSearch = orderKeywords.some(keyword => searchTerm.includes(keyword)) || 
+                             state.orders.some(o => o.id.toString().includes(searchTerm));
+        
+        // Check if search term matches offer keywords
+        const isOfferSearch = offerKeywords.some(keyword => searchTerm.includes(keyword));
+        
+        // Check if search term matches coupon keywords
+        const isCouponSearch = couponKeywords.some(keyword => searchTerm.includes(keyword));
+        
+        // Check if search term matches category keywords
+        const isCategorySearch = categoryKeywords.some(keyword => searchTerm.includes(keyword));
+        
+        if (isProductSearch) {
+            // Navigate to products section and filter results
+            showSection('products');
+            filterProducts(searchTerm);
+        } else if (isCustomerSearch) {
+            // Navigate to customers section and filter results
+            showSection('customers');
+            filterCustomers(searchTerm);
+        } else if (isOrderSearch) {
+            // Navigate to orders section and filter results
+            showSection('orders');
+            filterOrders(searchTerm);
+        } else if (isOfferSearch) {
+            // Navigate to offers section
+            showSection('offers');
+        } else if (isCouponSearch) {
+            // Navigate to coupons section
+            showSection('coupons');
+        } else if (isCategorySearch) {
+            // Navigate to categories section
+            showSection('categories');
+        } else {
+            // Default to products if no specific match
+            showSection('products');
+            filterProducts(searchTerm);
+        }
+    }, 300); // 300ms debounce
+}
+
+function showSection(sectionName) {
+    // Update active nav
+    document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+    const navItem = document.querySelector(`.nav-item[data-section="${sectionName}"]`);
+    if (navItem) navItem.classList.add('active');
+
+    // Show section
+    document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+    const section = document.getElementById(sectionName + '-section');
+    if (section) section.classList.add('active');
+
+    // Update page title
+    const titles = {
+        dashboard: 'لوحة المعلومات',
+        products: 'المنتجات',
+        customers: 'العملاء',
+        orders: 'الطلبات',
+        categories: 'التصنيفات',
+        offers: 'العروض',
+        coupons: 'الكوبونات',
+        inventory: 'المخزون'
+    };
+    document.getElementById('pageTitle').textContent = titles[sectionName] || 'لوحة التحكم';
+}
+
+function filterProducts(searchTerm) {
+    const tbody = document.getElementById('productsTableBody');
+    if (!tbody) return;
+
+    let productsToShow = state.products;
+    
+    if (searchTerm) {
+        productsToShow = state.products.filter(product => 
+            product.name.toLowerCase().includes(searchTerm) ||
+            product.category.toLowerCase().includes(searchTerm) ||
+            product.id.toString().includes(searchTerm)
+        );
+    }
+
+    if (productsToShow.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 20px; color: #666;">
+            ${searchTerm ? `لا توجد منتجات تطابق "${searchTerm}"` : 'لا توجد منتجات'}
+        </td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = productsToShow.map(product => `
+        <tr>
+            <td>${product.id}</td>
+            <td>${product.name}</td>
+            <td>${product.category}</td>
+            <td>جنيه ${product.price.toFixed(2)}</td>
+            <td>${product.discount || 0}%</td>
+            <td>${product.stock}</td>
+            <td><span class="status-badge ${product.status === 'نشط' ? 'active' : 'inactive'}">${product.status}</span></td>
+            <td>
+                <div class="action-buttons">
+                    <button class="action-btn edit" onclick="editProduct(${product.id})" style="font-size: 12px; padding: 5px 10px;">تعديل</button>
+                    <button class="action-btn delete" onclick="deleteProduct(${product.id})" style="font-size: 12px; padding: 5px 10px;">حذف</button>
+                </div>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function filterCustomers(searchTerm) {
+    const tbody = document.getElementById('customersTableBody');
+    if (!tbody) return;
+
+    let customersToShow = state.customers;
+    
+    if (searchTerm) {
+        customersToShow = state.customers.filter(customer => 
+            customer.name.toLowerCase().includes(searchTerm) ||
+            customer.email.toLowerCase().includes(searchTerm) ||
+            customer.phone.includes(searchTerm) ||
+            customer.id.toString().includes(searchTerm)
+        );
+    }
+
+    if (customersToShow.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 20px; color: #666;">
+            ${searchTerm ? `لا يوجد عملاء يطابقون "${searchTerm}"` : 'لا يوجد عملاء'}
+        </td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = customersToShow.map(customer => `
+        <tr>
+            <td>${customer.id}</td>
+            <td>${customer.name}</td>
+            <td>${customer.email}</td>
+            <td>${customer.phone}</td>
+            <td><strong>${customer.orders}</strong></td>
+            <td>جنيه ${customer.totalSpent.toFixed(2)}</td>
+            <td>
+                <div class="action-buttons">
+                    <button class="action-btn edit" onclick="editCustomer(${customer.id})" style="font-size: 12px; padding: 5px 10px;">تعديل</button>
+                </div>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function filterOrders(searchTerm) {
+    const tbody = document.getElementById('ordersTableBody');
+    if (!tbody) return;
+
+    let ordersToShow = state.orders;
+    
+    if (searchTerm) {
+        ordersToShow = state.orders.filter(order => 
+            order.id.toString().includes(searchTerm) ||
+            order.customer.toLowerCase().includes(searchTerm) ||
+            order.date.includes(searchTerm) ||
+            order.total.toString().includes(searchTerm)
+        );
+    }
+
+    if (ordersToShow.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 20px; color: #666;">
+            ${searchTerm ? `لا توجد طلبات تطابق "${searchTerm}"` : 'لا توجد طلبات'}
+        </td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = ordersToShow.map(order => `
+        <tr>
+            <td><strong>#${order.id}</strong></td>
+            <td>${order.customer}</td>
+            <td>${order.date}</td>
+            <td><strong>جنيه ${order.total.toFixed(2)}</strong></td>
+            <td><span class="status-badge ${order.status}">${getArabicOrderStatus(order.status)}</span></td>
+            <td>
+                <div class="action-buttons">
+                    <button class="action-btn edit" onclick="updateOrderStatus(${order.id})" style="font-size: 12px; padding: 5px 10px;">تحديث</button>
+                </div>
+            </td>
+        </tr>
+    `).join('');
 }
 
 // =====================================================

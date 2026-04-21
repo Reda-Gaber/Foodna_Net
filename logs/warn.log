@@ -128,3 +128,33 @@
 [2026-02-24T21:54:30.901Z] WARN: GROQ_API_KEY not configured in environment
 [2026-02-24T21:57:11.415Z] WARN: GROQ_API_KEY not configured in environment
 [2026-02-24T22:00:33.903Z] WARN: GROQ_API_KEY not configured in environment
+[2026-04-18T04:06:08.631Z] WARN: Failed to delete image {
+  "errno": -4058,
+  "code": "ENOENT",
+  "syscall": "unlink",
+  "path": "D:\\programming\\projects\\Foodna_Net\\public\\images\\products\\1762935312969-229292621.png"
+}
+[2026-04-18T04:06:38.936Z] WARN: Failed to delete image {
+  "errno": -4058,
+  "code": "ENOENT",
+  "syscall": "unlink",
+  "path": "D:\\programming\\projects\\Foodna_Net\\public\\images\\products\\1762935081163-376096564.png"
+}
+[2026-04-18T04:06:49.687Z] WARN: Failed to delete image {
+  "errno": -4058,
+  "code": "ENOENT",
+  "syscall": "unlink",
+  "path": "D:\\programming\\projects\\Foodna_Net\\public\\images\\products\\1762935081163-376096564.png"
+}
+[2026-04-18T04:07:45.613Z] WARN: Failed to delete image {
+  "errno": -4058,
+  "code": "ENOENT",
+  "syscall": "unlink",
+  "path": "D:\\programming\\projects\\Foodna_Net\\public\\images\\products\\1762909185861-969414054.png"
+}
+[2026-04-18T04:07:52.275Z] WARN: Failed to delete image {
+  "errno": -4058,
+  "code": "ENOENT",
+  "syscall": "unlink",
+  "path": "D:\\programming\\projects\\Foodna_Net\\public\\images\\products\\1762909185861-969414054.png"
+}

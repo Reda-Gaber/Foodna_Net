@@ -22,7 +22,7 @@
  </div>
  <div class="category-one">
  <div class="container">
- <div class="products-card">
+ <div class="productss">
  <div class="products-grid_1">
     </div>
    </div>
@@ -47,12 +47,18 @@
                         const newPrice = oldPrice * (1 - discount / 100);
                         const el = document.createElement('div');
                         el.className = 'product product_only';
-                        el.innerHTML = `<img src="/images/products/${p.Image}" alt="${p.Product_Name}" style="width:100%;border-radius:8px;">
+                        el.innerHTML = `
+                            <div class="product-discount-badge">خصم ${discount.toFixed(0)}%</div>
+                            <a href="/product-page?id=${p.Product_ID}" class="product-img-link">
+                                <img src="/images/products/${p.Image}" alt="${p.Product_Name}" class="product-img" style="border-radius:0;">
+                            </a>
                             <div class="product-info">
-                                <h4>${p.Product_Name}</h4>
-                                <div class="price-block">
-                                    <span style="text-decoration:line-through;color:#999;margin-right:8px">${oldPrice.toFixed(2)} جنيه</span>
-                                    <span style="color:#e62a32;font-weight:700">${newPrice.toFixed(2)} جنيه</span>
+                                <a href="/product-page?id=${p.Product_ID}" class="product-title-link">
+                                    <h3>${p.Product_Name}</h3>
+                                </a>
+                                <div class="price-row">
+                                    <span class="price price__old">${oldPrice.toFixed(2)} جنيه</span>
+                                    <span class="price price__new">${newPrice.toFixed(2)} جنيه</span>
                                 </div>
                             </div>
                             <div class="button__actions"><button class="Product__actions"><a href="/product-page?id=${p.Product_ID}">اختر الخيارات</a></button></div>`;

@@ -12,7 +12,7 @@ const Logger = require('../../core/utils/logger');
  */
 exports.getKitchenOrders = async (req, res) => {
   try {
-    // الحصول على الطلبات التي لم تكتمل بعد (Pending و Shipped)
+    // الحصول على الطلبات التي لم تكتمل بعد (Pending و Processing و Ready)
     const [orders] = await db.query(
       `SELECT DISTINCT
           o.Order_ID,
@@ -23,7 +23,7 @@ exports.getKitchenOrders = async (req, res) => {
        FROM Orders o
        LEFT JOIN Customers c ON o.Customer_ID = c.Customer_Id
        LEFT JOIN Order_Items oi ON o.Order_ID = oi.Order_ID
-       WHERE o.Order_Status IN ('Pending', 'Shipped')
+       WHERE o.Order_Status IN ('Pending', 'Processing', 'Ready')
        ORDER BY o.Created_At ASC
        LIMIT 50`
     );
@@ -94,11 +94,10 @@ exports.updateKitchenStatus = async (req, res) => {
     // Database ENUM values: 'Pending', 'Shipped', 'Delivered', 'Cancelled'
     const statusMap = {
       'Pending': 'Pending',
-      'Processing': 'Shipped',    // جاري المعالجة -> تم الشحن
-      'Ready': 'Shipped',         // جاهز -> تم الشحن
-      'Completed': 'Shipped',     // مكتمل -> تم الشحن
+      'Processing': 'Processing',    // جاري المعالجة
+      'Ready': 'Ready',         // جاهز
+      'Completed': 'Delivered',     // مكتمل -> تم التسليم
       'Delivered': 'Delivered',
-      'Shipped': 'Shipped',
       'Cancelled': 'Cancelled'
     };
 
