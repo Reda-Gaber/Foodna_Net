@@ -1,8 +1,6 @@
 (function(){
   'use strict';
 
-  console.log('[FSD] Script loaded');
-
   // Run after DOM ready to ensure elements exist
   function onReady(fn){
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn);
@@ -16,7 +14,6 @@
     const bodyRole = document.body && document.body.getAttribute && document.body.getAttribute('data-role');
     const isCustomer = !isAdminArea && (!bodyRole || bodyRole === 'customer');
     if (!isCustomer){
-      console.log('[FSD] Not customer interface – skipping user/search overrides');
       return;
     }
 
@@ -46,11 +43,9 @@
         });
         let data = { authenticated: false };
         try{ data = await res.json(); }catch(e){ /* ignore parse error */ }
-        console.log('[FSD] Auth check response:', data);
         if (!res.ok) return { authenticated: false };
         return data;
       }catch(e){
-        console.warn('[FSD] Auth check failed', e);
         return { authenticated: false };
       }
     }
@@ -60,26 +55,19 @@
         // Prefer backend verification but handle possible race with window.auth
         const auth = await checkAuth();
         if (auth && auth.authenticated){
-          console.log('[FSD] Customer authenticated');
-          console.log('[FSD] Redirecting to profile');
           return window.location.assign('/profile');
         }
 
         // If backend says not authenticated but navbar has set window.auth, retry once (race condition)
         if (window.auth && window.auth.authenticated){
-          console.log('[FSD] Detected window.auth=true while backend false — retrying auth check');
           await new Promise(r => setTimeout(r, 250));
           const auth2 = await checkAuth();
           if (auth2 && auth2.authenticated){
-            console.log('[FSD] Auth verified on retry — redirecting to profile');
             return window.location.assign('/profile');
           }
         }
-
-        console.log('[FSD] Redirecting to register');
         return window.location.assign('/user/register');
       }catch(err){
-        console.error('[FSD] user handler error', err);
         return window.location.assign('/user/register');
       }
     }
@@ -87,7 +75,7 @@
     // Listen for navbar's auth.changed event to keep local window.auth up-to-date
     try{
       window.addEventListener('auth.changed', function(e){
-        try{ console.log('[FSD] auth.changed event', e.detail); window.auth = e.detail; }catch(_){ }
+        try{ window.auth = e.detail; }catch(_){ }
       });
     }catch(_){ }
 
@@ -106,7 +94,6 @@
       }catch(_){ }
 
       userLink.addEventListener('click', function fsd_user_click_interceptor(ev){
-        console.log('[FSD] User icon intercepted');
         try{
           ev.preventDefault();
           if (typeof ev.stopImmediatePropagation === 'function') ev.stopImmediatePropagation();
@@ -205,7 +192,6 @@
         const items = Array.isArray(data) ? data : (data.products || data.data || []);
         renderResults(items);
       } catch(err) {
-        console.warn('[FSD] Search fetch error', err);
         const all = getLoadedProducts();
         const ql = q.toLowerCase();
         const filtered = all.filter(p => (p.Product_Name||'').toLowerCase().includes(ql)).slice(0, 50);
@@ -238,7 +224,7 @@
         const detailUrl = pid ? '/product-page?id=' + pid : '#';
 
         const imgHtml = imgSrc
-          ? `<img src="${imgSrc}" alt="${escapeHtml(name)}" style="width:60px;height:60px;object-fit:cover;border-radius:8px;" onerror="this.style.display='none'">`
+          ? `<img src="${imgSrc}" alt="${escapeHtml(name)}" style="width:60px;height:60px;object-fit:cover;border-radius:8px;">`
           : `<div style="width:60px;height:60px;background:#f0f0f0;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:22px;">🍽️</div>`;
 
         item.innerHTML = `
@@ -252,6 +238,12 @@
             <a href="${detailUrl}" style="font-size:12px;color:#555;text-decoration:underline;white-space:nowrap;">التفاصيل</a>
           </div>
         `;
+
+        const imgElement = item.querySelector('img');
+        if (imgElement) {
+          imgElement.addEventListener('error', () => { imgElement.style.display = 'none'; });
+        }
+
         frag.appendChild(item);
       });
       container.appendChild(frag);
@@ -266,8 +258,8 @@
               addToCart(payload);
               btn.textContent = '✓ أُضيف'; btn.style.background = '#10b981';
               setTimeout(() => { btn.textContent = 'أضف للسلة'; btn.style.background = ''; }, 1500);
-            } else console.warn('fsd: addToCart not found');
-          }catch(err){ console.error('fsd addToCart error', err); }
+            }
+          }catch(err){ }
         });
       });
     }
@@ -277,8 +269,8 @@
 
     function attachTriggers(){
       document.addEventListener('keydown', (e) => { if ((e.ctrlKey && e.key.toLowerCase()==='k') || (e.key==='/' )){ const active = document.activeElement; if (active && (active.tagName==='INPUT' || active.tagName==='TEXTAREA' || active.isContentEditable)) return; e.preventDefault(); openDrawer(); } });
-      let found=false; for (const sel of SEARCH_SELECTORS){ const el = document.querySelector(sel); if (!el) continue; if (el.dataset.fsdBound){ found=true; break; } el.addEventListener('click', function fsd_search_click_interceptor(ev){ console.log('[FSD] Search icon intercepted'); try{ ev.preventDefault(); if (typeof ev.stopImmediatePropagation === 'function') ev.stopImmediatePropagation(); if (typeof ev.stopPropagation === 'function') ev.stopPropagation(); }catch(_){ } openDrawer(); }, true); el.dataset.fsdBound='1'; found=true; break; }
-      if (!found){ try{ const icons = Array.from(document.querySelectorAll('header a, header button')).map(el => ({ tag: el.tagName, id: el.id, cls: el.className, href: el.getAttribute('href') })); console.log('[FSD] Header icons:', icons); }catch(err){ console.warn('[FSD] Could not enumerate header icons', err); } }
+      let found=false; for (const sel of SEARCH_SELECTORS){ const el = document.querySelector(sel); if (!el) continue; if (el.dataset.fsdBound){ found=true; break; } el.addEventListener('click', function fsd_search_click_interceptor(ev){ try{ ev.preventDefault(); if (typeof ev.stopImmediatePropagation === 'function') ev.stopImmediatePropagation(); if (typeof ev.stopPropagation === 'function') ev.stopPropagation(); }catch(_){ } openDrawer(); }, true); el.dataset.fsdBound='1'; found=true; break; }
+      if (!found){ try{ const icons = Array.from(document.querySelectorAll('header a, header button')).map(el => ({ tag: el.tagName, id: el.id, cls: el.className, href: el.getAttribute('href') })); }catch(err){ } }
     }
 
     // ----- Address Modal -----
@@ -316,7 +308,7 @@
           const res = await fetch('/auth/api/auth/check', { method: 'GET', credentials: 'include', headers: { 'Content-Type':'application/json' } });
           const data = await res.json();
           if (data && data.user && data.user.Address) addrEl.value = data.user.Address;
-        }catch(e){ console.warn('[FSD] Could not fetch stored address', e); }
+        }catch(e){ }
       })();
 
       infoEl.textContent = `المنتج: ${product.Product_Name || product.title}, السعر: ${product.Price || product.price} جنيه`;

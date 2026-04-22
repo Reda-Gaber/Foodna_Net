@@ -5,7 +5,7 @@
 
   function addToCart(product){
     const item = { id: product.id||product.Product_ID, title: product.title||product.Product_Name, price: Number(product.price||product.Price)||0, img: product.img||`images/products/${product.Image}`, quantity:1 };
-    if (window.cartState && typeof window.cartState.addItem==='function') { try{ window.cartState.addItem(item); }catch(e){console.error(e);} }
+    if (window.cartState && typeof window.cartState.addItem==='function') { try{ window.cartState.addItem(item); }catch(e){} }
     else { const s=JSON.parse(localStorage.getItem('cart'))||[]; s.push(item); localStorage.setItem('cart',JSON.stringify(s)); if (typeof updetecart==='function') updetecart(); }
     const cartEl = $('.cart'); if (cartEl) cartEl.classList.add('active');
   }
@@ -27,11 +27,11 @@
 
   function showCartMessage(msg,type='info'){ const el=document.getElementById('cart_message'); if (!el) return; el.textContent=msg; el.className='cart_message '+type; el.style.display='block'; const colors={success:'#4CAF50',error:'var(--text-color)',warning:'#ff9800',info:'#2196F3'}; el.style.backgroundColor=colors[type]||colors.info; el.style.color='#fff'; if (type!=='error') setTimeout(()=>el.style.display='none',4000); }
 
-  async function handleCheckout(){ const items=(window.cartState && typeof window.cartState.getItems==='function')?window.cartState.getItems():(JSON.parse(localStorage.getItem('cart'))||[]); if (!items||items.length===0){ showCartMessage('السلة فارغة! الرجاء إضافة منتجات.','warning'); return; } console.log('[FSD-Cart] Verifying authentication before checkout...'); let authOk=false; if (typeof window.fsd!=='undefined' && typeof window.fsd.checkAuth==='function'){ const authResult=await window.fsd.checkAuth(); console.log('[FSD-Cart] Backend auth check response:',authResult); authOk=authResult&&authResult.authenticated===true; } else if (typeof window.isAuthenticated==='function' && window.isAuthenticated()){ authOk=true; } if (!authOk){ console.log('[FSD-Cart] Not authenticated - redirecting to login'); showCartMessage('يجب تسجيل الدخول أولاً لإتمام الطلب!','error'); try{ localStorage.setItem('pendingCart',JSON.stringify(items)); localStorage.setItem('postAuthRedirect',window.location.pathname+window.location.search); localStorage.setItem('checkoutIntent','true'); }catch(e){} setTimeout(()=>{ if (typeof window.redirectToLogin==='function') window.redirectToLogin(); else window.location.href='/user/register'; },800); return; } console.log('[FSD-Cart] Customer authenticated - proceeding to checkout'); const totals=(window.cartState&&typeof window.cartState.getTotals==='function')?window.cartState.getTotals():{subtotal:items.reduce((s,i)=>(s+(i.price*i.quantity)),0)}; if (typeof window.openCheckoutModal==='function') return window.openCheckoutModal(items,totals.subtotal); showCartMessage(`جاري معالجة الطلب بقيمة ${totals.subtotal.toFixed(2)} جنيه...`,'info'); submitOrder(items, totals.subtotal); }
+  async function handleCheckout(){ const items=(window.cartState && typeof window.cartState.getItems==='function')?window.cartState.getItems():(JSON.parse(localStorage.getItem('cart'))||[]); if (!items||items.length===0){ showCartMessage('السلة فارغة! الرجاء إضافة منتجات.','warning'); return; } let authOk=false; if (typeof window.fsd!=='undefined' && typeof window.fsd.checkAuth==='function'){ const authResult=await window.fsd.checkAuth(); authOk=authResult&&authResult.authenticated===true; } else if (typeof window.isAuthenticated==='function' && window.isAuthenticated()){ authOk=true; } if (!authOk){ showCartMessage('يجب تسجيل الدخول أولاً لإتمام الطلب!','error'); try{ localStorage.setItem('pendingCart',JSON.stringify(items)); localStorage.setItem('postAuthRedirect',window.location.pathname+window.location.search); localStorage.setItem('checkoutIntent','true'); }catch(e){} setTimeout(()=>{ if (typeof window.redirectToLogin==='function') window.redirectToLogin(); else window.location.href='/user/register'; },800); return; } const totals=(window.cartState&&typeof window.cartState.getTotals==='function')?window.cartState.getTotals():{subtotal:items.reduce((s,i)=>(s+(i.price*i.quantity)),0)}; if (typeof window.openCheckoutModal==='function') return window.openCheckoutModal(items,totals.subtotal); showCartMessage(`جاري معالجة الطلب بقيمة ${totals.subtotal.toFixed(2)} جنيه...`,'info'); submitOrder(items, totals.subtotal); }
 
-  async function submitOrder(items,totalAmount){ try{ const res=await fetch('/api/orders',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({items:items.map(i=>({productId:i.id,quantity:i.quantity,price:i.price})), totalAmount, deliveryAddress:'عنوان التوصيل'})}); const data=await res.json(); if (res.status===401){ showCartMessage('يجب عليك تسجيل الدخول أولاً!','error'); try{ localStorage.setItem('pendingCart',JSON.stringify(items)); localStorage.setItem('postAuthRedirect',window.location.pathname); }catch(e){} setTimeout(()=>{ if (typeof window.redirectToLogin==='function') window.redirectToLogin(); else window.location.href='/register'; },800); return; } if (!data.success){ showCartMessage(data.message||'فشل في إنشاء الطلب','error'); return; } showCartMessage(`✓ تم إنشاء الطلب بنجاح! رقم الطلب: ${data.data.orderNumber}`,'success'); if (window.cartState&&typeof window.cartState.clear==='function') window.cartState.clear(); else localStorage.removeItem('cart'); setTimeout(()=>{ if (window.cartState&&typeof window.cartState.close==='function') window.cartState.close(); updetecart(); },1500); }catch(err){ console.error('Checkout error',err); showCartMessage('✗ خطأ في الاتصال','error'); } }
+  async function submitOrder(items,totalAmount){ try{ const res=await fetch('/api/orders',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({items:items.map(i=>({productId:i.id,quantity:i.quantity,price:i.price})), totalAmount, deliveryAddress:'عنوان التوصيل'})}); const data=await res.json(); if (res.status===401){ showCartMessage('يجب عليك تسجيل الدخول أولاً!','error'); try{ localStorage.setItem('pendingCart',JSON.stringify(items)); localStorage.setItem('postAuthRedirect',window.location.pathname); }catch(e){} setTimeout(()=>{ if (typeof window.redirectToLogin==='function') window.redirectToLogin(); else window.location.href='/register'; },800); return; } if (!data.success){ showCartMessage(data.message||'فشل في إنشاء الطلب','error'); return; } showCartMessage(`✓ تم إنشاء الطلب بنجاح! رقم الطلب: ${data.data.orderNumber}`,'success'); if (window.cartState&&typeof window.cartState.clear==='function') window.cartState.clear(); else localStorage.removeItem('cart'); setTimeout(()=>{ if (window.cartState&&typeof window.cartState.close==='function') window.cartState.close(); updetecart(); },1500); }catch(err){ showCartMessage('✗ خطأ في الاتصال','error'); } }
 
-  function bindCheckoutButtons(){ try{ $$('.btn_cart').forEach(b=>{ if (b._checkoutBound) return; b.addEventListener('click',e=>{ e.preventDefault(); handleCheckout(); }); b._checkoutBound=true; }); }catch(e){console.error(e);} }
+  function bindCheckoutButtons(){ try{ $$('.btn_cart').forEach(b=>{ if (b._checkoutBound) return; b.addEventListener('click',e=>{ e.preventDefault(); handleCheckout(); }); b._checkoutBound=true; }); }catch(e){} }
   // Ensure direct binding to the explicit checkout button (added in footer)
   function ensureDirectCheckoutBinding(){
     try{
@@ -40,7 +40,7 @@
         checkoutBtn.addEventListener('click', e=>{ e.preventDefault(); handleCheckout(); });
         checkoutBtn._checkoutBound = true;
       }
-    }catch(e){console.error(e);}  
+    }catch(e){}  
   }
 
   // Bind on DOM ready (covers scripts loaded before DOMContentLoaded)
@@ -85,7 +85,8 @@
 
   // bind toggle on DOM ready as well
   document.addEventListener('DOMContentLoaded', () => { bindCartToggleButtons(); });
-  try{ document.addEventListener('click',function(e){ const btn = e.target.closest && e.target.closest('.btn_cart'); if (btn){ e.preventDefault(); handleCheckout(); } }); }catch(e){ console.warn(e); }
+  try{ document.addEventListener('click',function(e){ const btn = e.target.closest && e.target.closest('.btn_cart'); if (btn){ e.preventDefault(); handleCheckout(); } }); }catch(e){ }
 
   window.addToCart = addToCart; window.updetecart = updetecart;
 })();
+

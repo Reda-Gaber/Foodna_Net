@@ -479,3 +479,21 @@
   "totalAmount": 100,
   "finalAmount": 100
 }
+[2026-04-22T19:22:44.440Z] AUDIT: Action: PUBLIC_ORDER_CREATED, User: system {
+  "orderId": 120035,
+  "totalAmount": 115,
+  "finalAmount": 115
+}
+[2026-04-22T20:13:13.114Z] AUDIT: Action: PUBLIC_ORDER_CREATED, User: system {
+  "orderId": 120036,
+  "totalAmount": 120,
+  "finalAmount": 120
+}
+[2026-04-22T20:13:34.810Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-04-22T20:13:55.804Z] AUDIT: Action: COUPON_CREATED, User: 8 {
+  "couponId": 1,
+  "code": "S100"
+}

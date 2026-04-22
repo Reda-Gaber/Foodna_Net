@@ -31,10 +31,10 @@
               <div class="text-product">
                 <h2 class="titel-product">${product.Product_Name}</h2>
                 <p class="description-product">${product.Description}</p>
-                <p class="points-one-product">إذا اشتريت هذا، ستحصل على ${product.Quantity} نقاط!</p>
+                <p class="points-one-product">إذا اشتريت هذا، ستحصل على ${Number(product.Quantity) || 0} نقاط!</p>
                 <div class="points-two-product">
                   <i class="ri-award-fill"></i>
-                  <p>إذا اشتريت هذا، ستحصل على ${product.Quantity} نقاط!</p>
+                  <p>إذا اشتريت هذا، ستحصل على ${Number(product.Quantity) || 0} نقاط!</p>
                 </div>
                 <div class="size-product">
                   <h3 class="size">الحجم:</h3>
@@ -53,15 +53,7 @@
               <div class="check_box">
               ${ (product.Discount && Number(product.Discount) > 0) ? (`<h2 class="price_product"><span class="old-price" style="text-decoration:line-through;color:#999;margin-right:8px">${Number(product.Price).toFixed(2)} جنيه</span><span class="new-price" style="color:#e62a32;font-weight:700">${(Number(product.Price)*(1-Number(product.Discount)/100)).toFixed(2)} جنيه</span></h2>`) : (`<h2 class="price_product">${Number(product.Price).toFixed(2)} جنيه</h2>`) }
               <!-- قسم الكومبو محذوف -->
-              <div class="sauce_product box_product">
-                <h2 class="chek_sauce">الصلصة</h2>
-                <div class="sauce-chek check_product">
-                  <button class="button_sauce">صلصة الطماطم الأصلية 🍕</button>
-                  <button class="button_sauce">صلصة الطماطم الحارة 🔥</button>
-                  <button class="button_sauce">صلصة البيستو <span>(+30 جنيه)</span></button>
-                  <button class="button_sauce">الصلصة البيضاء<span>(+30 جنيه)</span></button>
-                </div>
-              </div>
+              <!-- قسم الصلصة محذوف -->
               <h2 class="totil_price_product">إجمالي الطلب: <span>${ (product.Discount && Number(product.Discount) > 0) ? (Number(product.Price)*(1-Number(product.Discount)/100)).toFixed(2) : Number(product.Price).toFixed(2) } جنيه</span></h2>
               <button class="button-data-id" data-id="${product.Product_ID}">إضافة للسلة</button>
             </div>
@@ -72,7 +64,6 @@
         attachAddToCartListener(product);
       })
       .catch(error => {
-        console.error('Error loading product:', error);
         document.getElementById('product').innerText = 'حدث خطأ في تحميل المنتج';
       });
   }
@@ -144,7 +135,6 @@
         // الزر يبقى رمادي ومعطّل بعد الإضافة
         setButtonAdded(true);
       } else {
-        console.error('Cart state not available');
         showAddedMessage('خطأ: لم يتم تحميل السلة', true);
       }
     });
@@ -223,7 +213,12 @@
           grid.appendChild(productCard);
         });
       })
-      .catch(error => console.error('Error loading products:', error));
+      .catch(error => {
+        if (error) {
+          console.log('Error loading recommended products:', error);
+        }
+      }
+      );
   }
 
   /**
@@ -382,7 +377,6 @@
       // Initial display
       updateCartDisplay(window.cartState.getItems());
     } else {
-      console.warn('Cart state not available');
     }
   }
 

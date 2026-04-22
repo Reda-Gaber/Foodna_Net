@@ -151,7 +151,7 @@ function validateOrderItems(items) {
  * @private
  */
 function validatePaymentMethod(paymentMethod) {
-  const validMethods = ['cash', 'card', 'check', 'transfer', 'mobile', 'other'];
+  const validMethods = ['cash', 'card', 'check', 'transfer', 'mobile', 'other', 'wallet'];
   if (!paymentMethod || !validMethods.includes(paymentMethod.toLowerCase())) {
     return {
       valid: false,
@@ -522,4 +522,3 @@ exports.updateOrderStatus = async (req, res) => {
     return ApiResponse.error(res, 'فشل في تحديث حالة الطلب', 500);
   }
 };
-

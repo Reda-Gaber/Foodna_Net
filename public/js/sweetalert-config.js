@@ -28,20 +28,16 @@ function loadSwalConfig() {
             // try CDN
             loadScript(cdnSrc, () => {
                 if (window.Swal) return resolve(window.Swal);
-                console.error('SweetAlert2 loaded but `Swal` not found');
                 reject(new Error('SweetAlert2 loaded but `Swal` not found'));
             }, () => {
-                console.error('Failed to load SweetAlert2 from CDN after local load');
                 reject(new Error('Failed to load SweetAlert2 from CDN after local load'));
             });
         }, () => {
             // local failed -> try CDN
             loadScript(cdnSrc, () => {
                 if (window.Swal) return resolve(window.Swal);
-                console.error('SweetAlert2 loaded from CDN but `Swal` not found');
                 reject(new Error('SweetAlert2 loaded from CDN but `Swal` not found'));
             }, () => {
-                console.error('SweetAlert2 failed to load from local and CDN');
                 reject(new Error('SweetAlert2 failed to load'));
             });
         });
@@ -198,6 +194,7 @@ if (document.head) {
     `;
     document.head.appendChild(style);
 }
+
 
 
 

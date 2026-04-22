@@ -5,7 +5,7 @@ window.apiass = true;
   'use strict';
 
   const container = document.querySelector('.products-grid_1');
-  if (!container) { console.warn('[OFFERS] container .products-grid_1 not found'); return; }
+  if (!container) { return; }
 
   // ===== Loading skeleton =====
   container.innerHTML = Array(4).fill(
@@ -28,7 +28,6 @@ window.apiass = true;
     products = await res.json();
     if (!Array.isArray(products)) products = products.data || products.products || [];
   } catch (err) {
-    console.error('[OFFERS] fetch error:', err);
     container.innerHTML = `
       <div style="grid-column:1/-1;text-align:center;padding:40px;color:#888;">
         <p style="font-size:18px;">⚠️ تعذّر تحميل العروض</p>
@@ -140,7 +139,6 @@ window.apiass = true;
         btn.style.opacity = '0.75';
         setTimeout(() => { btn.textContent = '🛒 أضف للسلة'; btn.style.opacity = '1'; }, 1800);
       } catch (err) {
-        console.error('[OFFERS] addToCart fallback error:', err);
       }
     }
   });

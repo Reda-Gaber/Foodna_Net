@@ -15,11 +15,8 @@
   const iconTheme = 'ri-sun-line';
 
   if (!themButton) {
-    console.warn('⚠️ Theme button not found on this page');
     return;
   }
-
-  console.log('✅ Dark mode initialized on page load');
 
   // ============================
   // تحميل الحالة المحفوظة
@@ -51,8 +48,6 @@
   themButton.addEventListener('click', (e) => {
     e.preventDefault();
     
-    console.log('🌓 Dark mode button clicked');
-    
     // تبديل الفئة
     document.body.classList.toggle(darkTheme);
     themButton.classList.toggle(iconTheme);
@@ -63,9 +58,6 @@
     
     localStorage.setItem('selected-theme', newTheme);
     localStorage.setItem('selected-icon', newIcon);
-
-    console.log('✨ Theme switched to:', newTheme);
-    console.log('🎨 Icon changed to:', newIcon);
   });
 
   // ============================
@@ -82,10 +74,7 @@
         document.body.classList.remove(darkTheme);
         themButton.classList.remove(iconTheme);
       }
-      
-      console.log('🔄 Theme updated from another tab/window:', newTheme);
     }
   });
-
-  console.log('✅ Dark mode system fully initialized');
 })();
+

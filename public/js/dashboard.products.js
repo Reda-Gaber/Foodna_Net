@@ -6,11 +6,7 @@ async function loadProducts() {
     if (!response.ok) throw new Error("Network error");
 
     const data = await response.json();
-    state = data;
-    console.log(state)
-    document.getElementById('totalProducts').textContent = state.length;
-    console.log("عدد المنتجات:", state.products?.length);
-    console.log("أول منتج:", state.products?.[0]);
+    state = data;document.getElementById('totalProducts').textContent = state.length;
 
     const tbody = document.getElementById('productsTableBody');
 
@@ -36,7 +32,6 @@ async function loadProducts() {
     // <button class="action-btn edit" onclick="editProduct(${product.Product_ID})">Edit</button>
                 
   } catch (err) {
-    console.error("Failed to load products:", err);
     const tbody = document.getElementById('productsTableBody');
     tbody.innerHTML = `<tr><td colspan="8" style="color:red; text-align:center;">خطأ في تحميل البيانات: ${err.message}</td></tr>`;
     if (typeof showError !== 'undefined') {
@@ -51,9 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('addProductBtn').addEventListener('click', () => openProductModal());
   
   document.getElementById("delete").addEventListener("click", (e) => {
-    e.preventDefault();
-    console.log(e)
-  });
+    e.preventDefault();});
 });
 
 

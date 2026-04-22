@@ -31,7 +31,6 @@
         }
       }
     }catch(e){
-      console.warn('[Checkout] Rehydrate failed', e && e.message ? e.message : e);
     }
   });
 

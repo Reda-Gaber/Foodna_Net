@@ -18,11 +18,21 @@
    */
   async function checkAuthStatus() {
     try {
-      const response = await fetch('/auth/api/auth/check', { 
+      const response = await fetch('/auth/api/auth/check', {
         credentials: 'include',
-        method: 'GET'
+        method: 'GET',
+        headers: { 'Accept': 'application/json' }
       });
-      const data = await response.json();
+      const contentType = response.headers.get('content-type') || '';
+      let data = { authenticated: false };
+
+      if (response.ok && contentType.includes('application/json')) {
+        try {
+          data = await response.json();
+        } catch (e) {
+          data = { authenticated: false };
+        }
+      }
 
       if (data.success) {
         window.auth = {
@@ -41,7 +51,6 @@
 
       return window.auth;
     } catch (error) {
-      console.error('Error checking auth status:', error);
       window.auth.initialized = true;
       return window.auth;
     }
@@ -74,7 +83,6 @@
       if (pending) localStorage.setItem('pendingCart', pending);
       localStorage.setItem('checkoutIntent', 'true');
     } catch (e) {
-      console.warn('Could not persist post-auth state', e && e.message ? e.message : e);
     }
     // send user to register page with next query param so server can honor it too
     window.location.href = '/register?next=' + next;
@@ -92,3 +100,4 @@
   // Expose check function globally
   window.checkAuthStatus = checkAuthStatus;
 })();
+

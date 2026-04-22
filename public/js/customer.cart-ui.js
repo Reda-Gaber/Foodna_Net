@@ -172,7 +172,6 @@
     };
 
     // TODO: Send checkout data to server
-    console.log('Checkout Data:', checkoutData);
 
     // Show success message
     showCheckoutSuccess();
@@ -294,3 +293,4 @@
   // Start initialization
   init();
 })();
+

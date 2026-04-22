@@ -33,7 +33,7 @@
         /* ============ HEADER ============ */
         .pos-header {
             grid-column: 1 / -1;
-            background: linear-gradient(135deg, #ff6b6b 0%, var(--text-color) 100%);
+            background: linear-gradient(135deg, #ff6b6b 0%, #c0392b 100%);
             color: white;
             padding: 1rem 2rem;
             display: flex;
@@ -243,7 +243,7 @@
         }
 
         .cart-header {
-            background: linear-gradient(135deg, #ff6b6b 0%, var(--text-color) 100%);
+            background: linear-gradient(135deg, #ff6b6b 0%, #c0392b 100%);
             color: white;
             padding: 1rem;
             display: flex;
@@ -504,7 +504,7 @@
         }
 
         .grand-total {
-            background: linear-gradient(135deg, #ff6b6b 0%, var(--text-color) 100%);
+            background: linear-gradient(135deg, #ff6b6b 0%, #c0392b 100%);
             color: white;
             padding: 1rem;
             border-radius: 8px;
@@ -607,7 +607,7 @@
         }
 
         .clear-btn {
-            background: var(--text-color);
+            background: #c0392b;
             color: white;
         }
 
@@ -827,7 +827,7 @@
                         <button class="payment-method-btn" data-method="card" onclick="setPaymentMethod('card')">
                             <i class="ri-bank-card-line"></i> بطاقة
                         </button>
-                        <button class="payment-method-btn" data-method="wallet" onclick="setPaymentMethod('wallet')">
+                        <button class="payment-method-btn" data-method="mobile" onclick="setPaymentMethod('mobile')">
                             <i class="ri-wallet-line"></i> محفظة
                         </button>
                     </div>
@@ -941,19 +941,23 @@
         }
 
         // ============ SEARCH PRODUCTS ============
+        let searchDebounceTimer = null;
         document.getElementById('searchInput').addEventListener('input', (e) => {
-            const query = e.target.value.toLowerCase();
-            if (!query) {
-                const activeCategory = document.querySelector('.category-tab.active');
-                filterByCategory(activeCategory);
-                return;
-            }
-            
-            const filtered = state.products.filter(p => 
-                p.Product_Name.toLowerCase().includes(query) ||
-                p.Product_ID.toString().includes(query)
-            );
-            renderProducts(filtered);
+            clearTimeout(searchDebounceTimer);
+            searchDebounceTimer = setTimeout(() => {
+                const query = e.target.value.toLowerCase();
+                if (!query) {
+                    const activeCategory = document.querySelector('.category-tab.active');
+                    filterByCategory(activeCategory);
+                    return;
+                }
+                
+                const filtered = state.products.filter(p => 
+                    p.Product_Name.toLowerCase().includes(query) ||
+                    p.Product_ID.toString().includes(query)
+                );
+                renderProducts(filtered);
+            }, 300);
         });
 
         // ============ RENDER PRODUCTS ============
@@ -1090,11 +1094,11 @@
             }
 
             try {
-                const response = await fetch('/cashier/api/validate-coupon', {
+                const response = await fetch('/cashier/api/coupon/validate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     credentials: 'include',
-                    body: JSON.stringify({ coupon_code: couponCode })
+                    body: JSON.stringify({ code: couponCode })
                 });
 
                 const data = await response.json();
@@ -1199,7 +1203,7 @@
                 showCancelButton: true,
                 confirmButtonText: 'نعم، احذف',
                 cancelButtonText: 'إلغاء',
-                confirmButtonColor: 'var(--text-color)',
+                confirmButtonColor: '#c0392b',
                 cancelButtonColor: '#9e9e9e'
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -1235,7 +1239,15 @@
                     price: item.Price
                 }));
 
-                const grandTotal = parseFloat(document.getElementById('grandTotal').textContent) || 0;
+                // Parse grandTotal safely - strip currency text before parseFloat
+                const grandTotalText = document.getElementById('grandTotal').textContent;
+                const grandTotal = parseFloat(grandTotalText.replace(/[^\d.]/g, ''));
+
+                if (isNaN(grandTotal) || grandTotal <= 0) {
+                    showError('خطأ في حساب الإجمالي، يرجى المحاولة مرة أخرى');
+                    return;
+                }
+
                 const notes = document.getElementById('orderNotes').value;
 
                 const response = await fetch('/cashier/api/orders', {
@@ -1247,7 +1259,7 @@
                         totalAmount: grandTotal,
                         notes: notes,
                         paymentMethod: state.paymentMethod,
-                        discount: state.appliedCoupon?.id || null
+                        couponCode: state.appliedCoupon?.Coupon_Code || null
                     })
                 });
 

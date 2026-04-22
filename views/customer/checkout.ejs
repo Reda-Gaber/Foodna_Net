@@ -35,7 +35,7 @@
           <h3><i class="ri-coupon-line"></i> كوبون الخصم</h3>
           <div class="coupon-input-row">
             <input type="text" id="coupon-input" placeholder="أدخل كود الخصم..." />
-            <button id="apply-coupon-btn" onclick="applyCoupon()">تطبيق</button>
+            <button type="button" id="apply-coupon-btn">تطبيق</button>
           </div>
           <div id="coupon-msg" class="coupon-msg"></div>
         </div>
@@ -189,7 +189,7 @@
 
         <!-- زر تأكيد الطلب -->
         <div id="checkout-msg" class="checkout-msg-bar" style="display:none"></div>
-        <button class="confirm-order-btn" id="confirm-order-btn" onclick="submitCheckoutOrder()">
+        <button type="button" class="confirm-order-btn" id="confirm-order-btn">
           <i class="ri-check-double-line"></i>
           تأكيد الطلب
         </button>

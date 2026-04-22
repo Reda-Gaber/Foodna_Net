@@ -55,7 +55,6 @@
      */
     addItem(product) {
       if (!product || !product.id) {
-        console.error('Invalid product:', product);
         return null;
       }
 
@@ -218,7 +217,6 @@
           try {
             callback(data);
           } catch (error) {
-            console.error(`Error in ${type} observer:`, error);
           }
         });
       }
@@ -254,3 +252,4 @@
     window.cartState.init();
   }
 })();
+

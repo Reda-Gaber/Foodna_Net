@@ -269,7 +269,6 @@
       showSuccessModal();
 
     } catch (err) {
-      console.error('Checkout error:', err);
       showCheckoutMsg('❌ ' + (err.message || 'حدث خطأ، حاول مرة أخرى'), 'error');
       if (btn) {
         btn.disabled = false;
@@ -332,10 +331,58 @@
     } catch (e) { /* ignore */ }
   }
 
+  function attachPageEvents() {
+    const confirmBtn = document.getElementById('confirm-order-btn');
+    if (confirmBtn && !confirmBtn._bound) {
+      confirmBtn.addEventListener('click', submitCheckoutOrder);
+      confirmBtn._bound = true;
+    }
+
+    const applyBtn = document.getElementById('apply-coupon-btn');
+    if (applyBtn && !applyBtn._bound) {
+      applyBtn.addEventListener('click', applyCoupon);
+      applyBtn._bound = true;
+    }
+
+    // Payment cards should be interactive after DOM is ready
+    document.querySelectorAll('.payment-method-card').forEach(card => {
+      if (card._bound) return;
+      card.addEventListener('click', function () {
+        document.querySelectorAll('.payment-method-card').forEach(c => c.classList.remove('active'));
+        this.classList.add('active');
+        selectedPayment = this.dataset.method;
+        const radio = this.querySelector('input[type=radio]');
+        if (radio) radio.checked = true;
+
+        const cardForm = document.getElementById('card-form-section');
+        const onlineForm = document.getElementById('online-form-section');
+        if (cardForm) cardForm.style.display = selectedPayment === 'card' ? 'block' : 'none';
+        if (onlineForm) onlineForm.style.display = selectedPayment === 'online' ? 'block' : 'none';
+      });
+      card._bound = true;
+    });
+
+    document.querySelectorAll('.wallet-opt').forEach(opt => {
+      if (opt._bound) return;
+      opt.addEventListener('click', function () {
+        document.querySelectorAll('.wallet-opt').forEach(o => o.classList.remove('active'));
+        this.classList.add('active');
+        const radio = this.querySelector('input[type=radio]');
+        if (radio) radio.checked = true;
+      });
+      opt._bound = true;
+    });
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('DOMContentLoaded', () => {
+      init();
+      attachPageEvents();
+    });
   } else {
     init();
+    attachPageEvents();
   }
 
 })();
+

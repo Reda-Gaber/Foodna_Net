@@ -14,11 +14,11 @@ const state = {
 // SAMPLE DATA - Replace with actual API calls
 // =====================================================
 const sampleProducts = [
-    { id: 1, name: 'سماعات رأس لاسلكية', category: 'الإلكترونيات', price: 79.99, stock: 45, status: 'نشط' },
-    { id: 2, name: 'ساعة ذكية', category: 'الإلكترونيات', price: 199.99, stock: 23, status: 'نشط' },
-    { id: 3, name: 'حامل الكمبيوتر المحمول', category: 'الملحقات', price: 34.99, stock: 8, status: 'نشط' },
-    { id: 4, name: 'لوحة مفاتيح ميكانيكية', category: 'الإلكترونيات', price: 129.99, stock: 67, status: 'نشط' },
-    { id: 5, name: 'كابل USB-C', category: 'الملحقات', price: 12.99, stock: 3, status: 'نشط' }
+    { id: 1, name: 'سماعة بلوتوث', category: 'الإلكترونيات', price: 79.99, stock: 45, status: 'نشط' },
+    { id: 2, name: 'ساعة يد ذكية', category: 'الإلكترونيات', price: 199.99, stock: 23, status: 'نشط' },
+    { id: 3, name: 'ستاند للاب توب', category: 'الملحقات', price: 34.99, stock: 8, status: 'نشط' },
+    { id: 4, name: 'كيبورد ميكانيكي', category: 'الإلكترونيات', price: 129.99, stock: 67, status: 'نشط' },
+    { id: 5, name: 'سلك USB', category: 'الملحقات', price: 12.99, stock: 3, status: 'نشط' }
 ];
 
 const sampleCustomers = [
@@ -95,13 +95,11 @@ async function loadDashboardData() {
         // جلب الإحصائيات
         const statsRes = await fetch('/admin/api/stats', { credentials: 'include' });
         if (!statsRes.ok) {
-            console.warn('Failed to load /admin/api/stats - status:', statsRes.status);
         }
         let stats = {};
         try {
             stats = await statsRes.json();
         } catch (e) {
-            console.warn('Could not parse /admin/api/stats response as JSON:', e);
         }
 
         // تحديث إحصائيات الداشبورد (باختبارات دفاعية)
@@ -126,7 +124,6 @@ async function loadDashboardData() {
         renderOrders();
         renderInventory();
     } catch (error) {
-        console.error('خطأ في تحميل بيانات الداشبورد:', error);
     }
 }
 
@@ -144,7 +141,6 @@ async function loadProducts() {
             status: 'نشط'
         }));
     } catch (error) {
-        console.error('خطأ في جلب المنتجات:', error);
         state.products = [];
     }
 }
@@ -152,20 +148,15 @@ async function loadProducts() {
 // جلب العملاء
 async function loadCustomers() {
     try {
-        console.log('🔍 جاري جلب العملاء من /admin/api/customers...');
         const res = await fetch('/admin/api/customers');
-        console.log('Response status:', res.status);
         
         if (!res.ok) {
             throw new Error(`HTTP error! status: ${res.status}`);
         }
         
-        const customers = await res.json();
-        console.log('✅ العملاء المحملين من API:', customers);
-        console.log('عدد العملاء:', Array.isArray(customers) ? customers.length : 'ليس array');
+        const customers = await res.json();? customers.length : 'ليس array');
         
         if (!Array.isArray(customers)) {
-            console.error('❌ البيانات ليست array:', typeof customers);
             state.customers = [];
             return;
         }
@@ -178,9 +169,7 @@ async function loadCustomers() {
             orders: c.orders || 0,
             totalSpent: parseFloat(c.totalSpent) || 0
         }));
-        console.log('✅ حالة العملاء محدثة:', state.customers);
     } catch (error) {
-        console.error('❌ خطأ في جلب العملاء:', error);
         state.customers = [];
     }
 }
@@ -198,7 +187,6 @@ async function loadOrders() {
             status: getOrderStatusClass(o.status)
         }));
     } catch (error) {
-        console.error('خطأ في جلب الطلبات:', error);
         state.orders = [];
     }
 }
@@ -284,7 +272,7 @@ function navigateToSection(section) {
     };
 
     if (sectionLoaders[section]) {
-        try { sectionLoaders[section](); } catch (e) { console.warn(section + ' load error:', e); }
+        try { sectionLoaders[section](); } catch (e) { }
     }
 
     const titles = {
@@ -503,7 +491,6 @@ fetch('/api/products')
         return response.json();
     })
     .then(data => {
-        console.log('Products from API:', data);
 
         // تأكد من أن البيانات تطابق الهيكل المتوقع
         state.products = data.map(item => ({
@@ -522,7 +509,6 @@ fetch('/api/products')
         renderInventory();
     })
     .catch(error => {
-        console.error('Error fetching products:', error);
         // في حالة الفشل، استخدم البيانات النموذجية
         state.products = [...sampleProducts];
         renderProducts();
@@ -541,7 +527,6 @@ async function openProductModal(productId = null) {
         if (!res.ok) throw new Error(`Failed to fetch categories: ${res.status}`);
         
         const response = await res.json();
-        console.log('📦 الاستجابة الكاملة من API:', response);
         
         // API يرجع البيانات داخل response.data
         if (response.data && Array.isArray(response.data)) {
@@ -551,10 +536,7 @@ async function openProductModal(productId = null) {
         } else if (response.categories && Array.isArray(response.categories)) {
             categories = response.categories;
         }
-        
-        console.log('✅ الفئات المعالجة:', categories);
     } catch (err) {
-        console.error('❌ خطأ في جلب الفئات:', err);
         categories = [];
     }
 
@@ -735,7 +717,6 @@ async function openProductModal(productId = null) {
                 if (discountVal !== '' || original.discount) {
                     const discountNum = parseFloat(discountVal || '0');
                     const originalDiscount = Number(original.discount ?? 0);
-                    console.log(`🔍 Discount: input="${discountVal}", parsed=${discountNum}, original=${originalDiscount}, changed=${discountNum !== originalDiscount}`);
                     if (!Number.isNaN(discountNum) && discountNum !== originalDiscount) { fd.append('discount', discountNum); changed = true; }
                 }
 
@@ -794,7 +775,6 @@ async function openProductModal(productId = null) {
                     finalize(false);
                 }
             } catch (err) {
-                console.error('Error:', err);
                 const swal = await getSwalOrFallback();
                 if (swal) swal.fire({ icon: 'error', title: 'خطأ', text: 'حدث خطأ في الاتصال بالخادم: ' + (err.message || err) });
                 else alert('حدث خطأ في الاتصال بالخادم: ' + (err.message || err));
@@ -805,13 +785,11 @@ async function openProductModal(productId = null) {
     }, 100);
 }
 function editProduct(id) {
-    console.log('✏️ تعديل منتج برقم:', id);
     openProductModal(id);
 }
 
 // حذف منتج
 async function deleteProduct(id) {
-    console.log('🗑️ حذف منتج برقم:', id);
     // Confirmation before deleting
     const swal = await ensureSwal();
     const { isConfirmed } = await swal.fire({
@@ -828,7 +806,6 @@ async function deleteProduct(id) {
     if (!isConfirmed) return;
 
     try {
-        console.log('Deleting product with ID:', id);
         
         const response = await fetch(`/admin/products/delete/${id}`, {
             method: 'DELETE',
@@ -837,18 +814,13 @@ async function deleteProduct(id) {
                 'Accept': 'application/json'
             }
         });
-
-        console.log('Response status:', response.status);
         
         let result;
         try {
             result = await response.json();
         } catch (parseErr) {
-            console.error('JSON parse error:', parseErr);
             throw new Error('خطأ في معالجة الرد من الخادم');
         }
-
-        console.log('Response data:', result);
 
         if (response.ok && result.success) {
             state.products = state.products.filter(p => p.id !== id);
@@ -877,7 +849,6 @@ async function deleteProduct(id) {
             }
         }
     } catch (err) {
-        console.error('Delete error:', err);
         {
             const swal2 = await ensureSwal();
             swal2.fire({
@@ -897,11 +868,8 @@ function renderCustomers() {
     const tbody = document.getElementById('customersTableBody');
 
     if (!tbody) {
-        console.error('عنصر customersTableBody غير موجود');
         return;
     }
-    
-    console.log('عدد العملاء في state:', state.customers.length);
     
     if (state.customers.length === 0) {
         tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px;">لا توجد عملاء حالياً</td></tr>';
@@ -996,18 +964,13 @@ function editCustomer(id) {
 }
 
 function deleteCustomer(id) {
-    console.log('🗑️ محاولة حذف العميل:', id);
-    console.log('📋 العملاء في الحالة:', state.customers);
     
     const customer = state.customers.find(c => c.id === id);
     
     if (!customer) {
-        console.error('❌ العميل غير موجود في الحالة:', id);
         alert('العميل غير موجود');
         return;
     }
-    
-    console.log('✅ العميل المراد حذفه:', customer);
     
     // استخدام SweetAlert إذا كان متاحاً، وإلا استخدام confirm
     if (typeof Swal !== 'undefined') {
@@ -1023,18 +986,14 @@ function deleteCustomer(id) {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    console.log('🗑️ جاري حذف العميل برقم:', id);
                     const res = await fetch(`/admin/api/customers/${id}`, {
                         method: 'DELETE',
                         credentials: 'include',
                         headers: { 'Content-Type': 'application/json' }
                     });
                     
-                    console.log('📊 الاستجابة من الخادم - الحالة:', res.status);
-                    
                     if (res.ok) {
                         const data = await res.json();
-                        console.log('✅ استجابة النجاح:', data);
                         
                         state.customers = state.customers.filter(c => c.id !== id);
                         renderCustomers();
@@ -1047,10 +1006,8 @@ function deleteCustomer(id) {
                             timer: 1500,
                             showConfirmButton: false
                         });
-                        console.log('✅ تم حذف العميل بنجاح من الواجهة');
                     } else {
                         const errorData = await res.json().catch(() => ({ error: 'خطأ غير معروف' }));
-                        console.error('❌ فشل الحذف - الحالة:', res.status, 'البيانات:', errorData);
                         
                         Swal.fire({
                             title: 'خطأ',
@@ -1059,7 +1016,6 @@ function deleteCustomer(id) {
                         });
                     }
                 } catch (error) {
-                    console.error('❌ خطأ في الاتصال:', error);
                     Swal.fire({
                         title: 'خطأ',
                         text: 'حدث خطأ في الاتصال: ' + error.message,
@@ -1072,29 +1028,24 @@ function deleteCustomer(id) {
         // fallback إلى confirm
         if (confirm(`هل أنت متأكد من حذف العميل "${customer.name}"؟`)) {
             try {
-                console.log('🗑️ جاري حذف العميل (fallback):', id);
                 fetch(`/admin/api/customers/${id}`, {
                     method: 'DELETE',
                     credentials: 'include',
                     headers: { 'Content-Type': 'application/json' }
                 }).then(async res => {
                     if (res.ok) {
-                        console.log('✅ تم حذف العميل بنجاح');
                         state.customers = state.customers.filter(c => c.id !== id);
                         renderCustomers();
                         renderDashboard();
                         alert('تم حذف العميل بنجاح');
                     } else {
                         const errorData = await res.json().catch(() => ({ error: 'خطأ غير معروف' }));
-                        console.error('❌ فشل الحذف:', res.status, errorData);
                         alert('فشل حذف العميل: ' + (errorData.error || 'خطأ غير معروف'));
                     }
                 }).catch(error => {
-                    console.error('❌ خطأ في الاتصال:', error);
                     alert('حدث خطأ: ' + error.message);
                 });
             } catch (error) {
-                console.error('❌ استثناء:', error);
                 alert('حدث خطأ: ' + error.message);
             }
         }
@@ -1404,7 +1355,6 @@ async function loadCategories() {
         attachCategoryActionListeners();
     } catch (err) {
         tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:20px;color:#e53935;">فشل تحميل التصنيفات</td></tr>';
-        console.error('loadCategories error:', err);
     }
 }
 
@@ -1595,7 +1545,6 @@ async function loadOffers() {
         attachOfferActionListeners();
     } catch (err) {
         tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:20px;color:#e53935;">فشل تحميل العروض</td></tr>';
-        console.error('loadOffers error:', err);
     }
 }
 
@@ -1725,45 +1674,34 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function applyNewOffer() {
-    console.log('🎯 applyNewOffer called');
     const sel  = document.getElementById('offer-product-select');
     const val  = parseFloat(document.getElementById('offer-new-discount')?.value || 0);
     const msg  = document.getElementById('new-offer-msg');
     const pid  = sel?.value;
     
-    console.log('🎯 Selected product ID:', pid);
-    console.log('🎯 Discount value:', val);
-    
     if (!pid) { 
-        if (msg) { msg.textContent = 'اختر منتجاً'; msg.style.color = '#e53935'; } 
-        console.log('❌ No product selected');
+        if (msg) { msg.textContent = 'اختر منتجاً'; msg.style.color = '#e53935'; }
         return; 
     }
     if (isNaN(val) || val < 1 || val > 100) {
         if (msg) { msg.textContent = 'نسبة الخصم يجب أن تكون بين 1 و 100'; msg.style.color = '#e53935'; }
-        console.log('❌ Invalid discount value');
         return;
     }
     try {
         const fd = new FormData();
         fd.append('id', pid);
         fd.append('discount', val);
-        console.log('📤 Sending request to /admin/products/update');
         const res = await fetch('/admin/products/update', { method: 'POST', credentials: 'include', body: fd });
-        console.log('📥 Response status:', res.status);
         
         if (res.ok) {
             if (msg) { msg.textContent = '✓ تم تطبيق العرض'; msg.style.color = '#2e7d32'; }
-            console.log('✅ Offer applied successfully');
             setTimeout(() => { closeModal(); loadOffers(); }, 700);
         } else {
             const errorData = await res.json();
             if (msg) { msg.textContent = errorData.message || 'فشل تطبيق العرض'; msg.style.color = '#e53935'; }
-            console.log('❌ Failed to apply offer:', errorData);
         }
     } catch (e) {
         if (msg) { msg.textContent = 'خطأ في الاتصال'; msg.style.color = '#e53935'; }
-        console.error('❌ Network error:', e);
     }
 }
 
@@ -1776,15 +1714,11 @@ async function loadCoupons() {
     tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:20px;color:#888;">جارٍ التحميل...</td></tr>';
 
     try {
-        console.log('📊 Loading coupons from API...');
         const res  = await fetch('/admin/api/coupons', { credentials: 'include' });
-        console.log('📊 API Response status:', res.status);
         
         const data = await res.json();
-        console.log('📊 API Response data:', data);
         
         const coupons = data.data || data.coupons || (Array.isArray(data) ? data : []);
-        console.log('📊 Parsed coupons:', coupons);
 
         if (!coupons.length) {
             tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:20px;color:#888;">لا توجد كوبونات</td></tr>';
@@ -1820,10 +1754,8 @@ async function loadCoupons() {
         
         // إضافة event listeners للأزرار بعد تحديث DOM
         attachCouponActionListeners();
-        console.log('✅ Coupons loaded successfully');
     } catch (err) {
         tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:20px;color:#e53935;">فشل تحميل الكوبونات</td></tr>';
-        console.error('❌ loadCoupons error:', err);
     }
 }
 
@@ -1952,8 +1884,6 @@ async function createCoupon() {
             payload.usageLimit = parseInt(limit);
         }
 
-        console.log('Creating coupon with payload:', payload);
-
         const res = await fetch('/admin/api/coupons', {
             method: 'POST',
             credentials: 'include',
@@ -1962,7 +1892,6 @@ async function createCoupon() {
         });
 
         const data = await res.json();
-        console.log('API Response:', { status: res.status, data });
 
         if (res.ok) {
             if (msg) { msg.textContent = '✓ تمت الإضافة بنجاح'; msg.style.color = '#2e7d32'; }
@@ -1970,10 +1899,8 @@ async function createCoupon() {
         } else {
             const errorMsg = data.message || data.errors || 'فشل إضافة الكوبون';
             if (msg) { msg.textContent = errorMsg; msg.style.color = '#e53935'; }
-            console.error('Error creating coupon:', errorMsg);
         }
     } catch (e) {
-        console.error('Exception in createCoupon:', e);
         if (msg) { msg.textContent = 'خطأ في الاتصال: ' + e.message; msg.style.color = '#e53935'; }
     }
 }
@@ -2248,7 +2175,6 @@ async function fetchProducts() {
         state.products = data;
         renderProducts();
     } catch (error) {
-        console.error('Error fetching products:', error);
     }
 }
 
@@ -2266,7 +2192,6 @@ async function addProduct(productData) {
         state.products.push(data);
         renderProducts();
     } catch (error) {
-        console.error('Error adding product:', error);
     }
 }
 
@@ -2285,7 +2210,6 @@ async function updateProduct(id, productData) {
         state.products[index] = data;
         renderProducts();
     } catch (error) {
-        console.error('Error updating product:', error);
     }
 }
 
@@ -2298,7 +2222,6 @@ async function deleteProductAPI(id) {
         state.products = state.products.filter(p => p.id !== id);
         renderProducts();
     } catch (error) {
-        console.error('Error deleting product:', error);
     }
 }
 */

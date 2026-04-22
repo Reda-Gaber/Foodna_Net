@@ -165,7 +165,6 @@
           this.addMessage(data.message || 'حدث خطأ. يرجى المحاولة لاحقاً.', 'bot');
         }
       } catch (error) {
-        console.error('Chatbot error:', error);
         this.addMessage('عذراً، حدث خطأ في الاتصال. يرجى المحاولة لاحقاً.', 'bot');
       }
 
@@ -247,7 +246,6 @@
           JSON.stringify(this.messages.slice(-20)) // Keep last 20 messages
         );
       } catch (error) {
-        console.warn('Failed to save chat history:', error);
       }
     }
 
@@ -269,7 +267,6 @@
           });
         }
       } catch (error) {
-        console.warn('Failed to load chat history:', error);
       }
     }
   }
@@ -283,3 +280,4 @@
     window.chatbotWidget = new ChatbotWidget();
   }
 })();
+

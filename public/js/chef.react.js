@@ -35,7 +35,7 @@
           const list = (data.data.orders || []).map(o=>({ id:o.id, items:o.items||[], createdAt:o.createdAt, notes:o.notes||'', status:o.status }));
           setOrders(list);
         }
-      }catch(err){ console.error(err); }
+      }catch(err){ }
       setLoading(false);
     }
 
@@ -55,7 +55,7 @@
         } else {
           setCustomers([]);
         }
-      }catch(err){ console.error('fetchCustomers error', err); setCustomers([]); }
+      }catch(err){ setCustomers([]); }
       setLoadingCustomers(false);
     }
 
@@ -68,7 +68,7 @@
           alert('✅ تم تحديث الطلب بنجاح');
         }
         else alert(data.message || 'فشل التحديث');
-      }catch(err){ console.error(err); alert('خطأ: ' + err.message); }
+      }catch(err){ alert('خطأ: ' + err.message); }
     }
 
     if (unauth) {
@@ -121,3 +121,4 @@
   const root = document.getElementById('chef-root');
   if (root) ReactDOM.createRoot(root).render(React.createElement(ChefApp));
 })();
+

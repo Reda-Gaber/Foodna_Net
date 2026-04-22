@@ -21,7 +21,6 @@ async function apiass() {
     renderOffers(data);
     renderSlider(); // الآن السلايدر مستقل عن البيانات
   } catch (error) {
-    console.error("حدث خطأ أثناء جلب البيانات من الـ API", error);
   }
 }
 
@@ -90,3 +89,4 @@ function renderOffers(products) {
 }
 
 apiass();
+

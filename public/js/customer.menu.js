@@ -15,8 +15,6 @@ async function apiass() {
         let myRequest = await fetch("/api/products?limit=1000");
         let dataRequest = await myRequest.json();
         allMenuProducts = dataRequest;
-        
-        console.log('✅ تم جلب المنتجات:', dataRequest.length, 'منتج');
 
         // فلترة حسب الفئة لو موجودة في URL
         let filtered = currentCategory
@@ -25,16 +23,16 @@ async function apiass() {
 
         // لو all=1 في URL، اعرض كل المنتجات بدون حد
         const urlParamsCheck = new URLSearchParams(window.location.search);
-        if (urlParamsCheck.get('all') === '1') {
-            visibleCount = 99999;
+        if (urlParamsCheck.get('all') === '1' || MENU_PAGE_SIZE_OVERRIDE) {
+            visibleCount = MENU_PAGE_SIZE_OVERRIDE || 99999;
         } else {
             visibleCount = MENU_PAGE_SIZE;
         }
 
         renderMenuProducts(filtered, visibleCount);
-        renderLoadMoreButton(filtered);
+        // انتظار حتى تكتمل عملية العرض قبل إضافة الزر
+        setTimeout(() => renderLoadMoreButton(filtered), 100);
     } catch (error) {
-        console.error("خطأ في جلب المنتجات:", error);
     }
 }
 
@@ -81,62 +79,77 @@ function renderMenuProducts(productData, count) {
 // زر عرض المزيد
 // ============================
 function renderLoadMoreButton(productData) {
+
     // حذف الزر القديم لو موجود
     const oldBtn = document.getElementById('menu-load-more-btn');
-    if (oldBtn) oldBtn.remove();
+    if (oldBtn) {
+        oldBtn.remove();
+    }
 
-    if (productData.length <= visibleCount) return; // مفيش مزيد
+    if (productData.length <= visibleCount) {
+        return; // مفيش مزيد
+    }
 
     const btnWrapper = document.createElement('div');
     btnWrapper.id = 'menu-load-more-btn';
     btnWrapper.style.cssText = 'text-align:center; margin: 30px auto; padding: 10px;';
-    btnWrapper.innerHTML = `
-        <button onclick="loadMoreMenuProducts()" style="
-            background: var(--main-color);
-            color: #fff;
-            border: none;
-            padding: 12px 40px;
-            border-radius: 25px;
-            font-size: 15px;
-            font-family: var(--font-1, 'Kufam', sans-serif);
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.2s, transform 0.2s;
-            box-shadow: 0 4px 15px rgba(230,42,50,0.3);
-        " onmouseover="this.style.background='#b71c1c'" onmouseout="this.style.background='var(--main-color)'">
-            عرض المزيد (${productData.length - visibleCount} منتج)
-        </button>
+
+    const button = document.createElement('button');
+    button.textContent = `عرض المزيد (${productData.length - visibleCount} منتج)`;
+    button.style.cssText = `
+        background: var(--main-color);
+        color: #fff;
+        border: none;
+        padding: 12px 40px;
+        border-radius: 25px;
+        font-size: 15px;
+        font-family: var(--font-1, 'Kufam', sans-serif);
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.2s;
+        box-shadow: 0 4px 15px rgba(230,42,50,0.3);
     `;
-    
+    button.onmouseover = () => button.style.background = '#b71c1c';
+    button.onmouseout = () => button.style.background = 'var(--main-color)';
+    button.onclick = loadMoreMenuProducts;
+
+    btnWrapper.appendChild(button);
+
     const categorySection = document.querySelector('.category-one');
     if (categorySection) {
         categorySection.appendChild(btnWrapper);
     } else {
-        document.querySelector('.productss')?.parentElement?.appendChild(btnWrapper);
+        const productss = document.querySelector('.productss');
+        if (productss) {
+            productss.insertAdjacentElement('afterend', btnWrapper);
+        } else {
+        }
     }
 }
 
-window.loadMoreMenuProducts = function() {
+function loadMoreMenuProducts() {
     const urlParams = new URLSearchParams(window.location.search);
     const cat = urlParams.get('category') || null;
-    
+
     // توجيه لصفحة المنيو مع الفئة
     if (cat) {
-        window.location.href = `/menu?category=${encodeURIComponent(cat)}&all=1`;
+        const newUrl = `/menu?category=${encodeURIComponent(cat)}&all=1`;
+        window.location.href = newUrl;
     } else {
-        window.location.href = `/menu?all=1`;
+        const newUrl = `/menu?all=1`;
+        window.location.href = newUrl;
     }
-};
+}
 
 // تحميل كل المنتجات لو URL فيه all=1
+let MENU_PAGE_SIZE_OVERRIDE = null;
+
 (function checkShowAll() {
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('all') === '1') {
         MENU_PAGE_SIZE_OVERRIDE = 9999;
     }
 })();
-
-let MENU_PAGE_SIZE_OVERRIDE = null;
 
 // تعديل apiass لاستخدام override
 const _origApiass = apiass;
@@ -153,7 +166,6 @@ function renderProductsToContainer(productData, containerSelector, quantityLabel
         : document.querySelector(containerSelector);
     
     if (!container) {
-        console.warn(`⚠️ الحاوية '${containerSelector}' غير موجودة`);
         return;
     }
 
@@ -317,7 +329,6 @@ async function buildCategoryNav() {
             });
         }
     } catch (e) {
-        console.warn('buildCategoryNav error:', e);
     }
 }
 
@@ -331,3 +342,4 @@ async function buildCategoryNav() {
 })();
 
 buildCategoryNav();
+

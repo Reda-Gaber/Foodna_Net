@@ -112,7 +112,6 @@ function  addToCart (product) {
     if (cartElement) {
         cartElement.classList.add("active");
     }
-    console.log(cartData);
 }
 function updetecart () {
   const cartItemContainer = document.getElementById('cart_items');
@@ -270,7 +269,6 @@ function handleCheckout() {
                     localStorage.setItem('postAuthRedirect', encodeURIComponent(window.location.pathname + window.location.search));
                     localStorage.setItem('checkoutIntent', 'true');
                 } catch (e) {
-                    console.warn('Could not persist pending cart before redirect', e);
                 }
                 setTimeout(() => { window.location.href = '/register?next=' + encodeURIComponent(window.location.pathname + window.location.search); }, 800);
             }
@@ -296,7 +294,6 @@ function handleCheckout() {
  */
 async function submitOrder(cartItems, totalAmount) {
     try {
-        console.log('Submitting order...');
         // محاولة إرسال الطلب
         const response = await fetch('/api/orders', {
             method: 'POST',
@@ -316,9 +313,6 @@ async function submitOrder(cartItems, totalAmount) {
         });
 
         const data = await response.json();
-        
-        console.log('Response status:', response.status);
-        console.log('Response data:', data);
 
         if (response.status === 401) {
             // العميل غير مسجل - إعادة التوجيه لصفحة التسجيل
@@ -329,7 +323,6 @@ async function submitOrder(cartItems, totalAmount) {
                     localStorage.setItem('postAuthRedirect', encodeURIComponent(window.location.pathname + window.location.search));
                     localStorage.setItem('checkoutIntent', 'true');
                 } catch (e) {
-                    console.warn('Could not persist pending cart before redirect', e);
                 }
                 if (typeof window.redirectToLogin === 'function') {
                     window.redirectToLogin();
@@ -344,7 +337,6 @@ async function submitOrder(cartItems, totalAmount) {
             // عرض رسالة الخطأ الفعلية من الخادم
             const errorMessage = data.message || data.error?.message || 'فشل في إنشاء الطلب';
             showCartMessage(`✗ خطأ: ${errorMessage}`, 'error');
-            console.error('Server error:', data);
             return;
         }
 
@@ -365,7 +357,6 @@ async function submitOrder(cartItems, totalAmount) {
             updetecart();
         }
     } catch (error) {
-        console.error('Checkout error:', error);
         showCartMessage(`✗ خطأ في الاتصال: ${error.message}`, 'error');
     }
 }

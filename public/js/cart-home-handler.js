@@ -22,7 +22,6 @@
     cartOverlay = document.getElementById('cartOverlay');
 
     if (!cartElement) {
-      console.warn('Cart element not found');
       return false;
     }
     return true;
@@ -75,7 +74,6 @@
             const product = products.find(p => p.Product_ID === productId);
 
             if (!product) {
-              console.error('Product not found:', productId);
               return;
             }
 
@@ -101,7 +99,7 @@
           });
         });
       })
-      .catch(error => console.error('Error loading products:', error));
+      .catch(error =>);
   }
 
   /**
@@ -333,7 +331,6 @@
         }
       }, 2000);
     } catch (error) {
-      console.error('Checkout error:', error);
       showMessage(`✗ خطأ في الاتصال: ${error.message}`, 'error');
     }
   }
@@ -344,7 +341,6 @@
   function showMessage(message, type = 'info') {
     const messageEl = document.getElementById('cart_message');
     if (!messageEl) {
-      console.warn('Message element not found');
       return;
     }
 
@@ -376,7 +372,6 @@
   function init() {
     // Initialize DOM references
     if (!initDOMReferences()) {
-      console.warn('Could not initialize cart DOM references');
       return;
     }
 
@@ -401,7 +396,6 @@
       updateCartDisplay(window.cartState.getItems());
       syncCartUI({ isOpen: window.cartState.isOpen() });
     } else {
-      console.warn('Global cart state not available');
     }
   }
 

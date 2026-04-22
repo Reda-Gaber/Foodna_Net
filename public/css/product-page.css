@@ -27,6 +27,7 @@
   --text-footer-color: #FFF;
   --hover-color: #000;
   --background-of-header-for-pages: #000;
+  --color-prodect-box: #3a3a3a; /* للدارك مود */
   
   /* أحجام الخطوط وأوزانها */
   /*(.5rem = 8px | 1rem = 16px)*/
@@ -53,27 +54,103 @@
 /* نهاية المتغيرات */
 
 /* ====== الوضع الليلي (Dark Theme) ====== */
-.dark-theme .size-product .size-options button{
-  border: 1.5px solid hsl(230, 16%, 35%);
-  background-color: var(--color-prodect-box);
-} 
-.dark-theme .size-product .size-options button:hover{
-   border: 1.5px solid var(--main-color);
+/* خلفية الصفحة والعناصر الأساسية */
+.dark-theme .up_main {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
 }
-.dark-theme .size-product{
-  border-bottom: 2px solid hsl(230, 16%, 35%);
+
+.dark-theme .top-product {
+  background: #2a2a2a;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
-.dark-theme .check_box .check_product button{
-  background-color: var(--color-prodect-box);
-  border: 1.5px solid hsl(230, 16%, 35%);
-  color: beige;
+
+.dark-theme .top-product:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
 }
-.dark-theme .button-data-id{
+
+/* النصوص والعناوين */
+.dark-theme .text-product h2.titel-product,
+.dark-theme .text-product .description-product,
+.dark-theme .text-product .points-one-product,
+.dark-theme .points-two-product p,
+.dark-theme .size-product .size,
+.dark-theme .totil_price_product {
+  color: #ffffff;
+}
+
+.dark-theme .text-product h2.titel-product {
+  color: #ffffff;
+}
+
+/* خلفية صورة المنتج */
+.dark-theme .img-product {
+  background: linear-gradient(135deg, #3a3a3a 0%, #4a4a4a 100%);
+}
+
+/* أزرار الأحجام */
+.dark-theme .size-product .size-options button {
+  border: 1.5px solid #555;
+  background-color: #3a3a3a;
+  color: #ffffff;
+}
+
+.dark-theme .size-product .size-options button:hover {
+  border: 1.5px solid var(--main-color);
+  background-color: #4a4a4a;
+}
+
+/* خط فاصل */
+.dark-theme .size-product {
+  border-bottom: 2px solid #555;
+}
+
+/* قسم السعر والإضافة للسلة */
+.dark-theme .check_box {
+  background: #2a2a2a;
+  border: 1px solid #444;
+}
+
+.dark-theme .price_product,
+.dark-theme .totil_price_product {
+  color: #ffffff;
+}
+
+.dark-theme .old-price {
+  color: #888 !important;
+}
+
+/* زر إضافة للسلة */
+.dark-theme .button-data-id {
   background-color: var(--main-color);
-  color: beige;
+  color: #ffffff;
 }
-.dark-theme .size-product .size{
-  color: beige
+
+.dark-theme .button-data-id:hover {
+  background-color: var(--footer-color);
+}
+
+/* قسم المنتجات الموصى بها */
+.dark-theme .recommended-section {
+  background: #1a1a1a;
+}
+
+.dark-theme .recommended-section .product {
+  background: #2a2a2a;
+  border: 1px solid #444;
+}
+
+.dark-theme .recommended-section .product h3,
+.dark-theme .recommended-section .product .price {
+  color: #ffffff;
+}
+
+.dark-theme .recommended-section .Product__actions {
+  background: var(--main-color);
+  color: #ffffff;
+}
+
+.dark-theme .recommended-section .Product__actions:hover {
+  background: var(--footer-color);
 }
 
 /* ====== القواعد العامة ====== */

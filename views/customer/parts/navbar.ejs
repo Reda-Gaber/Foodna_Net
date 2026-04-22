@@ -55,27 +55,39 @@
      // Check auth status and update user icon and global auth object
      (async function(){
        try{
-         const res = await fetch('/auth/api/auth/check', { credentials: 'include' });
-         const data = await res.json();
+         const res = await fetch('/auth/api/auth/check', {
+           credentials: 'include',
+           headers: { 'Accept': 'application/json' }
+         });
+
+         let data = { authenticated: false };
+         const contentType = res.headers.get('content-type') || '';
+         if (res.ok && contentType.includes('application/json')) {
+           try {
+             data = await res.json();
+           } catch (err) {
+             data = { authenticated: false };
+           }
+         }
+
          window.auth = { authenticated: !!data.authenticated, user: data.user || null };
 
          const userIcon = document.getElementById('login-button');
          const userLink = document.getElementById('user-icon-link');
          if (!userIcon || !userLink) return;
 
-        if (window.auth.authenticated) {
-          userIcon.classList.add('user-logged');
-          // link to user profile (public profile page)
-          userLink.href = '/profile';
-       } else {
-          // go to client registration page (mounted under /user)
-          userLink.href = '/user/register';
-        }
+         if (window.auth.authenticated) {
+           userIcon.classList.add('user-logged');
+           userLink.href = '/profile';
+         } else {
+           userLink.href = '/user/register';
+         }
 
-         // expose simple event for other scripts to listen to auth changes
          window.dispatchEvent(new CustomEvent('auth.changed', { detail: window.auth }));
        } catch (e) {
-         console.error('Auth check failed', e);
+         window.auth = { authenticated: false, user: null };
+         const userLink = document.getElementById('user-icon-link');
+         if (userLink) userLink.href = '/user/register';
        }
      })();
    </script>

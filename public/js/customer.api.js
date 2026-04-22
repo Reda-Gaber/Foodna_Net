@@ -9,7 +9,6 @@ async function apiass () {
      offers(dataRequest);
      // بناء واجهة المنتجات 
  } catch (error){
-       console.error("error");
     }
 }
 
@@ -26,7 +25,6 @@ async function apia () {
      displayAllProducts(dataRequest);
     
  } catch (error){
-       console.error("error");
     }
 }
 
@@ -37,7 +35,6 @@ let swiperOffersInstance = null;
 const mySwiper = document.querySelector(".slides_matc");
 function slider(actev) {
   if (!mySwiper) {
-    console.log('⚠️ .slides_matc غير موجود في الصفحة الحالية');
     return;
   }
 
@@ -85,7 +82,6 @@ function slider(actev) {
 const OffersSlide = document.querySelector(".Offers_slide");
 function offers(data) {
   if (!OffersSlide) {
-    console.log('⚠️ .Offers_slide غير موجود في الصفحة الحالية');
     return;
   }
 
@@ -313,7 +309,6 @@ async function apiassOptimized() {
             offers(dataRequest);
         }
     } catch (error) {
-        console.error("error loading offers");
     }
 }
 
@@ -329,20 +324,17 @@ async function apiaOptimized() {
             displayAllProducts(dataRequest);
         }
     } catch (error) {
-        console.error("error loading products");
     }
 }
 
 // Run the function - ONLY on homepage where these elements exist
 if (document.querySelector(".slides_matc") && document.querySelector(".Offers_slide")) {
-    console.log('✅ تحميل بيانات الصفحة الرئيسية...');
     apiassOptimized();
     apiaOptimized();
 
     // REMOVED: Auto-refresh was causing unnecessary DOM updates and flickering
     // Products will still update if manually triggered or through event listeners
 } else {
-    console.log('ℹ️ صفحة جانبية - تم تخطي استدعاء customer.api.js');
 }
 
 
@@ -504,6 +496,7 @@ function updateCart() {
         });
     });
 }
+
 
 
 
