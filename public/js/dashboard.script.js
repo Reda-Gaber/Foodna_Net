@@ -617,13 +617,16 @@ async function openProductModal(productId = null) {
             </div>
 
             <div class="form-actions">
-                <button type="button" class="btn btn-secondary" onclick="closeModal()">إلغاء</button>
+                <button type="button" class="btn btn-secondary btn-close-modal">إلغاء</button>
                 <button type="submit" class="btn btn-primary">${isEdit ? 'تحديث' : 'إضافة'} منتج</button>
             </div>
         </form>
     `;
 
     openModal(modalTitle, modalBody);
+
+    // إضافة event listener لزر إلغاء
+    document.querySelector('.btn-close-modal').addEventListener('click', closeModal);
 
     // === Events بعد تحميل الـ Modal ===
     setTimeout(() => {
@@ -915,11 +918,36 @@ function renderCustomers() {
             <td class="secondary">جنيه ${customer.totalSpent.toFixed(2)}</td>
             <td class="actions">
                 <div class="action-buttons">
-                    <button class="action-btn edit" onclick="editCustomer(${customer.id})" style="font-size: 12px; padding: 5px 10px;">تعديل</button>
+                    <button class="action-btn delete btn-delete-customer" data-customer-id="${customer.id}" style="font-size: 12px; padding: 5px 10px; background-color: #ef4444; color: white; border: none; border-radius: 4px; cursor: pointer;">حذف</button>
                 </div>
             </td>
         </tr>
     `).join('');
+    
+    // إضافة event listeners للأزرار بعد تحديث DOM
+    attachCustomerDeleteListeners();
+}
+
+function attachCustomerDeleteListeners() {
+    const deleteButtons = document.querySelectorAll('.btn-delete-customer');
+    deleteButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const customerId = parseInt(btn.getAttribute('data-customer-id'));
+            deleteCustomer(customerId);
+        });
+    });
+}
+
+function attachOrderFilterActionListeners() {
+    const updateButtons = document.querySelectorAll('.btn-update-order-filter');
+    updateButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const orderId = parseInt(btn.getAttribute('data-order-id'));
+            updateOrderStatus(orderId);
+        });
+    });
 }
 
 function editCustomer(id) {
@@ -940,13 +968,16 @@ function editCustomer(id) {
                 <input type="tel" id="customerPhone" value="${customer.phone}" required>
             </div>
             <div class="form-actions">
-                <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button type="button" class="btn btn-secondary btn-close-modal-customer">Cancel</button>
                 <button type="submit" class="btn btn-primary">Update Customer</button>
             </div>
         </form>
     `;
 
     openModal('Edit Customer', modalBody);
+
+    // إضافة event listener لزر إلغاء
+    document.querySelector('.btn-close-modal-customer').addEventListener('click', closeModal);
 
     document.getElementById('customerForm').addEventListener('submit', (e) => {
         e.preventDefault();
@@ -965,10 +996,108 @@ function editCustomer(id) {
 }
 
 function deleteCustomer(id) {
-    if (confirm('Are you sure you want to delete this customer?')) {
-        state.customers = state.customers.filter(c => c.id !== id);
-        renderCustomers();
-        renderDashboard();
+    console.log('🗑️ محاولة حذف العميل:', id);
+    console.log('📋 العملاء في الحالة:', state.customers);
+    
+    const customer = state.customers.find(c => c.id === id);
+    
+    if (!customer) {
+        console.error('❌ العميل غير موجود في الحالة:', id);
+        alert('العميل غير موجود');
+        return;
+    }
+    
+    console.log('✅ العميل المراد حذفه:', customer);
+    
+    // استخدام SweetAlert إذا كان متاحاً، وإلا استخدام confirm
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            title: 'تأكيد الحذف',
+            text: `هل أنت متأكد من حذف العميل "${customer.name}"؟ سيتم حذف جميع طلباته أيضاً.`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'نعم، احذف',
+            cancelButtonText: 'إلغاء'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    console.log('🗑️ جاري حذف العميل برقم:', id);
+                    const res = await fetch(`/admin/api/customers/${id}`, {
+                        method: 'DELETE',
+                        credentials: 'include',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                    
+                    console.log('📊 الاستجابة من الخادم - الحالة:', res.status);
+                    
+                    if (res.ok) {
+                        const data = await res.json();
+                        console.log('✅ استجابة النجاح:', data);
+                        
+                        state.customers = state.customers.filter(c => c.id !== id);
+                        renderCustomers();
+                        renderDashboard();
+                        
+                        Swal.fire({
+                            title: 'تم بنجاح ✓',
+                            text: 'تم حذف العميل بنجاح',
+                            icon: 'success',
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+                        console.log('✅ تم حذف العميل بنجاح من الواجهة');
+                    } else {
+                        const errorData = await res.json().catch(() => ({ error: 'خطأ غير معروف' }));
+                        console.error('❌ فشل الحذف - الحالة:', res.status, 'البيانات:', errorData);
+                        
+                        Swal.fire({
+                            title: 'خطأ',
+                            text: errorData.error || errorData.message || 'فشل حذف العميل',
+                            icon: 'error'
+                        });
+                    }
+                } catch (error) {
+                    console.error('❌ خطأ في الاتصال:', error);
+                    Swal.fire({
+                        title: 'خطأ',
+                        text: 'حدث خطأ في الاتصال: ' + error.message,
+                        icon: 'error'
+                    });
+                }
+            }
+        });
+    } else {
+        // fallback إلى confirm
+        if (confirm(`هل أنت متأكد من حذف العميل "${customer.name}"؟`)) {
+            try {
+                console.log('🗑️ جاري حذف العميل (fallback):', id);
+                fetch(`/admin/api/customers/${id}`, {
+                    method: 'DELETE',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' }
+                }).then(async res => {
+                    if (res.ok) {
+                        console.log('✅ تم حذف العميل بنجاح');
+                        state.customers = state.customers.filter(c => c.id !== id);
+                        renderCustomers();
+                        renderDashboard();
+                        alert('تم حذف العميل بنجاح');
+                    } else {
+                        const errorData = await res.json().catch(() => ({ error: 'خطأ غير معروف' }));
+                        console.error('❌ فشل الحذف:', res.status, errorData);
+                        alert('فشل حذف العميل: ' + (errorData.error || 'خطأ غير معروف'));
+                    }
+                }).catch(error => {
+                    console.error('❌ خطأ في الاتصال:', error);
+                    alert('حدث خطأ: ' + error.message);
+                });
+            } catch (error) {
+                console.error('❌ استثناء:', error);
+                alert('حدث خطأ: ' + error.message);
+            }
+        }
     }
 }
 
@@ -994,11 +1123,25 @@ function renderOrders() {
             <td class="secondary"><span class="status-badge ${order.status}">${getArabicOrderStatus(order.status)}</span></td>
             <td class="actions">
                 <div class="action-buttons">
-                    <button class="action-btn edit" onclick="updateOrderStatus(${order.id})" style="font-size: 12px; padding: 5px 10px;">تحديث</button>
+                    <button class="action-btn edit btn-update-order" data-order-id="${order.id}" style="font-size: 12px; padding: 5px 10px;">تحديث</button>
                 </div>
             </td>
         </tr>
     `).join('');
+    
+    // إضافة event listeners للأزرار بعد تحديث DOM
+    attachOrderActionListeners();
+}
+
+function attachOrderActionListeners() {
+    const updateButtons = document.querySelectorAll('.btn-update-order');
+    updateButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const orderId = parseInt(btn.getAttribute('data-order-id'));
+            updateOrderStatus(orderId);
+        });
+    });
 }
 
 function getArabicOrderStatus(status) {
@@ -1026,13 +1169,16 @@ function updateOrderStatus(id) {
                 </select>
             </div>
             <div class="form-actions">
-                <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button type="button" class="btn btn-secondary btn-close-modal-order">Cancel</button>
                 <button type="submit" class="btn btn-primary">Update Status</button>
             </div>
         </form>
     `;
 
     openModal('Update Order Status', modalBody);
+
+    // إضافة event listener لزر إلغاء
+    document.querySelector('.btn-close-modal-order').addEventListener('click', closeModal);
 
     document.getElementById('orderForm').addEventListener('submit', (e) => {
         e.preventDefault();
@@ -1070,12 +1216,37 @@ function renderSuppliers() {
             <td>${supplier.products}</td>
             <td>
                 <div class="action-buttons">
-                    <button class="action-btn edit" onclick="editSupplier(${supplier.id})">Edit</button>
-                    <button class="action-btn delete" onclick="deleteSupplier(${supplier.id})">Delete</button>
+                    <button class="action-btn edit btn-edit-supplier" data-supplier-id="${supplier.id}">Edit</button>
+                    <button class="action-btn delete btn-delete-supplier" data-supplier-id="${supplier.id}">Delete</button>
                 </div>
             </td>
         </tr>
     `).join('');
+    
+    // إضافة event listeners للأزرار بعد تحديث DOM
+    attachSupplierActionListeners();
+}
+
+function attachSupplierActionListeners() {
+    // Edit buttons
+    const editButtons = document.querySelectorAll('.btn-edit-supplier');
+    editButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const supplierId = parseInt(btn.getAttribute('data-supplier-id'));
+            editSupplier(supplierId);
+        });
+    });
+    
+    // Delete buttons
+    const deleteButtons = document.querySelectorAll('.btn-delete-supplier');
+    deleteButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const supplierId = parseInt(btn.getAttribute('data-supplier-id'));
+            deleteSupplier(supplierId);
+        });
+    });
 }
 
 function openSupplierModal(supplierId = null) {
@@ -1106,13 +1277,16 @@ function openSupplierModal(supplierId = null) {
                 <input type="number" id="supplierProducts" value="${supplier?.products || ''}" required>
             </div>
             <div class="form-actions">
-                <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button type="button" class="btn btn-secondary btn-close-modal-supplier">Cancel</button>
                 <button type="submit" class="btn btn-primary">${isEdit ? 'Update' : 'Add'} Supplier</button>
             </div>
         </form>
     `;
 
     openModal(modalTitle, modalBody);
+
+    // إضافة event listener لزر إلغاء
+    document.querySelector('.btn-close-modal-supplier').addEventListener('click', closeModal);
 
     document.getElementById('supplierForm').addEventListener('submit', (e) => {
         e.preventDefault();
@@ -1220,15 +1394,40 @@ async function loadCategories() {
                 <td>${escDash(c.Description  || c.description || '—')}</td>
                 <td>${c.product_count ?? '—'}</td>
                 <td>
-                    <button class="btn btn-sm btn-secondary" onclick="editCategory(${c.Category_ID || c.id})">تعديل</button>
-                    <button class="btn btn-sm btn-danger"    onclick="deleteCategory(${c.Category_ID || c.id})">حذف</button>
+                    <button class="btn btn-sm btn-secondary btn-edit-category" data-category-id="${c.Category_ID || c.id}">تعديل</button>
+                    <button class="btn btn-sm btn-danger btn-delete-category" data-category-id="${c.Category_ID || c.id}">حذف</button>
                 </td>
             </tr>
         `).join('');
+        
+        // إضافة event listeners للأزرار بعد تحديث DOM
+        attachCategoryActionListeners();
     } catch (err) {
         tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:20px;color:#e53935;">فشل تحميل التصنيفات</td></tr>';
         console.error('loadCategories error:', err);
     }
+}
+
+function attachCategoryActionListeners() {
+    // Edit buttons
+    const editButtons = document.querySelectorAll('.btn-edit-category');
+    editButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const categoryId = parseInt(btn.getAttribute('data-category-id'));
+            editCategory(categoryId);
+        });
+    });
+    
+    // Delete buttons
+    const deleteButtons = document.querySelectorAll('.btn-delete-category');
+    deleteButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const categoryId = parseInt(btn.getAttribute('data-category-id'));
+            deleteCategory(categoryId);
+        });
+    });
 }
 
 function editCategory(id) {
@@ -1242,10 +1441,18 @@ function editCategory(id) {
             <label style="display:block;margin-bottom:4px;font-weight:600;">الوصف</label>
             <textarea id="cat-desc-input" rows="3" style="width:100%;padding:8px;border:1.5px solid #ddd;border-radius:7px;resize:vertical;"></textarea>
           </div>
-          <button id="cat-save-btn" class="btn btn-primary" onclick="saveCategoryEdit(${id})">حفظ التعديل</button>
+          <button id="cat-save-btn" class="btn btn-primary btn-save-category-edit" data-category-id="${id}">حفظ التعديل</button>
           <span id="cat-save-msg" style="margin-right:10px;font-size:13px;"></span>
         </div>`;
     openModal('تعديل التصنيف', body);
+    
+    // إضافة event listener لزر الحفظ
+    document.querySelector('.btn-save-category-edit').addEventListener('click', (e) => {
+        e.preventDefault();
+        const categoryId = parseInt(e.target.getAttribute('data-category-id'));
+        saveCategoryEdit(categoryId);
+    });
+    
     // تحميل البيانات الحالية
     fetch(`/admin/api/categories/${id}`, { credentials: 'include' })
         .then(r => r.json())
@@ -1306,9 +1513,13 @@ document.addEventListener('DOMContentLoaded', () => {
                   <label style="display:block;margin-bottom:4px;font-weight:600;">الوصف</label>
                   <textarea id="new-cat-desc" rows="3" style="width:100%;padding:8px;border:1.5px solid #ddd;border-radius:7px;resize:vertical;"></textarea>
                 </div>
-                <button class="btn btn-primary" onclick="createCategory()">إضافة</button>
+                <button class="btn btn-primary btn-create-category">إضافة</button>
                 <span id="new-cat-msg" style="margin-right:10px;font-size:13px;"></span>
               </div>`;
+            openModal('إضافة تصنيف جديد', body);
+            
+            // إضافة event listener لزر إضافة الفئة
+            document.querySelector('.btn-create-category').addEventListener('click', createCategory);
             openModal('إضافة تصنيف جديد', body);
         });
     }
@@ -1374,15 +1585,42 @@ async function loadOffers() {
                     <td>${discount}%</td>
                     <td>${status}</td>
                     <td>
-                        <button class="btn btn-sm btn-secondary" onclick="editOfferDiscount(${pid},'${escDash(p.Product_Name||'')}',${discount})">تعديل الخصم</button>
-                        <button class="btn btn-sm btn-danger"    onclick="removeDiscount(${pid})">إزالة العرض</button>
+                        <button class="btn btn-sm btn-secondary btn-edit-offer" data-product-id="${pid}" data-product-name="${escDash(p.Product_Name||'')}" data-discount="${discount}">تعديل الخصم</button>
+                        <button class="btn btn-sm btn-danger btn-remove-offer" data-product-id="${pid}">إزالة العرض</button>
                     </td>
                 </tr>`;
         }).join('');
+        
+        // إضافة event listeners للأزرار بعد تحديث DOM
+        attachOfferActionListeners();
     } catch (err) {
         tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:20px;color:#e53935;">فشل تحميل العروض</td></tr>';
         console.error('loadOffers error:', err);
     }
+}
+
+function attachOfferActionListeners() {
+    // Edit buttons
+    const editButtons = document.querySelectorAll('.btn-edit-offer');
+    editButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const productId = parseInt(btn.getAttribute('data-product-id'));
+            const productName = btn.getAttribute('data-product-name');
+            const discount = parseInt(btn.getAttribute('data-discount'));
+            editOfferDiscount(productId, productName, discount);
+        });
+    });
+    
+    // Remove buttons
+    const removeButtons = document.querySelectorAll('.btn-remove-offer');
+    removeButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const productId = parseInt(btn.getAttribute('data-product-id'));
+            removeDiscount(productId);
+        });
+    });
 }
 
 function editOfferDiscount(productId, productName, currentDiscount) {
@@ -1394,9 +1632,17 @@ function editOfferDiscount(productId, productName, currentDiscount) {
           <input id="offer-discount-val" type="number" min="0" max="100" value="${currentDiscount}"
             style="width:100%;padding:8px;border:1.5px solid #ddd;border-radius:7px;">
         </div>
-        <button class="btn btn-primary" onclick="saveOfferDiscount(${productId})">حفظ</button>
+        <button class="btn btn-primary btn-save-offer-discount" data-product-id="${productId}">حفظ</button>
         <span id="offer-msg" style="margin-right:10px;font-size:13px;"></span>
       </div>`;
+    openModal('تعديل الخصم', body);
+    
+    // إضافة event listener لزر حفظ العرض
+    document.querySelector('.btn-save-offer-discount').addEventListener('click', (e) => {
+        e.preventDefault();
+        const productId = parseInt(e.target.getAttribute('data-product-id'));
+        saveOfferDiscount(productId);
+    });
     openModal('تعديل الخصم', body);
 }
 
@@ -1457,10 +1703,14 @@ document.addEventListener('DOMContentLoaded', () => {
                   <input id="offer-new-discount" type="number" min="1" max="100" value="10"
                     style="width:100%;padding:8px;border:1.5px solid #ddd;border-radius:7px;">
                 </div>
-                <button class="btn btn-primary" onclick="applyNewOffer()">تطبيق العرض</button>
+                <button class="btn btn-primary btn-apply-new-offer">تطبيق العرض</button>
                 <span id="new-offer-msg" style="margin-right:10px;font-size:13px;"></span>
               </div>`;
             openModal('إضافة عرض جديد', body);
+            
+            // إضافة event listener لزر تطبيق العرض
+            document.querySelector('.btn-apply-new-offer').addEventListener('click', applyNewOffer);
+            
             // تحميل قائمة المنتجات
             fetch('/api/products?limit=200').then(r => r.json()).then(products => {
                 const arr = Array.isArray(products) ? products : (products.data || []);
@@ -1475,28 +1725,45 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function applyNewOffer() {
+    console.log('🎯 applyNewOffer called');
     const sel  = document.getElementById('offer-product-select');
     const val  = parseFloat(document.getElementById('offer-new-discount')?.value || 0);
     const msg  = document.getElementById('new-offer-msg');
     const pid  = sel?.value;
-    if (!pid) { if (msg) { msg.textContent = 'اختر منتجاً'; msg.style.color = '#e53935'; } return; }
+    
+    console.log('🎯 Selected product ID:', pid);
+    console.log('🎯 Discount value:', val);
+    
+    if (!pid) { 
+        if (msg) { msg.textContent = 'اختر منتجاً'; msg.style.color = '#e53935'; } 
+        console.log('❌ No product selected');
+        return; 
+    }
     if (isNaN(val) || val < 1 || val > 100) {
         if (msg) { msg.textContent = 'نسبة الخصم يجب أن تكون بين 1 و 100'; msg.style.color = '#e53935'; }
+        console.log('❌ Invalid discount value');
         return;
     }
     try {
         const fd = new FormData();
         fd.append('id', pid);
         fd.append('discount', val);
+        console.log('📤 Sending request to /admin/products/update');
         const res = await fetch('/admin/products/update', { method: 'POST', credentials: 'include', body: fd });
+        console.log('📥 Response status:', res.status);
+        
         if (res.ok) {
             if (msg) { msg.textContent = '✓ تم تطبيق العرض'; msg.style.color = '#2e7d32'; }
+            console.log('✅ Offer applied successfully');
             setTimeout(() => { closeModal(); loadOffers(); }, 700);
         } else {
-            if (msg) { msg.textContent = 'فشل تطبيق العرض'; msg.style.color = '#e53935'; }
+            const errorData = await res.json();
+            if (msg) { msg.textContent = errorData.message || 'فشل تطبيق العرض'; msg.style.color = '#e53935'; }
+            console.log('❌ Failed to apply offer:', errorData);
         }
     } catch (e) {
         if (msg) { msg.textContent = 'خطأ في الاتصال'; msg.style.color = '#e53935'; }
+        console.error('❌ Network error:', e);
     }
 }
 
@@ -1509,9 +1776,15 @@ async function loadCoupons() {
     tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:20px;color:#888;">جارٍ التحميل...</td></tr>';
 
     try {
+        console.log('📊 Loading coupons from API...');
         const res  = await fetch('/admin/api/coupons', { credentials: 'include' });
+        console.log('📊 API Response status:', res.status);
+        
         const data = await res.json();
+        console.log('📊 API Response data:', data);
+        
         const coupons = data.data || data.coupons || (Array.isArray(data) ? data : []);
+        console.log('📊 Parsed coupons:', coupons);
 
         if (!coupons.length) {
             tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:20px;color:#888;">لا توجد كوبونات</td></tr>';
@@ -1537,17 +1810,44 @@ async function loadCoupons() {
                     <td>${usageStr}</td>
                     <td>${statusEl}</td>
                     <td>
-                        <button class="btn btn-sm btn-secondary" onclick="toggleCoupon(${c.Coupon_ID||c.id},${isActive?1:0})">
+                        <button class="btn btn-sm btn-secondary btn-toggle-coupon" data-coupon-id="${c.Coupon_ID||c.id}" data-is-active="${isActive?1:0}">
                             ${isActive ? 'تعطيل' : 'تفعيل'}
                         </button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteCoupon(${c.Coupon_ID||c.id})">حذف</button>
+                        <button class="btn btn-sm btn-danger btn-delete-coupon" data-coupon-id="${c.Coupon_ID||c.id}">حذف</button>
                     </td>
                 </tr>`;
         }).join('');
+        
+        // إضافة event listeners للأزرار بعد تحديث DOM
+        attachCouponActionListeners();
+        console.log('✅ Coupons loaded successfully');
     } catch (err) {
         tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:20px;color:#e53935;">فشل تحميل الكوبونات</td></tr>';
-        console.error('loadCoupons error:', err);
+        console.error('❌ loadCoupons error:', err);
     }
+}
+
+function attachCouponActionListeners() {
+    // Toggle buttons
+    const toggleButtons = document.querySelectorAll('.btn-toggle-coupon');
+    toggleButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const couponId = parseInt(btn.getAttribute('data-coupon-id'));
+            const isActive = parseInt(btn.getAttribute('data-is-active'));
+            toggleCoupon(couponId, isActive);
+        });
+    });
+    
+    // Delete buttons
+    const deleteButtons = document.querySelectorAll('.btn-delete-coupon');
+    deleteButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const couponId = parseInt(btn.getAttribute('data-coupon-id'));
+            deleteCoupon(couponId);
+        });
+    });
 }
 
 async function toggleCoupon(id, isCurrentlyActive) {
@@ -1610,11 +1910,14 @@ document.addEventListener('DOMContentLoaded', () => {
                   <input id="nc-min" type="number" min="0" value="0" style="width:100%;padding:8px;border:1.5px solid #ddd;border-radius:7px;">
                 </div>
                 <div style="grid-column:1/-1;margin-top:4px;">
-                  <button class="btn btn-primary" onclick="createCoupon()">إضافة الكوبون</button>
+                  <button class="btn btn-primary btn-create-coupon">إضافة الكوبون</button>
                   <span id="nc-msg" style="margin-right:10px;font-size:13px;"></span>
                 </div>
               </div>`;
             openModal('إضافة كوبون جديد', body);
+            
+            // إضافة event listener لزر إضافة الكوبون
+            document.querySelector('.btn-create-coupon').addEventListener('click', createCoupon);
         });
     }
 });
@@ -1624,29 +1927,54 @@ async function createCoupon() {
     const type    = document.getElementById('nc-type')?.value    || 'percentage';
     const value   = parseFloat(document.getElementById('nc-value')?.value  || 0);
     const expiry  = document.getElementById('nc-expiry')?.value  || '';
-    const limit   = document.getElementById('nc-limit')?.value   || null;
+    const limit   = document.getElementById('nc-limit')?.value   || '';
     const minPur  = parseFloat(document.getElementById('nc-min')?.value || 0);
     const msg     = document.getElementById('nc-msg');
 
+    // Validation
     if (!code)   { if (msg) { msg.textContent = 'كود الكوبون مطلوب';   msg.style.color = '#e53935'; } return; }
     if (!value)  { if (msg) { msg.textContent = 'قيمة الخصم مطلوبة';  msg.style.color = '#e53935'; } return; }
     if (!expiry) { if (msg) { msg.textContent = 'تاريخ الانتهاء مطلوب'; msg.style.color = '#e53935'; } return; }
 
     try {
-        const res  = await fetch('/admin/api/coupons', {
-            method: 'POST', credentials: 'include',
+        // Prepare payload
+        const payload = {
+            code,
+            discountType: type,
+            discountValue: value,
+            expiryDate: expiry,
+            minPurchase: minPur,
+            isActive: true
+        };
+        
+        // Only add usageLimit if it has a value
+        if (limit && limit.trim()) {
+            payload.usageLimit = parseInt(limit);
+        }
+
+        console.log('Creating coupon with payload:', payload);
+
+        const res = await fetch('/admin/api/coupons', {
+            method: 'POST',
+            credentials: 'include',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ code, discountType: type, discountValue: value, expiryDate: expiry, usageLimit: limit || undefined, minPurchase: minPur, isActive: true })
+            body: JSON.stringify(payload)
         });
+
         const data = await res.json();
+        console.log('API Response:', { status: res.status, data });
+
         if (res.ok) {
-            if (msg) { msg.textContent = '✓ تمت الإضافة'; msg.style.color = '#2e7d32'; }
+            if (msg) { msg.textContent = '✓ تمت الإضافة بنجاح'; msg.style.color = '#2e7d32'; }
             setTimeout(() => { closeModal(); loadCoupons(); }, 700);
         } else {
-            if (msg) { msg.textContent = data.message || 'فشلت الإضافة'; msg.style.color = '#e53935'; }
+            const errorMsg = data.message || data.errors || 'فشل إضافة الكوبون';
+            if (msg) { msg.textContent = errorMsg; msg.style.color = '#e53935'; }
+            console.error('Error creating coupon:', errorMsg);
         }
     } catch (e) {
-        if (msg) { msg.textContent = 'خطأ في الاتصال'; msg.style.color = '#e53935'; }
+        console.error('Exception in createCoupon:', e);
+        if (msg) { msg.textContent = 'خطأ في الاتصال: ' + e.message; msg.style.color = '#e53935'; }
     }
 }
 
@@ -1801,12 +2129,15 @@ function filterProducts(searchTerm) {
             <td><span class="status-badge ${product.status === 'نشط' ? 'active' : 'inactive'}">${product.status}</span></td>
             <td>
                 <div class="action-buttons">
-                    <button class="action-btn edit" onclick="editProduct(${product.id})" style="font-size: 12px; padding: 5px 10px;">تعديل</button>
-                    <button class="action-btn delete" onclick="deleteProduct(${product.id})" style="font-size: 12px; padding: 5px 10px;">حذف</button>
+                    <button class="action-btn edit btn-edit-product" data-product-id="${product.id}" style="font-size: 12px; padding: 5px 10px;">تعديل</button>
+                    <button class="action-btn delete btn-delete-product" data-product-id="${product.id}" style="font-size: 12px; padding: 5px 10px;">حذف</button>
                 </div>
             </td>
         </tr>
     `).join('');
+    
+    // إضافة event listeners للأزرار بعد تحديث DOM
+    attachProductActionListeners();
 }
 
 function filterCustomers(searchTerm) {
@@ -1841,11 +2172,25 @@ function filterCustomers(searchTerm) {
             <td>جنيه ${customer.totalSpent.toFixed(2)}</td>
             <td>
                 <div class="action-buttons">
-                    <button class="action-btn edit" onclick="editCustomer(${customer.id})" style="font-size: 12px; padding: 5px 10px;">تعديل</button>
+                    <button class="action-btn edit btn-edit-customer" data-customer-id="${customer.id}" style="font-size: 12px; padding: 5px 10px;">تعديل</button>
                 </div>
             </td>
         </tr>
     `).join('');
+    
+    // إضافة event listeners للأزرار بعد تحديث DOM
+    attachCustomerEditListeners();
+}
+
+function attachCustomerEditListeners() {
+    const editButtons = document.querySelectorAll('.btn-edit-customer');
+    editButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const customerId = parseInt(btn.getAttribute('data-customer-id'));
+            editCustomer(customerId);
+        });
+    });
 }
 
 function filterOrders(searchTerm) {
@@ -1879,11 +2224,14 @@ function filterOrders(searchTerm) {
             <td><span class="status-badge ${order.status}">${getArabicOrderStatus(order.status)}</span></td>
             <td>
                 <div class="action-buttons">
-                    <button class="action-btn edit" onclick="updateOrderStatus(${order.id})" style="font-size: 12px; padding: 5px 10px;">تحديث</button>
+                    <button class="action-btn edit btn-update-order-filter" data-order-id="${order.id}" style="font-size: 12px; padding: 5px 10px;">تحديث</button>
                 </div>
             </td>
         </tr>
     `).join('');
+    
+    // إضافة event listeners للأزرار بعد تحديث DOM
+    attachOrderFilterActionListeners();
 }
 
 // =====================================================

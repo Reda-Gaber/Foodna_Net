@@ -31,6 +31,7 @@ const chatbotRoutes = require("./modules/chatbot/chatbot.routes");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const isProduction = process.env.NODE_ENV === 'production';
 
 // ==================== Security Middleware ====================
 app.use(helmetConfig); // حماية Headers
@@ -64,8 +65,6 @@ const dbPool = mysql.createPool({
   queueLimit: 0
 });
 
-
-
 const sessionStore = new MySqlStore({
   expiration: 8 * 60 * 60 * 1000, // 8 ساعات
   createDatabaseTable: true,
@@ -87,9 +86,9 @@ app.use(session({
   saveUninitialized: false,
   cookie: {
     maxAge: parseInt(process.env.SESSION_MAX_AGE) || 8 * 60 * 60 * 1000, // 8 ساعات
-    secure: process.env.NODE_ENV === 'production', // HTTPS فقط في الإنتاج
-    httpOnly: true, // لا يمكن الوصول من JavaScript
-    sameSite: 'strict' // حماية CSRF
+    secure: isProduction,           // HTTPS فقط في الإنتاج
+    httpOnly: true,                 // لا يمكن الوصول من JavaScript
+    sameSite: isProduction ? 'none' : 'lax' // 'none' مطلوب مع secure:true على Vercel
   }
 }));
 
@@ -139,15 +138,15 @@ app.use((err, req, res, next) => {
   if (req.path.startsWith('/api')) {
     return res.status(err.status || 500).json({
       success: false,
-      message: process.env.NODE_ENV === 'production' 
+      message: isProduction
         ? 'حدث خطأ في الخادم' 
         : err.message,
-      ...(process.env.NODE_ENV !== 'production' && { stack: err.stack })
+      ...(!isProduction && { stack: err.stack })
     });
   }
   
   res.status(err.status || 500).render('error', {
-    message: process.env.NODE_ENV === 'production'
+    message: isProduction
       ? 'حدث خطأ في الخادم'
       : err.message
   });

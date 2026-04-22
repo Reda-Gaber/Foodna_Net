@@ -50298,3 +50298,21 @@
   "sqlState": "42S22",
   "sqlMessage": "Unknown column 'o.status' in 'where clause'"
 }
+[2026-04-22T15:26:56.090Z] ERROR: Create product error {
+  "message": "Column 'Description' cannot be null",
+  "stack": "Error: Column 'Description' cannot be null\n    at PromisePoolConnection.query (D:\\programming\\projects\\Foodna_Net\\node_modules\\mysql2\\lib\\promise\\connection.js:29:22)\n    at Product.create (D:\\programming\\projects\\Foodna_Net\\modules\\admin\\products.model.js:17:54)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async create (D:\\programming\\projects\\Foodna_Net\\modules\\admin\\products.controller.js:75:28)",
+  "code": "ER_BAD_NULL_ERROR",
+  "errno": 1048,
+  "sql": "INSERT INTO Products \n                 (Product_Name, Category, Description, Image, Quantity, Price, Discount, Supplier_ID)\n                 VALUES ('شاورما الدجاج', 'ساندويتشات', NULL, '1776871615898-861007476.jpg', 10, 100, 0, NULL)",
+  "sqlState": "23000",
+  "sqlMessage": "Column 'Description' cannot be null"
+}
+[2026-04-22T15:28:12.646Z] ERROR: Create product error {
+  "message": "Column 'Description' cannot be null",
+  "stack": "Error: Column 'Description' cannot be null\n    at PromisePoolConnection.query (D:\\programming\\projects\\Foodna_Net\\node_modules\\mysql2\\lib\\promise\\connection.js:29:22)\n    at Product.create (D:\\programming\\projects\\Foodna_Net\\modules\\admin\\products.model.js:17:54)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async create (D:\\programming\\projects\\Foodna_Net\\modules\\admin\\products.controller.js:75:28)",
+  "code": "ER_BAD_NULL_ERROR",
+  "errno": 1048,
+  "sql": "INSERT INTO Products \n                 (Product_Name, Category, Description, Image, Quantity, Price, Discount, Supplier_ID)\n                 VALUES ('فغق', 'حلويات', NULL, NULL, 454, 45, 0, NULL)",
+  "sqlState": "23000",
+  "sqlMessage": "Column 'Description' cannot be null"
+}

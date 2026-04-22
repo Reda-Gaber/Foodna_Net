@@ -10,22 +10,29 @@ class Coupon {
    * إنشاء كوبون جديد
    */
   static async create(data) {
-    const [result] = await db.query(
-      `INSERT INTO Coupons (Code, Discount_Type, Discount_Value, Min_Purchase, 
-                           Max_Discount, Expiry_Date, Usage_Limit, Is_Active)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-      [
-        data.code,
-        data.discountType, // 'percentage' or 'fixed'
-        data.discountValue,
-        data.minPurchase || 0,
-        data.maxDiscount || null,
-        data.expiryDate,
-        data.usageLimit || null,
-        data.isActive !== undefined ? data.isActive : 1
-      ]
-    );
-    return result.insertId;
+    console.log('📊 Model: Creating coupon with:', data);
+    try {
+      const [result] = await db.query(
+        `INSERT INTO Coupons (Code, Discount_Type, Discount_Value, Min_Purchase, 
+                             Max_Discount, Expiry_Date, Usage_Limit, Is_Active)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          data.code,
+          data.discountType, // 'percentage' or 'fixed'
+          data.discountValue,
+          data.minPurchase || 0,
+          data.maxDiscount || null,
+          data.expiryDate,
+          data.usageLimit || null,
+          data.isActive !== undefined ? data.isActive : 1
+        ]
+      );
+      console.log('✅ Model: Coupon inserted successfully. Insert ID:', result.insertId);
+      return result.insertId;
+    } catch (error) {
+      console.error('❌ Model: Database error while creating coupon:', error);
+      throw error;
+    }
   }
 
   /**
@@ -104,13 +111,20 @@ class Coupon {
    * الحصول على جميع الكوبونات
    */
   static async getAll(limit = 50, offset = 0) {
-    const [rows] = await db.query(
-      `SELECT * FROM Coupons 
-       ORDER BY Created_At DESC
-       LIMIT ? OFFSET ?`,
-      [limit, offset]
-    );
-    return rows;
+    console.log('📊 Model: Getting all coupons with limit:', limit, 'offset:', offset);
+    try {
+      const [rows] = await db.query(
+        `SELECT * FROM Coupons 
+         ORDER BY Created_At DESC
+         LIMIT ? OFFSET ?`,
+        [limit, offset]
+      );
+      console.log('✅ Model: Retrieved', rows.length, 'coupons');
+      return rows;
+    } catch (error) {
+      console.error('❌ Model: Database error while fetching coupons:', error);
+      throw error;
+    }
   }
 
   /**

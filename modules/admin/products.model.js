@@ -21,7 +21,7 @@ class Product {
                 [
                     data.name,
                     data.category,
-                    data.description || null,
+                    data.description || '',  // استخدام string فارغة بدلاً من null
                     imageFilename,
                     data.quantity,
                     data.price,
@@ -73,7 +73,7 @@ class Product {
                 [
                     data.name,
                     data.category,
-                    data.description || null,
+                    data.description || '',  // استخدام string فارغة بدلاً من null
                     imageFilename,
                     data.quantity,
                     data.price,

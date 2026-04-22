@@ -5,6 +5,7 @@
 
 const router = require("express").Router();
 const db = require("../../config/db");
+const { requireEmployee } = require("../../core/middlewares/authMiddleware");
 
 // ============================================
 // جميع العملاء
@@ -103,6 +104,73 @@ router.get("/stats", async (req, res) => {
   } catch (error) {
     console.error("Error fetching stats:", error);
     res.status(500).json({ error: "فشل جلب الإحصائيات", details: error.message });
+  }
+});
+
+// ============================================
+// حذف عميل
+// ============================================
+router.delete("/customers/:id", requireEmployee, async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    console.log('🗑️ محاولة حذف العميل برقم:', id, 'من المستخدم:', req.session.user?.id);
+    
+    if (!id || isNaN(parseInt(id))) {
+      console.warn('⚠️ معرف العميل غير صحيح:', id);
+      return res.status(400).json({ error: "معرف العميل غير صحيح" });
+    }
+    
+    const customerId = parseInt(id);
+    
+    let connection;
+    try {
+      connection = await db.getConnection();
+      console.log('✅ تم الاتصال بقاعدة البيانات');
+      
+      await connection.beginTransaction();
+      console.log('✅ تم بدء الـ transaction');
+      
+      // حذف الطلبات المتعلقة به أولاً
+      const [deleteOrdersResult] = await connection.query(
+        "DELETE FROM Orders WHERE Customer_ID = ?",
+        [customerId]
+      );
+      console.log('🗑️ تم حذف', deleteOrdersResult.affectedRows, 'طلب');
+      
+      // ثم حذف العميل
+      const [deleteCustomerResult] = await connection.query(
+        "DELETE FROM Customers WHERE Customer_Id = ?",
+        [customerId]
+      );
+      console.log('🗑️ تم حذف', deleteCustomerResult.affectedRows, 'عميل');
+      
+      if (deleteCustomerResult.affectedRows === 0) {
+        await connection.rollback();
+        console.warn('⚠️ العميل غير موجود:', customerId);
+        return res.status(404).json({ error: "العميل غير موجود" });
+      }
+      
+      await connection.commit();
+      console.log('✅ تم تأكيد الـ transaction');
+      
+      console.log('✅ تم حذف العميل بنجاح:', customerId);
+      return res.json({ success: true, message: "تم حذف العميل بنجاح" });
+    } catch (dbError) {
+      if (connection) {
+        await connection.rollback();
+        console.error('❌ تم إلغاء الـ transaction بسبب خطأ:', dbError);
+      }
+      throw dbError;
+    } finally {
+      if (connection) {
+        connection.release();
+        console.log('✅ تم إغلاق الاتصال');
+      }
+    }
+  } catch (error) {
+    console.error("❌ خطأ في حذف العميل:", error);
+    res.status(500).json({ error: "فشل حذف العميل", details: error.message });
   }
 });
 

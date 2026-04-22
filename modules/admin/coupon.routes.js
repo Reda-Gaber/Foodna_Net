@@ -12,11 +12,11 @@ const router = express.Router();
 // جميع المسارات تتطلب تسجيل دخول كموظف
 router.use(requireEmployee);
 
+// التحقق من صحة الكوبون - يجب أن يأتي قبل GET :id
+router.post('/coupons/validate', couponController.validateCoupon);
+
 // إنشاء كوبون جديد
 router.post('/coupons', couponController.createCoupon);
-
-// التحقق من صحة الكوبون (متاح للعملاء أيضاً)
-router.post('/coupons/validate', couponController.validateCoupon);
 
 // الحصول على جميع الكوبونات
 router.get('/coupons', couponController.getAllCoupons);

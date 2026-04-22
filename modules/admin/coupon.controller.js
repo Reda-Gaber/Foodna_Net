@@ -12,13 +12,24 @@ const Logger = require('../../core/utils/logger');
  */
 exports.createCoupon = async (req, res) => {
   try {
+    console.log('🔐 Session check:', {
+      hasSession: !!req.session,
+      hasUser: !!req.session?.user,
+      userId: req.session?.user?.id,
+      userRole: req.session?.user?.role
+    });
+
     const { code, discountType, discountValue, minPurchase, maxDiscount, expiryDate, usageLimit, isActive } = req.body;
 
+    console.log('📝 Creating coupon with data:', { code, discountType, discountValue, expiryDate, minPurchase, usageLimit, isActive });
+
     if (!code || !discountType || !discountValue || !expiryDate) {
+      console.warn('❌ Validation failed:', { code: !!code, discountType: !!discountType, discountValue: !!discountValue, expiryDate: !!expiryDate });
       return ApiResponse.validationError(res, null, 'البيانات المطلوبة: code, discountType, discountValue, expiryDate');
     }
 
     if (discountType !== 'percentage' && discountType !== 'fixed') {
+      console.warn('❌ Invalid discount type:', discountType);
       return ApiResponse.validationError(res, null, 'نوع الخصم يجب أن يكون percentage أو fixed');
     }
 
@@ -33,9 +44,11 @@ exports.createCoupon = async (req, res) => {
       isActive
     });
 
+    console.log('✅ Coupon created successfully with ID:', couponId);
     Logger.audit('COUPON_CREATED', req.session.user?.id, { couponId, code });
     return ApiResponse.success(res, { couponId }, 'تم إنشاء الكوبون بنجاح', 201);
   } catch (error) {
+    console.error('🔴 Create coupon error:', error);
     Logger.error('Create coupon error', error);
     return ApiResponse.error(res, error.message || 'فشل في إنشاء الكوبون', 500);
   }
@@ -80,9 +93,12 @@ exports.getAllCoupons = async (req, res) => {
     const limit = parseInt(req.query.limit) || 50;
     const offset = (page - 1) * limit;
 
+    console.log('📊 Getting all coupons - page:', page, 'limit:', limit, 'offset:', offset);
     const coupons = await Coupon.getAll(limit, offset);
+    console.log('✅ Retrieved', coupons.length, 'coupons');
     return ApiResponse.success(res, coupons, 'تم جلب الكوبونات بنجاح');
   } catch (error) {
+    console.error('❌ Get coupons error:', error);
     Logger.error('Get coupons error', error);
     return ApiResponse.error(res, 'فشل في جلب الكوبونات', 500);
   }

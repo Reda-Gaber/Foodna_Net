@@ -444,3 +444,38 @@
   "email": "admin@foodna.com",
   "role": "Admin"
 }
+[2026-04-22T15:08:36.275Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-04-22T15:26:23.790Z] AUDIT: Action: PRODUCT_DELETED, User: 8 {
+  "productId": 67
+}
+[2026-04-22T15:30:06.612Z] AUDIT: Action: PRODUCT_CREATED, User: 8 {
+  "productId": 60124
+}
+[2026-04-22T15:31:58.118Z] AUDIT: Action: PRODUCT_DELETED, User: 8 {
+  "productId": 70
+}
+[2026-04-22T15:52:18.269Z] AUDIT: Action: CATEGORY_UPDATED, User: 8 {
+  "categoryId": "1"
+}
+[2026-04-22T15:57:26.244Z] AUDIT: Action: PRODUCT_UPDATED, User: 8 {
+  "productId": 103
+}
+[2026-04-22T16:27:19.424Z] AUDIT: Action: PRODUCT_UPDATED, User: 8 {
+  "productId": 94
+}
+[2026-04-22T16:27:47.325Z] AUDIT: Action: USER_LOGIN, User: 9 {
+  "email": "chef@foodna.com",
+  "role": "Chef"
+}
+[2026-04-22T16:28:21.640Z] AUDIT: Action: USER_LOGIN, User: 10 {
+  "email": "cashier@foodna.com",
+  "role": "Cashier"
+}
+[2026-04-22T16:28:38.178Z] AUDIT: Action: PUBLIC_ORDER_CREATED, User: system {
+  "orderId": 90035,
+  "totalAmount": 100,
+  "finalAmount": 100
+}

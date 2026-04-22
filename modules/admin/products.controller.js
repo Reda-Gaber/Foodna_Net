@@ -1,39 +1,74 @@
 /**
  * Product Controller (Admin)
- * معالجة منطق المنتجات - النسخة المحسّنة باستخدام Async/Await
+ * معالجة منطق المنتجات - محدّث للعمل مع Vercel (memoryStorage)
  */
 const Product = require('./products.model');
 const ApiResponse = require('../../core/utils/response');
 const Logger = require('../../core/utils/logger');
-const fs = require('fs');
 const path = require('path');
-const { promisify } = require('util');
 
+// =====================================================
+// Helper: حفظ الصورة من الـ buffer إلى الديسك
+// على Vercel لا يمكن الكتابة إلا في /tmp
+// =====================================================
+const fs = require('fs');
+const { promisify } = require('util');
+const writeFileAsync = promisify(fs.writeFile);
 const unlinkAsync = promisify(fs.unlink);
+
+async function saveImageFromBuffer(file) {
+    if (!file || !file.buffer) return null;
+
+    const ext = path.extname(file.originalname).toLowerCase();
+    const filename = Date.now() + '-' + Math.round(Math.random() * 1E9) + ext;
+
+    // في Vercel نكتب في /tmp (المسار الوحيد القابل للكتابة)
+    // في البيئة المحلية نكتب في public/images/products/
+    const isVercel = !!process.env.VERCEL;
+    const savePath = isVercel
+        ? path.join('/tmp', filename)
+        : path.join(__dirname, '../../public/images/products/', filename);
+
+    await writeFileAsync(savePath, file.buffer);
+    return filename;
+}
+
+async function deleteImageFile(filename) {
+    if (!filename) return;
+    try {
+        const isVercel = !!process.env.VERCEL;
+        const filePath = isVercel
+            ? path.join('/tmp', filename)
+            : path.join(__dirname, '../../public/images/products/', filename);
+        await unlinkAsync(filePath);
+    } catch (err) {
+        Logger.warn('Failed to delete image file', err);
+    }
+}
 
 class ProductController {
     /**
      * إنشاء منتج جديد
      */
     static async create(req, res) {
+        let imageFilename = null;
         try {
-            // الصورة اختيارية الآن
-            let imageFilename = null;
+            // حفظ الصورة إن وُجدت
             if (req.file) {
-                imageFilename = req.file.filename;
+                imageFilename = await saveImageFromBuffer(req.file);
             }
-            // Parse numeric inputs for creation
+
             const parsedQuantity = (req.body.quantity !== undefined && req.body.quantity !== '') ? parseInt(req.body.quantity) : null;
-            const parsedPrice = (req.body.price !== undefined && req.body.price !== '') ? parseFloat(req.body.price) : null;
+            const parsedPrice    = (req.body.price    !== undefined && req.body.price    !== '') ? parseFloat(req.body.price)    : null;
             const parsedDiscount = (req.body.discount !== undefined && req.body.discount !== '') ? parseFloat(req.body.discount) : null;
 
             const data = {
-                name: req.body.name,
-                category: req.body.category,
-                description: req.body.description || null,
-                quantity: Number.isNaN(parsedQuantity) ? null : parsedQuantity,
-                price: Number.isNaN(parsedPrice) ? null : parsedPrice,
-                discount: Number.isNaN(parsedDiscount) ? 0 : parsedDiscount,
+                name:        req.body.name,
+                category:    req.body.category,
+                description: req.body.description || '',  // استخدام string فارغة بدلاً من null
+                quantity:    Number.isNaN(parsedQuantity) ? null : parsedQuantity,
+                price:       Number.isNaN(parsedPrice)    ? null : parsedPrice,
+                discount:    Number.isNaN(parsedDiscount) ? 0    : parsedDiscount,
                 supplier_id: req.body.supplier_id || null
             };
 
@@ -41,16 +76,14 @@ class ProductController {
             Logger.audit('PRODUCT_CREATED', req.session.user?.id, { productId: result.productId });
 
             return ApiResponse.success(res, {
-                productId: result.productId,
+                productId:   result.productId,
                 inventoryId: result.inventoryId
             }, 'تم إضافة المنتج بنجاح', 201);
+
         } catch (error) {
             Logger.error('Create product error', error);
             // حذف الصورة المرفوعة في حالة الخطأ
-            if (req.file) {
-                const imagePath = path.join(__dirname, '../../public/images/products/', req.file.filename);
-                unlinkAsync(imagePath).catch(err => Logger.warn('Failed to delete uploaded image', err));
-            }
+            if (imageFilename) await deleteImageFile(imageFilename);
             return ApiResponse.error(res, error.message || 'فشل في إضافة المنتج', 500);
         }
     }
@@ -73,26 +106,23 @@ class ProductController {
             let imageFilename = product.Image;
 
             if (req.file) {
-                imageFilename = req.file.filename;
+                // حفظ الصورة الجديدة
+                imageFilename = await saveImageFromBuffer(req.file);
                 // حذف الصورة القديمة
-                if (product.Image) {
-                    const oldPath = path.join(__dirname, '../../public/images/products/', product.Image);
-                    unlinkAsync(oldPath).catch(err => Logger.warn('Failed to delete old image', err));
-                }
+                if (product.Image) await deleteImageFile(product.Image);
             }
 
-            // Only coerce numbers when provided; otherwise fallback to existing values
-            const parsedQuantity = (req.body.quantity !== undefined && req.body.quantity !== '') ? parseInt(req.body.quantity) : undefined;
-            const parsedPrice = (req.body.price !== undefined && req.body.price !== '') ? parseFloat(req.body.price) : undefined;
-            const parsedDiscount = (req.body.discount !== undefined && req.body.discount !== '') ? parseFloat(req.body.discount) : undefined;
+            const parsedQuantity = (req.body.quantity !== undefined && req.body.quantity !== '') ? parseInt(req.body.quantity)     : undefined;
+            const parsedPrice    = (req.body.price    !== undefined && req.body.price    !== '') ? parseFloat(req.body.price)      : undefined;
+            const parsedDiscount = (req.body.discount !== undefined && req.body.discount !== '') ? parseFloat(req.body.discount)   : undefined;
 
             const data = {
-                name: (req.body.name !== undefined && req.body.name !== '') ? req.body.name : product.Product_Name,
-                category: (req.body.category !== undefined && req.body.category !== '') ? req.body.category : product.Category,
-                description: (req.body.description !== undefined) ? req.body.description : product.Description,
-                quantity: parsedQuantity === undefined ? (product.Quantity_Available ?? null) : (Number.isNaN(parsedQuantity) ? null : parsedQuantity),
-                price: parsedPrice === undefined ? (product.Price ?? null) : (Number.isNaN(parsedPrice) ? null : parsedPrice),
-                discount: parsedDiscount === undefined ? (product.Discount ?? 0) : (Number.isNaN(parsedDiscount) ? 0 : parsedDiscount),
+                name:        (req.body.name        !== undefined && req.body.name        !== '') ? req.body.name        : product.Product_Name,
+                category:    (req.body.category    !== undefined && req.body.category    !== '') ? req.body.category    : product.Category,
+                description: (req.body.description !== undefined)                               ? req.body.description : product.Description,
+                quantity:    parsedQuantity === undefined ? (product.Quantity_Available ?? null) : (Number.isNaN(parsedQuantity) ? null : parsedQuantity),
+                price:       parsedPrice    === undefined ? (product.Price              ?? null) : (Number.isNaN(parsedPrice)    ? null : parsedPrice),
+                discount:    parsedDiscount === undefined ? (product.Discount           ?? 0)   : (Number.isNaN(parsedDiscount) ? 0    : parsedDiscount),
                 supplier_id: (req.body.supplier_id !== undefined) ? (req.body.supplier_id || null) : (product.Supplier_ID || null)
             };
 
@@ -100,6 +130,7 @@ class ProductController {
             Logger.audit('PRODUCT_UPDATED', req.session.user?.id, { productId: id });
 
             return ApiResponse.success(res, { productId: result.productId }, 'تم تحديث المنتج بنجاح');
+
         } catch (error) {
             Logger.error('Update product error', error);
             return ApiResponse.error(res, error.message || 'فشل في تحديث المنتج', 500);
@@ -122,15 +153,13 @@ class ProductController {
             }
 
             // حذف الصورة
-            if (product.Image) {
-                const imagePath = path.join(__dirname, '../../public/images/products/', product.Image);
-                unlinkAsync(imagePath).catch(err => Logger.warn('Failed to delete image', err));
-            }
+            if (product.Image) await deleteImageFile(product.Image);
 
             await Product.deleteById(id);
             Logger.audit('PRODUCT_DELETED', req.session.user?.id, { productId: id });
 
             return ApiResponse.success(res, { productId: id }, 'تم حذف المنتج بنجاح');
+
         } catch (error) {
             Logger.error('Delete product error', error);
             return ApiResponse.error(res, error.message || 'فشل في حذف المنتج', 500);
@@ -153,6 +182,7 @@ class ProductController {
             }
 
             return ApiResponse.success(res, product, 'تم جلب المنتج بنجاح');
+
         } catch (error) {
             Logger.error('Get product error', error);
             return ApiResponse.error(res, error.message || 'فشل في جلب المنتج', 500);
@@ -164,12 +194,12 @@ class ProductController {
      */
     static async getAllProducts(req, res) {
         try {
-            const page = parseInt(req.query.page) || 1;
-            const limit = parseInt(req.query.limit) || 50;
+            const page   = parseInt(req.query.page)  || 1;
+            const limit  = parseInt(req.query.limit) || 50;
             const offset = (page - 1) * limit;
 
             const products = await Product.findAll(limit, offset);
-            const total = await Product.count();
+            const total    = await Product.count();
 
             return ApiResponse.success(res, {
                 products,
@@ -180,6 +210,7 @@ class ProductController {
                     totalPages: Math.ceil(total / limit)
                 }
             }, 'تم جلب المنتجات بنجاح');
+
         } catch (error) {
             Logger.error('Get all products error', error);
             return ApiResponse.error(res, error.message || 'فشل في جلب المنتجات', 500);

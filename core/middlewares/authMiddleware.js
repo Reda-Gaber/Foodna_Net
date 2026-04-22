@@ -86,7 +86,11 @@ function requireCustomer(req, res, next) {
  * التحقق من أن المستخدم هو Employee
  */
 function requireEmployee(req, res, next) {
+  console.log('🔐 Checking employee authentication...');
+  console.log('Session user:', req.session?.user);
+  
   if (!req.session?.user || !req.session.user.id) {
+    console.warn('⚠️ No employee session found');
     if (req.path.startsWith('/api') || req.originalUrl.startsWith('/api')) {
       return res.status(401).json({
         success: false,
@@ -98,6 +102,8 @@ function requireEmployee(req, res, next) {
     const nextPath = encodeURIComponent(req.originalUrl || '/');
     return res.redirect(`/auth/login?next=${nextPath}`);
   }
+  
+  console.log('✅ Employee authenticated:', req.session.user.id);
   next();
 }
 
