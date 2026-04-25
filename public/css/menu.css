@@ -331,7 +331,7 @@ img {
   width: 280px;
   min-width: 280px;
   height: auto;
-  min-height: 460px;
+  /* min-height: 460px; */
 }
 
 .product:hover {

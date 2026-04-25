@@ -33,32 +33,52 @@ const createAccount = async (req, res) => {
       return res.status(409).json({ error: 'البريد الإلكتروني موجود بالفعل' });
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const customerId = Math.floor(100000 + Math.random() * 900000);
 
-    await authModel.createUser({
-      Customer_Id:   customerId,
+    // إنشاء الحساب وأخذ الـ ID من الـ database مباشرة
+    const newUser = await authModel.createUser({
       Customer_Name: username,
       Email:         email,
       Phone:         phone,
       Password:      hashedPassword
     });
 
-    req.session.userId        = customerId;
-    req.session.email         = email;
-    req.session.role          = 'Client';
-    req.session.authenticated = true;
-    req.session.user = {
-      id:    customerId,
-      name:  username,
-      email: email,
-      role:  'Client'
-    };
+    // الـ ID بييجي من الـ database (auto increment) مش random
+    const customerId = newUser.insertId || newUser.Customer_Id;
 
-    const next = req.body?.next || req.query?.next;
-    req.session.save((err) => {
-      if (err) console.error('Session save error after register:', err);
-      if (next) return res.redirect(decodeURIComponent(next));
-      return res.redirect('/?success=true');
+    // إنشاء session جديد نظيف
+    req.session.regenerate((err) => {
+      if (err) {
+        console.error('Session regenerate error:', err);
+        return res.status(500).json({ error: 'تم إنشاء الحساب بنجاح لكن حدث خطأ في الجلسة، الرجاء تسجيل الدخول' });
+      }
+
+      req.session.userId        = customerId;
+      req.session.email         = email;
+      req.session.role          = 'Client';
+      req.session.authenticated = true;
+      req.session.user = {
+        id:    customerId,
+        name:  username,
+        email: email,
+        role:  'Client'
+      };
+
+      const next = req.body?.next || req.query?.next;
+      req.session.save((err) => {
+        if (err) {
+          console.error('Session save error after register:', err);
+          return res.status(500).json({ error: 'تم إنشاء الحساب بنجاح لكن حدث خطأ في الجلسة، الرجاء تسجيل الدخول' });
+        }
+        
+        console.log('✅ Session saved successfully for new user:', email, 'Session ID:', req.sessionID);
+        
+        // رجع JSON للـ fetch handler
+        return res.json({
+          success: true,
+          message: 'تم إنشاء الحساب بنجاح',
+          redirect: next ? decodeURIComponent(next) : '/'
+        });
+      });
     });
   } catch (error) {
     console.error(error);
@@ -68,13 +88,23 @@ const createAccount = async (req, res) => {
 
 const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
-    const user = await authModel.findUserByEmail(email);
+    const { email, password } = req.body || {};
 
+    if (!req.body) {
+      return res.status(400).json({ success: false, message: 'طلب تسجيل الدخول غير صالح، تأكد من إرسال البيانات بشكل صحيح' });
+    }
+
+    if (!email || !password) {
+      return res.status(400).json({ success: false, message: 'البريد وكلمة المرور مطلوبان' });
+    }
+
+    // تنظيف الـ session السابق قبل تسجيل الدخول الجديد
+    if (req.session.userId) {
+      req.session.destroy();
+    }
+
+    const user = await authModel.findUserByEmail(email);
     if (!user) {
-      // تحقق من نوع الطلب - JSON أو HTML form
-      const wantsJson = req.headers['accept']?.includes('application/json') || req.xhr;
-      if (wantsJson) return res.status(401).json({ success: false, message: 'البريد الإلكتروني أو كلمة المرور غير صحيحة' });
       return res.status(401).json({ success: false, message: 'البريد الإلكتروني أو كلمة المرور غير صحيحة' });
     }
 
@@ -83,30 +113,45 @@ const login = async (req, res) => {
       return res.status(401).json({ success: false, message: 'البريد الإلكتروني أو كلمة المرور غير صحيحة' });
     }
 
-    // حفظ بيانات كاملة في الـ session
-    req.session.userId        = user.Customer_Id;
-    req.session.email         = user.Email;
-    req.session.role          = 'Client';
-    req.session.authenticated = true;
-    req.session.user = {
-      id:    user.Customer_Id,
-      name:  user.Customer_Name,
-      email: user.Email,
-      role:  'Client'
-    };
+    // إنشاء session جديد نظيف
+    req.session.regenerate((err) => {
+      if (err) {
+        console.error('Session regenerate error:', err);
+        return res.status(500).json({ success: false, message: 'خطأ في إنشاء الجلسة، حاول مرة أخرى' });
+      }
 
-    const next = req.body?.next || req.query?.next;
-    req.session.save((err) => {
-      if (err) console.error('Session save error after login:', err);
-      // دائماً نرجع JSON للـ fetch handler في الصفحة
-      return res.json({
-        success: true,
-        message: 'تم تسجيل الدخول بنجاح',
-        redirect: next ? decodeURIComponent(next) : '/'
+      // حفظ كامل بيانات الـ session
+      req.session.userId        = user.Customer_Id;
+      req.session.email         = user.Email;
+      req.session.role          = 'Client';
+      req.session.authenticated = true;
+      req.session.user = {
+        id:    user.Customer_Id,
+        name:  user.Customer_Name,
+        email: user.Email,
+        role:  'Client'
+      };
+
+      const next = req.body?.next || req.query?.next;
+
+      // session.save() مع error handling واضح
+      req.session.save((err) => {
+        if (err) {
+          console.error('Session save error after login:', err);
+          return res.status(500).json({ success: false, message: 'خطأ في حفظ الجلسة، حاول مرة أخرى' });
+        }
+        
+        console.log('✅ Session saved successfully for user:', user.Email, 'Session ID:', req.sessionID);
+        
+        return res.json({
+          success: true,
+          message: 'تم تسجيل الدخول بنجاح',
+          redirect: next ? decodeURIComponent(next) : '/'
+        });
       });
     });
   } catch (error) {
-    console.error(error);
+    console.error('Login error:', error);
     return res.status(500).json({ success: false, message: 'خطأ في الخادم' });
   }
 };

@@ -101,12 +101,15 @@ loginForm.addEventListener('submit', (event) => {
   const submitBtn = loginForm.querySelector('button[type="submit"]');
   if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'جاري تسجيل الدخول...'; }
 
-  const formData = new FormData(loginForm);
+  const formData = new URLSearchParams(new FormData(loginForm));
   fetch('/user/login', {
     method: 'POST',
     body: formData,
     credentials: 'include',
-    headers: { 'Accept': 'application/json' }
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+    }
   })
   .then(async res => {
     const text = await res.text();

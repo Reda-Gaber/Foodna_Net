@@ -137,38 +137,57 @@
     if (display) display.textContent = val || 'MM/YY';
   };
 
-  // ===================== تطبيق الكوبون (محاكاة) =====================
-  window.applyCoupon = function () {
+  // ===================== تطبيق الكوبون (من الـ backend) =====================
+  window.applyCoupon = async function () {
     const code = (document.getElementById('coupon-input')?.value || '').trim().toUpperCase();
-    const msgEl = document.getElementById('coupon-msg');
     if (!code) {
       showCouponMsg('أدخل كود الكوبون أولاً', 'error');
       return;
     }
 
-    // محاكاة كوبونات للعرض
-    const mockCoupons = {
-      'FOODNA10': { type: 'percentage', value: 10 },
-      'FOODNA20': { type: 'percentage', value: 20 },
-      'SAVE50': { type: 'fixed', value: 50 },
-    };
+    const btn = document.getElementById('apply-coupon-btn');
+    if (btn) { btn.disabled = true; btn.textContent = '...'; }
 
-    const coupon = mockCoupons[code];
-    if (!coupon) {
+    try {
+      const response = await fetch('/cashier/api/coupon/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ code, totalAmount: subtotal })
+      });
+
+      const data = await response.json();
+
+      if (!data.success) {
+        discountAmount = 0;
+        updateTotals();
+        showCouponMsg('❌ كود الخصم غير صحيح أو منتهي الصلاحية', 'error');
+        return;
+      }
+
+      // استخدم الـ discount المحسوب من الـ backend لو موجود
+      if (data.data?.discount !== undefined) {
+        discountAmount = parseFloat(data.data.discount) || 0;
+      } else {
+        // احسبه يدوياً من بيانات الكوبون
+        const coupon = data.data?.coupon || data.data;
+        if (coupon.Discount_Type === 'percentage') {
+          discountAmount = subtotal * (parseFloat(coupon.Discount_Value) / 100);
+        } else {
+          discountAmount = Math.min(parseFloat(coupon.Discount_Value), subtotal);
+        }
+      }
+
+      updateTotals();
+      showCouponMsg(`✅ تم تطبيق الكوبون! وفرت ${discountAmount.toFixed(2)} جنيه`, 'success');
+
+    } catch (err) {
       discountAmount = 0;
       updateTotals();
-      showCouponMsg('❌ كود الخصم غير صحيح', 'error');
-      return;
+      showCouponMsg('❌ حدث خطأ في التحقق من الكوبون', 'error');
+    } finally {
+      if (btn) { btn.disabled = false; btn.textContent = 'تطبيق'; }
     }
-
-    if (coupon.type === 'percentage') {
-      discountAmount = subtotal * (coupon.value / 100);
-    } else {
-      discountAmount = Math.min(coupon.value, subtotal);
-    }
-
-    updateTotals();
-    showCouponMsg(`✅ تم تطبيق خصم ${coupon.value}${coupon.type === 'percentage' ? '%' : ' جنيه'}!`, 'success');
   };
 
   function showCouponMsg(text, type) {
@@ -240,10 +259,14 @@
       });
 
       if (response.status === 401) {
-        showCheckoutMsg('يجب تسجيل الدخول أولاً!', 'error');
-        setTimeout(() => {
+        // حفظ السلة الحالية قبل الـ redirect
+        try {
+          localStorage.setItem('pendingCart', JSON.stringify(cartItems));
           localStorage.setItem('checkoutIntent', 'true');
           localStorage.setItem('postAuthRedirect', '/checkout');
+        } catch(e) {}
+        showCheckoutMsg('يجب تسجيل الدخول أولاً، جاري تحويلك...', 'error');
+        setTimeout(() => {
           window.location.href = '/user/register';
         }, 1200);
         return;
@@ -310,25 +333,28 @@
 
   // ===================== تهيئة =====================
   function init() {
-    loadCartItems();
-
-    // لو في intent للـ checkout، اعمل redirect هنا
+    // استرجاع السلة المعلقة لو في checkoutIntent
     const intent = localStorage.getItem('checkoutIntent');
-    if (!intent) return;
-    localStorage.removeItem('checkoutIntent');
-    localStorage.removeItem('postAuthRedirect');
-
-    // استرجاع السلة المعلقة
-    try {
-      const pendingCart = JSON.parse(localStorage.getItem('pendingCart') || '[]');
-      if (pendingCart.length > 0) {
-        if (window.cartState && typeof window.cartState.addItem === 'function') {
-          pendingCart.forEach(item => window.cartState.addItem(item));
+    if (intent) {
+      try {
+        const pendingCart = JSON.parse(localStorage.getItem('pendingCart') || '[]');
+        if (pendingCart.length > 0) {
+          if (window.cartState && typeof window.cartState.addItem === 'function') {
+            // امسح السلة الحالية أولاً عشان ما تتضافش
+            if (typeof window.cartState.clear === 'function') window.cartState.clear();
+            pendingCart.forEach(item => window.cartState.addItem(item));
+          } else {
+            localStorage.setItem('cart', JSON.stringify(pendingCart));
+          }
+          localStorage.removeItem('pendingCart');
         }
-        localStorage.removeItem('pendingCart');
-        loadCartItems();
-      }
-    } catch (e) { /* ignore */ }
+      } catch (e) { /* ignore */ }
+      // امسح الـ intent بس بعد ما الـ cart اتستعاد
+      localStorage.removeItem('checkoutIntent');
+      localStorage.removeItem('postAuthRedirect');
+    }
+
+    loadCartItems();
   }
 
   function attachPageEvents() {
@@ -385,4 +411,3 @@
   }
 
 })();
-

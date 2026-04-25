@@ -5,6 +5,7 @@
 const db = require('../../config/db');
 const bcrypt = require('bcrypt');
 const Logger = require('../../core/utils/logger');
+const { getSessionUserId } = require('../../core/middlewares/sessionHandler');
 
 /**
  * تسجيل الدخول الموحد
@@ -65,50 +66,69 @@ exports.unifiedLogin = async (req, res) => {
       });
     }
 
-    // حفظ Session
-    if (tableName === 'Customers') {
-      req.session.userId = user[idField];
-      req.session.email = user.Email;
-      req.session.role = 'Client';
-    } else {
-      req.session.user = {
-        id: user[idField],
-        name: user[nameField],
-        role: userRole
-      };
-      req.session.role = userRole;
-    }
+    // حفظ Session - موحد لكل الأدوار
+    // مهم: نحدد القيم دي قبل الـ save() عشان تتكتب في الـ database
+    req.session.userId        = user[idField];
+    req.session.email         = user.Email;
+    req.session.role          = userRole;
+    req.session.authenticated = true;
+    req.session.user = {
+      id:    user[idField],
+      name:  user[nameField],
+      email: user.Email,
+      role:  userRole
+    };
 
-    Logger.audit('USER_LOGIN', user[idField], { 
-      email, 
-      role: userRole 
-    });
+    const redirectUrl = (() => {
+      switch (userRole) {
+        case 'Admin':    return '/admin/dashboard';
+        case 'Cashier':  return '/cashier';
+        case 'Chef':
+        case 'Kitchen':  return '/kitchen';
+        case 'Client':
+        default:         return req.body?.next ? decodeURIComponent(req.body.next) : '/';
+      }
+    })();
 
-    // إرجاع JSON response دائماً (سيتم التعامل معه في Frontend)
-    
-    return res.json({
-      success: true,
-      message: 'تم تسجيل الدخول بنجاح',
-      user: {
-        id: user[idField],
-        name: user[nameField],
-        email: user.Email,
-        role: userRole
-      },
-      redirect: (() => {
-        switch (userRole) {
-          case 'Admin':
-            return '/admin/dashboard';
-          case 'Cashier':
-            return '/cashier';
-          case 'Chef':
-          case 'Kitchen':
-            return '/kitchen';
-          case 'Client':
-          default:
-            return '/';
-        }
-      })()
+    Logger.audit('USER_LOGIN', user[idField], { email, role: userRole });
+
+    // ==========================================
+    // مهم جداً على Vercel:
+    // 1. نستخدم session.save() صراحة قبل ما نرد
+    // 2. نضمن إن الـ cookie بيتبعته مع الـ response
+    // 3. نستخدم res.writeHead() قبل session.save() عشان الـ cookie يتحط
+    // ==========================================
+
+    // نضمن إن الـ session هتتحفظ قبل الـ response
+    req.session.save((err) => {
+      if (err) {
+        Logger.error('Session save error after login', err);
+        return res.status(500).json({
+          success: false,
+          message: 'خطأ في حفظ الجلسة، حاول مرة أخرى'
+        });
+      }
+
+      // نتأكد من إن الـ cookie اتحط في الـ response headers
+      const setCookieHeader = res.getHeader('Set-Cookie');
+      if (setCookieHeader) {
+        Logger.info('Session cookie set:', {
+          path: req.path,
+          cookieCount: Array.isArray(setCookieHeader) ? setCookieHeader.length : 1
+        });
+      }
+
+      return res.json({
+        success: true,
+        message: 'تم تسجيل الدخول بنجاح',
+        user: {
+          id:    user[idField],
+          name:  user[nameField],
+          email: user.Email,
+          role:  userRole
+        },
+        redirect: redirectUrl
+      });
     });
 
   } catch (error) {
@@ -144,6 +164,12 @@ exports.unifiedLogout = (req, res) => {
  * التحقق من حالة تسجيل الدخول
  */
 exports.checkAuth = (req, res) => {
+  // Debug: log session info
+  console.log('[checkAuth] Session ID:', req.sessionID);
+  console.log('[checkAuth] Session userId:', req.session.userId);
+  console.log('[checkAuth] Session user:', req.session.user);
+  console.log('[checkAuth] Session authenticated:', req.session.authenticated);
+  
   // التحقق من أي من الطرق الممكنة لتخزين الـ session
   const isAuthenticated = !!(
     req.session.user ||

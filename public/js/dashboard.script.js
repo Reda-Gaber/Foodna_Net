@@ -154,7 +154,7 @@ async function loadCustomers() {
             throw new Error(`HTTP error! status: ${res.status}`);
         }
         
-        const customers = await res.json();? customers.length : 'ليس array');
+        const customers = await res.json() ? customers.length : 'ليس array';
         
         if (!Array.isArray(customers)) {
             state.customers = [];

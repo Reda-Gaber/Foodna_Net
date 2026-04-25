@@ -497,3 +497,29 @@
   "couponId": 1,
   "code": "S100"
 }
+[2026-04-23T20:04:02.211Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-04-23T20:06:19.736Z] AUDIT: Action: USER_LOGIN, User: 10 {
+  "email": "cashier@foodna.com",
+  "role": "Cashier"
+}
+[2026-04-23T20:06:33.182Z] AUDIT: Action: PUBLIC_ORDER_CREATED, User: system {
+  "orderId": 150035,
+  "totalAmount": 165,
+  "finalAmount": 165
+}
+[2026-04-23T20:07:55.225Z] AUDIT: Action: PUBLIC_ORDER_CREATED, User: system {
+  "orderId": 150036,
+  "totalAmount": 45,
+  "finalAmount": 45
+}
+[2026-04-23T20:08:50.455Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-04-23T20:09:39.765Z] AUDIT: Action: USER_LOGIN, User: 10 {
+  "email": "cashier@foodna.com",
+  "role": "Cashier"
+}

@@ -492,7 +492,7 @@ img {
   
   min-width: 360px;
   height: auto;
-  min-height: 460px;
+  /* min-height: 460px; */
 }
 
 /* ==================== IMPROVED CART SIDEBAR - UNIFIED ==================== */
