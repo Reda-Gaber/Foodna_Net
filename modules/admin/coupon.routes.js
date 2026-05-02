@@ -9,11 +9,11 @@ const { requireEmployee } = require('../../core/middlewares/authMiddleware');
 
 const router = express.Router();
 
-// جميع المسارات تتطلب تسجيل دخول كموظف
-router.use(requireEmployee);
-
-// التحقق من صحة الكوبون - يجب أن يأتي قبل GET :id
+// ✅ Public endpoint — العميل يقدر يتحقق من الكوبون بدون login
 router.post('/coupons/validate', couponController.validateCoupon);
+
+// جميع المسارات التالية تتطلب تسجيل دخول كموظف
+router.use(requireEmployee);
 
 // إنشاء كوبون جديد
 router.post('/coupons', couponController.createCoupon);
@@ -31,6 +31,3 @@ router.put('/coupons/:id', couponController.updateCoupon);
 router.delete('/coupons/:id', couponController.deleteCoupon);
 
 module.exports = router;
-
-
-

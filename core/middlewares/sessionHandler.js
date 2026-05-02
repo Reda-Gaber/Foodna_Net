@@ -9,6 +9,7 @@
  */
 
 const Logger = require('../utils/logger');
+const db = require('../../config/db');
 
 /**
  * Middleware to ensure session is saved after modifications
@@ -83,16 +84,37 @@ function getSessionUser(session) {
 
 /**
  * Check if user is authenticated (any role)
+ * Uses express-session's built-in reload to re-fetch from store (MySQL)
+ * which works across Vercel cold starts.
  * @param {Object} req - Express request
  * @returns {boolean}
  */
-function isAuthenticated(req) {
-  return !!(
-    req.session?.userId ||
-    req.session?.user?.id ||
-    req.session?.authenticated
-  );
+async function isAuthenticated(req) {
+  // If session already has user data, return true
+  if (req.session.userId || req.session.user?.id || req.session.authenticated) {
+    return true;
+  }
+
+  // No user data in memory – try to reload session from the store (MySQL)
+  // express-session handles the session ID internally; no need to read req.cookies
+  return new Promise((resolve) => {
+    req.session.reload((err) => {
+      if (err) {
+        console.error('[sessionHandler] Session reload error:', err.message);
+        resolve(false);
+      } else {
+        // After reload, check again
+        const ok = !!(
+          req.session.userId ||
+          req.session.user?.id ||
+          req.session.authenticated
+        );
+        resolve(ok);
+      }
+    });
+  });
 }
+
 
 /**
  * Check if user has specific role

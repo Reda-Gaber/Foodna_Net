@@ -12,8 +12,7 @@ function showErrorMessage(message) {
   if (modal && modalMessage) {
     modalMessage.textContent = message;
     modal.style.display = 'block';
-    
-    // إغلاق الرسالة بعد 4 ثواني
+
     setTimeout(() => {
       modal.style.display = 'none';
     }, 4000);
@@ -21,7 +20,7 @@ function showErrorMessage(message) {
 }
 
 /**
- * دالة للتحقق من قوة كلمة المرور - بسيطة الآن (4 أحرف على الأقل)
+ * دالة للتحقق من قوة كلمة المرور
  */
 function validatePassword(password) {
   return password && password.length >= 4;
@@ -37,9 +36,9 @@ buttonRegister.addEventListener('click', () => {
   cartRegister.classList.add('ach');
 });
 
-const buttonEyeOne = document.getElementById("eye-1");
-const buttonEyeTwo = document.getElementById("eye-2");
-const buttonEyeThree = document.getElementById("eye-3"); // لتأكيد كلمة المرور
+const buttonEyeOne   = document.getElementById("eye-1");
+const buttonEyeTwo   = document.getElementById("eye-2");
+const buttonEyeThree = document.getElementById("eye-3");
 
 buttonEyeOne.addEventListener('click', () => {
   const input = document.getElementById('login-password');
@@ -64,19 +63,22 @@ if (buttonEyeThree) {
   });
 }
 
+// ============================================================
+// Login Form
+// ============================================================
 const loginForm = document.querySelector(".myform_one");
-loginForm.addEventListener('submit', (event) => {
+loginForm.addEventListener('submit', async (event) => {
   event.preventDefault();
-  const email = document.querySelector(".login_username.login_email").value;
+
+  const email    = document.querySelector(".login_username.login_email").value;
   const password = document.querySelector(".login_pas").value;
-  const emailError = document.querySelector(".login_username.login_email").parentElement.querySelector('.drol');
+  const emailError    = document.querySelector(".login_username.login_email").parentElement.querySelector('.drol');
   const passwordError = document.querySelector(".login_pas").parentElement.querySelector('.drol');
 
-  emailError.textContent = '';
+  emailError.textContent    = '';
   passwordError.textContent = '';
 
   const regEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
   let isValid = true;
   let errorMessages = [];
 
@@ -97,51 +99,63 @@ loginForm.addEventListener('submit', (event) => {
     return;
   }
 
-  // إرسال بـ fetch عشان نعرض رسائل الخطأ بشكل منسق بدل JSON خام
   const submitBtn = loginForm.querySelector('button[type="submit"]');
-  if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'جاري تسجيل الدخول...'; }
+  if (submitBtn) {
+    submitBtn.disabled    = true;
+    submitBtn.textContent = 'جاري تسجيل الدخول...';
+  }
 
-  const formData = new URLSearchParams(new FormData(loginForm));
-  fetch('/user/login', {
-    method: 'POST',
-    body: formData,
-    credentials: 'include',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+  // ============================================================
+  // التعديل الأساسي: نبعت لـ /auth/login (الـ unified route)
+  // بدل /user/login القديم — عشان نضمن حفظ الـ session صح
+  // ============================================================
+  const formData = new URLSearchParams();
+  formData.append('email', email);
+  formData.append('password', password);
+
+  // لو في ?next في الـ URL نبعته للسيرفر عشان يعمل redirect صح
+  const urlParams = new URLSearchParams(window.location.search);
+  const next = urlParams.get('next');
+  if (next) formData.append('next', next);
+
+  try {
+    const res = await fetch('/auth/login', {
+      method: 'POST',
+      body: formData,
+      credentials: 'include',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+      }
+    });
+
+    const data = await res.json();
+
+    if (submitBtn) {
+      submitBtn.disabled    = false;
+      submitBtn.textContent = 'تسجيل الدخول';
     }
-  })
-  .then(async res => {
-    const text = await res.text();
-    // لو الرد مش JSON يعني redirect ناجح
-    try {
-      const data = JSON.parse(text);
-      if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'تسجيل الدخول'; }
-      if (data.message && (data.message.toLowerCase().includes('invalid') || res.status === 401)) {
-        showLoginError('❌ البريد الإلكتروني أو كلمة المرور غير صحيحة');
-      } else if (!res.ok) {
-        showLoginError('❌ ' + (data.message || data.error || 'حدث خطأ، حاول مرة أخرى'));
-      } else {
-        // نجاح
+
+    if (data.success) {
+      // انتظر ثانية صغيرة عشان تضمن حفظ الـ cookie قبل الـ redirect
+      setTimeout(() => {
         window.location.href = data.redirect || '/';
-      }
-    } catch(e) {
-      // مش JSON = redirect ناجح من السيرفر
-      if (res.redirected) {
-        window.location.href = res.url;
-      } else {
-        window.location.href = '/';
-      }
+      }, 200);
+    } else {
+      showLoginError(data.message || 'البريد الإلكتروني أو كلمة المرور غير صحيحة');
     }
-  })
-  .catch(err => {
-    if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'تسجيل الدخول'; }
+
+  } catch (err) {
+    if (submitBtn) {
+      submitBtn.disabled    = false;
+      submitBtn.textContent = 'تسجيل الدخول';
+    }
     showLoginError('❌ خطأ في الاتصال بالخادم، حاول مرة أخرى');
-  });
+    console.error('Login error:', err);
+  }
 });
 
 function showLoginError(message) {
-  // إزالة أي رسالة خطأ قديمة
   const existing = document.getElementById('login-error-banner');
   if (existing) existing.remove();
 
@@ -164,16 +178,17 @@ function showLoginError(message) {
     gap: 8px;
     animation: shake 0.4s ease;
   `;
-  banner.innerHTML = '<i class="ri-error-warning-line" style="font-size:18px"></i> ' + message.replace('❌ ','');
-  
-  // إدراج الرسالة فوق زر الإرسال
+  banner.innerHTML = '<i class="ri-error-warning-line" style="font-size:18px"></i> ' + message.replace('❌ ', '');
+
   const submitBtn = loginForm.querySelector('button[type="submit"]');
   loginForm.insertBefore(banner, submitBtn);
 
-  // إزالة الرسالة بعد 5 ثواني
-  setTimeout(() => { banner.style.opacity = '0'; banner.style.transition = 'opacity 0.5s'; setTimeout(() => banner.remove(), 500); }, 5000);
+  setTimeout(() => {
+    banner.style.opacity    = '0';
+    banner.style.transition = 'opacity 0.5s';
+    setTimeout(() => banner.remove(), 500);
+  }, 5000);
 
-  // CSS أنيميشن للاهتزاز
   if (!document.getElementById('shake-style')) {
     const style = document.createElement('style');
     style.id = 'shake-style';
@@ -182,31 +197,34 @@ function showLoginError(message) {
   }
 }
 
-// تحقق من فورم Register
+// ============================================================
+// Register Form
+// ============================================================
 const registerForm = document.querySelector(".myform");
 registerForm.addEventListener('submit', (event) => {
   event.preventDefault();
-  const username = document.querySelector("#reg-username").value;
-  const email = document.querySelector("#reg-email").value;
-  const phone = document.querySelector("#reg-phone").value;
-  const password = document.querySelector("#reg-password").value;
+
+  const username        = document.querySelector("#reg-username").value;
+  const email           = document.querySelector("#reg-email").value;
+  const phone           = document.querySelector("#reg-phone").value;
+  const password        = document.querySelector("#reg-password").value;
   const confirmPassword = document.querySelector("#reg-confirm-password").value;
 
-  const usernameError = document.querySelector("#reg-username").parentElement.querySelector('.drol') || createErrorElement(document.querySelector("#reg-username").parentElement);
-  const emailError = document.querySelector("#reg-email").parentElement.querySelector('.drol') || createErrorElement(document.querySelector("#reg-email").parentElement);
-  const phoneError = document.querySelector("#reg-phone").parentElement.querySelector('.drol') || createErrorElement(document.querySelector("#reg-phone").parentElement);
-  const passwordError = document.querySelector("#reg-password").parentElement.querySelector('.drol') || createErrorElement(document.querySelector("#reg-password").parentElement);
+  const usernameError        = document.querySelector("#reg-username").parentElement.querySelector('.drol')        || createErrorElement(document.querySelector("#reg-username").parentElement);
+  const emailError           = document.querySelector("#reg-email").parentElement.querySelector('.drol')           || createErrorElement(document.querySelector("#reg-email").parentElement);
+  const phoneError           = document.querySelector("#reg-phone").parentElement.querySelector('.drol')           || createErrorElement(document.querySelector("#reg-phone").parentElement);
+  const passwordError        = document.querySelector("#reg-password").parentElement.querySelector('.drol')        || createErrorElement(document.querySelector("#reg-password").parentElement);
   const confirmPasswordError = document.querySelector("#reg-confirm-password").parentElement.querySelector('.drol') || createErrorElement(document.querySelector("#reg-confirm-password").parentElement);
 
-  usernameError.textContent = '';
-  emailError.textContent = '';
-  phoneError.textContent = '';
-  passwordError.textContent = '';
+  usernameError.textContent        = '';
+  emailError.textContent           = '';
+  phoneError.textContent           = '';
+  passwordError.textContent        = '';
   confirmPasswordError.textContent = '';
 
-  const regUsername = /^[\u0600-\u06FFa-zA-Z\s]{3,50}$/; // يقبل عربي وإنجليزي
-  const regEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const regPhone = /^[0-9]{10,15}$/;
+  const regUsername = /^[\u0600-\u06FFa-zA-Z\s]{3,50}$/;
+  const regEmail    = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const regPhone    = /^[0-9]{10,15}$/;
 
   let isValid = true;
   let errorMessages = [];
@@ -246,7 +264,7 @@ registerForm.addEventListener('submit', (event) => {
     return;
   }
 
-  registerForm.submit(); 
+  registerForm.submit();
 });
 
 function createErrorElement(parent) {

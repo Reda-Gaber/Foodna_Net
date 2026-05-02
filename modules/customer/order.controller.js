@@ -4,6 +4,7 @@
  */
 
 const Order = require('./order.model');
+const db = require('../../config/db');
 const Cart = require('./cart.model');
 const ApiResponse = require('../../core/utils/response');
 const Logger = require('../../core/utils/logger');
@@ -11,7 +12,15 @@ const Logger = require('../../core/utils/logger');
 /**
  * إنشاء طلب جديد
  */
+const { isAuthenticated } = require('../../core/middlewares/sessionHandler');
+
 exports.createOrder = async (req, res) => {
+  // Ensure session is hydrated from DB if missing (cold‑start safety)
+  const authOk = await isAuthenticated(req);
+  if (!authOk) {
+    return ApiResponse.unauthorized(res, 'يجب تسجيل الدخول أولاً');
+  }
+
   try {
     const customerId = req.session.userId;
     const { items, deliveryAddress, totalAmount, paymentMethod = 'cash', phone, notes } = req.body;
@@ -19,9 +28,19 @@ exports.createOrder = async (req, res) => {
     console.log('[ORDER-CTRL] Creating order for customer:', customerId);
     console.log('[ORDER-CTRL] Request body:', { items, deliveryAddress, totalAmount, paymentMethod });
 
-    if (!customerId) {
-      console.log('[ORDER-CTRL] Error: No customer ID in session');
+    if (!customerId || isNaN(Number(customerId))) {
+      console.log('[ORDER-CTRL] Error: Invalid customer ID in session:', customerId);
       return ApiResponse.unauthorized(res, 'يجب تسجيل الدخول أولاً');
+    }
+
+    // Verify customer exists in DB
+    const [customerCheck] = await db.query(
+      'SELECT Customer_Id FROM Customers WHERE Customer_Id = ?',
+      [Number(customerId)]
+    );
+    if (!customerCheck || customerCheck.length === 0) {
+      console.log('[ORDER-CTRL] Error: Customer not found in DB:', customerId);
+      return ApiResponse.unauthorized(res, 'بيانات العميل غير صحيحة');
     }
 
     if (!deliveryAddress) {
@@ -135,7 +154,7 @@ exports.getOrderDetails = async (req, res) => {
 };
 
 /**
- * إلغاء طلب
+ * إلغاء طلب (مع التحقق من فترة السماح 3 دقائق)
  */
 exports.cancelOrder = async (req, res) => {
   try {
@@ -146,8 +165,23 @@ exports.cancelOrder = async (req, res) => {
       return ApiResponse.unauthorized(res);
     }
 
+    // التحقق من فترة السماح — الإلغاء مسموح فقط خلال 3 دقائق من إنشاء الطلب
+    const order = await Order.getOrderById(orderId, customerId);
+    if (!order) {
+      return ApiResponse.notFound(res, 'الطلب غير موجود');
+    }
+
+    const createdAt   = new Date(order.Created_At);
+    const now         = new Date();
+    const diffMinutes = (now - createdAt) / 1000 / 60;
+    const GRACE_MINUTES = 3;
+
+    if (diffMinutes > GRACE_MINUTES) {
+      return ApiResponse.error(res, 'انتهت فترة الإلغاء المسموحة (3 دقائق من تأكيد الطلب)', 403);
+    }
+
     await Order.cancelOrder(orderId, customerId);
-    Logger.audit('ORDER_CANCELLED', customerId, { orderId });
+    Logger.audit('ORDER_CANCELLED', customerId, { orderId, minutesAfterOrder: diffMinutes.toFixed(1) });
 
     return ApiResponse.success(res, null, 'تم إلغاء الطلب بنجاح');
   } catch (error) {
@@ -155,6 +189,3 @@ exports.cancelOrder = async (req, res) => {
     return ApiResponse.error(res, error.message || 'فشل في إلغاء الطلب', 400);
   }
 };
-
-
-

@@ -64,12 +64,12 @@ function authorizeRole(...roles) {
 /**
  * التحقق من أن المستخدم هو Customer
  */
-function requireCustomer(req, res, next) {
-  // قبول userId مباشرة أو user.id في حالة Client
-  const isCustomer = req.session?.userId ||
-                     (req.session?.user && (req.session.user.role === 'Client' || !req.session.user.role));
+async function requireCustomer(req, res, next) {
+  // Use the robust isAuthenticated check from sessionHandler
+  const { isAuthenticated } = require('./sessionHandler');
+  const auth = await isAuthenticated(req);
 
-  if (!isCustomer) {
+  if (!auth) {
     if (req.path.startsWith('/api') || req.originalUrl.startsWith('/api')) {
       return res.status(401).json({
         success: false,
@@ -107,10 +107,18 @@ function requireEmployee(req, res, next) {
   next();
 }
 
+function requireAuth(req, res, next) {
+  if (!req.session?.user) {
+    return res.redirect('/user/register');
+  }
+  next();
+}
+
 module.exports = {
   authenticateUser,
   authorizeRole,
   requireCustomer,
   requireEmployee,
+  requireAuth,
   getSessionUserId
 };

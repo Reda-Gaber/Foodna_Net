@@ -12,72 +12,46 @@
   let closeButton;
   let cartOverlay;
 
-  /**
-   * Initialize DOM references
-   */
   function initDOMReferences() {
     cartElement = document.querySelector('.cart');
     cartButton = document.getElementById('cart-button');
     closeButton = document.querySelector('.close_cart');
     cartOverlay = document.getElementById('cartOverlay');
-
-    if (!cartElement) {
-      return false;
-    }
+    if (!cartElement) return false;
     return true;
   }
 
-  /**
-   * Setup cart toggle buttons
-   */
   function setupCartToggleButtons() {
     if (cartButton) {
       cartButton.addEventListener('click', () => {
-        if (window.cartState) {
-          window.cartState.open();
-        }
+        if (window.cartState) window.cartState.open();
       });
     }
-
     if (closeButton) {
       closeButton.addEventListener('click', (e) => {
         e.preventDefault();
-        if (window.cartState) {
-          window.cartState.close();
-        }
+        if (window.cartState) window.cartState.close();
       });
     }
-
     if (cartOverlay) {
       cartOverlay.addEventListener('click', () => {
-        if (window.cartState) {
-          window.cartState.close();
-        }
+        if (window.cartState) window.cartState.close();
       });
     }
   }
 
-  /**
-   * Setup add to cart buttons
-   */
   function setupAddToCartButtons() {
     fetch('/api/products')
       .then(res => res.json())
       .then(products => {
         const addToCartButtons = document.querySelectorAll('.button-data-id');
-
         addToCartButtons.forEach(button => {
           button.addEventListener('click', (e) => {
             e.preventDefault();
-            
             const productId = Number(button.getAttribute('data-id'));
             const product = products.find(p => p.Product_ID === productId);
+            if (!product) return;
 
-            if (!product) {
-              return;
-            }
-
-            // Add to global cart state
             const cartProduct = {
               id: product.Product_ID,
               title: product.Product_Name,
@@ -88,23 +62,16 @@
 
             if (window.cartState) {
               window.cartState.addItem(cartProduct);
-              
-              // Visual feedback
               button.classList.add('activess');
               button.disabled = true;
-              
-              // Show notification
               showAddedNotification(`تم إضافة ${product.Product_Name} للسلة!`);
             }
           });
         });
       })
-      .catch(error =>);
+      .catch(error => console.error('Products fetch error:', error));
   }
 
-  /**
-   * Show added to cart notification
-   */
   function showAddedNotification(message) {
     const notificationEl = document.createElement('div');
     notificationEl.className = 'cart_message success';
@@ -121,18 +88,11 @@
       animation: slideDown 0.3s ease-out;
     `;
     document.body.appendChild(notificationEl);
-
-    setTimeout(() => {
-      notificationEl.remove();
-    }, 3000);
+    setTimeout(() => notificationEl.remove(), 3000);
   }
 
-  /**
-   * Sync cart UI with global state
-   */
   function syncCartUI(state) {
     if (!cartElement) return;
-
     if (state.isOpen) {
       cartElement.classList.add('active');
     } else {
@@ -140,9 +100,6 @@
     }
   }
 
-  /**
-   * Update cart display
-   */
   function updateCartDisplay(items) {
     const cartItemsContainer = document.getElementById('cart_items');
     const priceTotal = document.querySelector('.price_cart_total');
@@ -150,7 +107,6 @@
 
     if (!cartItemsContainer) return;
 
-    // Clear previous items
     cartItemsContainer.innerHTML = '';
 
     if (items.length === 0) {
@@ -170,7 +126,7 @@
     let totalQuantity = 0;
 
     items.forEach((item) => {
-      totalPrice += item.price * item.quantity;
+      totalPrice    += item.price * item.quantity;
       totalQuantity += item.quantity;
 
       const itemEl = document.createElement('div');
@@ -190,59 +146,40 @@
           <i class="ri-delete-bin-5-line"></i>
         </button>
       `;
-
       cartItemsContainer.appendChild(itemEl);
     });
 
-    // Update totals
     if (priceTotal) priceTotal.textContent = `${totalPrice.toFixed(2)} جنيه`;
     if (countBadge) countBadge.textContent = totalQuantity;
 
-    // Attach event listeners
     attachCartItemListeners();
   }
 
-  /**
-   * Attach listeners to quantity and delete buttons
-   */
   function attachCartItemListeners() {
-    // Increase quantity
     document.querySelectorAll('.increase-qty').forEach(btn => {
       btn.addEventListener('click', function() {
         const productId = Number(this.dataset.productId);
-        if (window.cartState) {
-          window.cartState.increaseQuantity(productId);
-        }
+        if (window.cartState) window.cartState.increaseQuantity(productId);
       });
     });
 
-    // Decrease quantity
     document.querySelectorAll('.decrease-qty').forEach(btn => {
       btn.addEventListener('click', function() {
         const productId = Number(this.dataset.productId);
-        if (window.cartState) {
-          window.cartState.decreaseQuantity(productId);
-        }
+        if (window.cartState) window.cartState.decreaseQuantity(productId);
       });
     });
 
-    // Delete item
     document.querySelectorAll('.delete_item').forEach(btn => {
       btn.addEventListener('click', function() {
         const productId = Number(this.dataset.productId);
-        if (window.cartState) {
-          window.cartState.removeItem(productId);
-        }
+        if (window.cartState) window.cartState.removeItem(productId);
       });
     });
   }
 
-  /**
-   * Setup checkout button
-   */
   function setupCheckoutButton() {
     const checkoutButtons = document.querySelectorAll('.btn_cart, .btn-complete-order');
-    
     checkoutButtons.forEach(button => {
       button.addEventListener('click', (e) => {
         e.preventDefault();
@@ -251,10 +188,12 @@
     });
   }
 
-  /**
-   * Handle checkout - يودي لصفحة /checkout
-   */
-  function handleCheckout() {
+  // ============================================================
+  // handleCheckout — الـ FIX الأساسي
+  // بدل ما نعتمد على window.auth اللي مش موجود،
+  // نسأل الـ server مباشرة عن حالة الـ session
+  // ============================================================
+  async function handleCheckout() {
     if (!window.cartState) {
       window.location.href = '/checkout';
       return;
@@ -267,39 +206,45 @@
       return;
     }
 
-    // لو مش مسجّل دخول، احفظ السلة وودّيه للتسجيل
-    if (window.auth && window.auth.authenticated === false) {
+    // نشيك على الـ session من الـ server فعلياً
+    let isAuthenticated = false;
+    try {
+      const res = await fetch('/auth/api/auth/check', { credentials: 'include' });
+      const data = await res.json();
+      isAuthenticated = data.authenticated === true;
+    } catch(e) {
+      // لو فشل الـ check، نرجع على /login عشان نتأكد
+      isAuthenticated = false;
+    }
+
+    if (!isAuthenticated) {
+      // احفظ السلة عشان ترجع بعد تسجيل الدخول
       try {
         localStorage.setItem('pendingCart', JSON.stringify(items));
-        localStorage.setItem('checkoutIntent', 'true');
-        localStorage.setItem('postAuthRedirect', '/checkout');
-      } catch (e) {}
-      window.location.href = '/user/register';
+      } catch(e) {}
+
+      // روح لـ /login مع next=/checkout ✅
+      window.location.href = '/login?next=' + encodeURIComponent('/checkout');
       return;
     }
 
-    // مسجّل دخول → روح لصفحة الـ checkout
+    // مسجّل دخول → روح لصفحة الـ checkout ✅
     window.location.href = '/checkout';
   }
 
-  /**
-   * Submit order to server
-   */
   async function submitOrder(items, totalAmount) {
     try {
       const response = await fetch('/api/orders', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({
           items: items.map(item => ({
             productId: item.id,
-            quantity: item.quantity,
-            price: item.price
+            quantity:  item.quantity,
+            price:     item.price
           })),
-          totalAmount: totalAmount,
+          totalAmount:     totalAmount,
           deliveryAddress: 'عنوان التوصيل'
         })
       });
@@ -308,101 +253,70 @@
 
       if (response.status === 401) {
         showMessage('يجب تسجيل الدخول أولاً!', 'error');
-        setTimeout(() => window.location.href = '/register', 800);
+        setTimeout(() => {
+          window.location.href = '/login?next=' + encodeURIComponent('/checkout');
+        }, 800);
         return;
       }
 
       if (!data.success) {
-        const errorMessage = data.message || data.error?.message || 'فشل في إنشاء الطلب';
-        showMessage(`✗ خطأ: ${errorMessage}`, 'error');
+        showMessage(`✗ خطأ: ${data.message || 'فشل في إنشاء الطلب'}`, 'error');
         return;
       }
 
-      // Success
       showMessage(`✓ تم إنشاء الطلب بنجاح! رقم الطلب: ${data.data.orderNumber}`, 'success');
-      
-      // Clear cart
       window.cartState.clear();
-      
-      // Close cart after 2 seconds
+
       setTimeout(() => {
-        if (window.cartState) {
-          window.cartState.close();
-        }
+        if (window.cartState) window.cartState.close();
       }, 2000);
+
     } catch (error) {
       showMessage(`✗ خطأ في الاتصال: ${error.message}`, 'error');
     }
   }
 
-  /**
-   * Show message notification
-   */
   function showMessage(message, type = 'info') {
     const messageEl = document.getElementById('cart_message');
-    if (!messageEl) {
-      return;
-    }
+    if (!messageEl) return;
 
     messageEl.textContent = message;
-    messageEl.className = `cart_message ${type}`;
+    messageEl.className   = `cart_message ${type}`;
     messageEl.style.display = 'block';
 
-    // Set color based on type
     const colors = {
       success: '#4CAF50',
-      error: 'var(--text-color)',
+      error:   'var(--text-color)',
       warning: '#ff9800',
-      info: '#2196F3'
+      info:    '#2196F3'
     };
-
     messageEl.style.backgroundColor = colors[type] || colors.info;
     messageEl.style.color = '#fff';
 
     if (type !== 'error') {
-      setTimeout(() => {
-        messageEl.style.display = 'none';
-      }, 4000);
+      setTimeout(() => { messageEl.style.display = 'none'; }, 4000);
     }
   }
 
-  /**
-   * Initialize on DOM ready
-   */
   function init() {
-    // Initialize DOM references
-    if (!initDOMReferences()) {
-      return;
-    }
+    if (!initDOMReferences()) return;
 
-    // Setup buttons
     setupCartToggleButtons();
     setupAddToCartButtons();
     setupCheckoutButton();
 
-    // Subscribe to global cart state changes
     if (window.cartState) {
-      // Listen to items changes
-      window.cartState.onItemsChange((items) => {
-        updateCartDisplay(items);
-      });
-
-      // Listen to UI state changes
-      window.cartState.onUIChange((state) => {
-        syncCartUI(state);
-      });
-
-      // Initial display
+      window.cartState.onItemsChange((items) => updateCartDisplay(items));
+      window.cartState.onUIChange((state) => syncCartUI(state));
       updateCartDisplay(window.cartState.getItems());
       syncCartUI({ isOpen: window.cartState.isOpen() });
-    } else {
     }
   }
 
-  // Start initialization
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
     init();
   }
+
 })();

@@ -523,3 +523,99 @@
   "email": "cashier@foodna.com",
   "role": "Cashier"
 }
+[2026-04-25T05:03:48.223Z] AUDIT: Action: USER_LOGIN, User: undefined {
+  "email": "codemasterreda@gmail.com",
+  "role": "Client"
+}
+[2026-04-25T05:09:48.492Z] AUDIT: Action: USER_LOGIN, User: undefined {
+  "email": "codemasterreda@gmail.com",
+  "role": "Client"
+}
+[2026-04-25T05:10:25.797Z] AUDIT: Action: USER_LOGIN, User: undefined {
+  "email": "codemasterreda@gmail.com",
+  "role": "Client"
+}
+[2026-04-26T01:34:41.504Z] AUDIT: Action: USER_LOGIN, User: undefined {
+  "email": "codemasterreda@gmail.com",
+  "role": "Client"
+}
+[2026-04-26T02:39:19.467Z] AUDIT: Action: USER_LOGIN, User: undefined {
+  "email": "codemasterreda@gmail.com",
+  "role": "Client"
+}
+[2026-04-26T02:45:38.038Z] AUDIT: Action: USER_LOGIN, User: undefined {
+  "email": "codemasterreda@gmail.com",
+  "role": "Client"
+}
+[2026-04-26T02:46:02.445Z] AUDIT: Action: ORDER_CREATED, User: 835150 {
+  "orderId": 180035,
+  "totalAmount": 48,
+  "paymentMethod": "cash"
+}
+[2026-04-28T01:09:18.909Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-04-28T01:09:39.270Z] AUDIT: Action: CATEGORY_UPDATED, User: 8 {
+  "categoryId": "1"
+}
+[2026-04-28T16:56:32.265Z] AUDIT: Action: PRODUCT_UPDATED, User: 8 {
+  "productId": 99
+}
+[2026-04-28T17:18:15.085Z] AUDIT: Action: USER_LOGIN, User: undefined {
+  "email": "codemasterreda@gmail.com",
+  "role": "Client"
+}
+[2026-04-28T17:18:42.411Z] AUDIT: Action: ORDER_CREATED, User: 835150 {
+  "orderId": 270035,
+  "totalAmount": 33.25,
+  "paymentMethod": "cash"
+}
+[2026-04-28T17:19:14.462Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-04-29T00:59:39.905Z] AUDIT: Action: CATEGORY_DELETED, User: 8 {
+  "categoryId": "1"
+}
+[2026-04-29T01:05:21.578Z] AUDIT: Action: CATEGORY_DELETED, User: 8 {
+  "categoryId": "5"
+}
+[2026-04-29T01:13:32.452Z] AUDIT: Action: CATEGORY_CREATED, User: 8 {
+  "categoryId": 60025,
+  "name": "مشروبات ساخنه"
+}
+[2026-04-29T01:43:03.685Z] AUDIT: Action: COUPON_CREATED, User: 8 {
+  "couponId": 30001,
+  "code": "S101"
+}
+[2026-04-29T01:44:29.566Z] AUDIT: Action: USER_LOGIN, User: undefined {
+  "email": "codemasterreda@gmail.com",
+  "role": "Client"
+}
+[2026-04-29T02:09:01.851Z] AUDIT: Action: USER_LOGIN, User: undefined {
+  "email": "codemasterreda@gmail.com",
+  "role": "Client"
+}
+[2026-04-29T02:33:23.852Z] AUDIT: Action: ORDER_CREATED, User: 835150 {
+  "orderId": 300035,
+  "totalAmount": 90,
+  "paymentMethod": "cash"
+}
+[2026-05-02T02:02:04.815Z] AUDIT: Action: USER_LOGIN, User: undefined {
+  "email": "codemasterreda@gmail.com",
+  "role": "Client"
+}
+[2026-05-02T02:45:01.634Z] AUDIT: Action: USER_LOGIN, User: undefined {
+  "email": "codemasterreda@gmail.com",
+  "role": "Client"
+}
+[2026-05-02T03:37:56.650Z] AUDIT: Action: ORDER_CREATED, User: 835150 {
+  "orderId": 330035,
+  "totalAmount": 48,
+  "paymentMethod": "cash"
+}
+[2026-05-02T03:39:15.963Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}

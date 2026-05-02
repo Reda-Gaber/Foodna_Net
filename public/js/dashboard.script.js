@@ -136,6 +136,7 @@ async function loadProducts() {
             id: p.Product_ID || idx + 1,
             name: p.Product_Name,
             category: p.Category,
+            category_id: p.Category_ID,
             price: (() => { const v = p.Price ?? p.price; const n = parseFloat(v); return Number.isFinite(n) ? n : 0; })(),
             stock: (p.Quantity_Available ?? p.Quantity ?? p.stock) ? parseInt(p.Quantity_Available ?? p.Quantity ?? p.stock) : 0,
             status: 'نشط'
@@ -149,18 +150,19 @@ async function loadProducts() {
 async function loadCustomers() {
     try {
         const res = await fetch('/admin/api/customers');
-        
+
         if (!res.ok) {
             throw new Error(`HTTP error! status: ${res.status}`);
         }
-        
-        const customers = await res.json() ? customers.length : 'ليس array';
-        
+
+        const customers = await res.json();
+
         if (!Array.isArray(customers)) {
+            console.error('API returned non-array:', customers);
             state.customers = [];
             return;
         }
-        
+
         state.customers = customers.map(c => ({
             id: c.id,
             name: c.name,
@@ -170,6 +172,7 @@ async function loadCustomers() {
             totalSpent: parseFloat(c.totalSpent) || 0
         }));
     } catch (error) {
+        console.error('Error loading customers:', error);
         state.customers = [];
     }
 }
@@ -540,11 +543,12 @@ async function openProductModal(productId = null) {
         categories = [];
     }
 
-    // بناء خيارات القائمة
+    // بناء خيارات القائمة - استخدام category_id كقيمة و category_name كعنوان
     const categoryOptions = categories.map(cat => {
+        const categoryId = cat.Category_ID || cat.id;
         const categoryName = cat.Category_Name || cat.category_name || cat.name;
-        const isSelected = product?.category === categoryName ? 'selected' : '';
-        return `<option value="${categoryName}" ${isSelected}>${categoryName}</option>`;
+        const isSelected = product?.category_id === categoryId ? 'selected' : '';
+        return `<option value="${categoryId}" data-name="${categoryName}">${categoryName}</option>`;
     }).join('');
 
     const modalTitle = isEdit ? 'تعديل المنتج' : 'إضافة منتج جديد';
@@ -704,8 +708,14 @@ async function openProductModal(productId = null) {
                 const description = document.getElementById('description').value.trim();
                 if (description !== (original.description || '')) { fd.append('description', description); changed = true; }
 
-                const categoryVal = document.getElementById('productCategory').value;
-                if (categoryVal !== (original.category || '')) { fd.append('category', categoryVal); changed = true; }
+                const categoryVal = document.getElementById('productCategory');
+                const categoryId = categoryVal.value;
+                const categoryName = categoryVal.options[categoryVal.selectedIndex]?.dataset?.name || '';
+                if (categoryId !== (original.category_id || '')) { 
+                    fd.append('category_id', categoryId); 
+                    fd.append('category', categoryName);
+                    changed = true; 
+                }
 
                 const priceVal = document.getElementById('productPrice').value;
                 if (priceVal !== '') {
@@ -1470,7 +1480,6 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // إضافة event listener لزر إضافة الفئة
             document.querySelector('.btn-create-category').addEventListener('click', createCategory);
-            openModal('إضافة تصنيف جديد', body);
         });
     }
 });
@@ -1489,7 +1498,27 @@ async function createCategory() {
         const data = await res.json();
         if (res.ok) {
             if (msg) { msg.textContent = '✓ تمت الإضافة'; msg.style.color = '#2e7d32'; }
-            setTimeout(() => { closeModal(); loadCategories(); }, 700);
+            setTimeout(() => {
+                closeModal();
+                loadCategories(); // تحديث جدول التصنيفات
+                // تحديث قائمة الفئات في فورم المنتج تلقائياً
+                const catSelect = document.getElementById('productCategory');
+                if (catSelect) {
+                    fetch('/admin/api/categories', { credentials: 'include' })
+                        .then(r => r.json())
+                        .then(response => {
+                            const cats = response.data || response.categories || (Array.isArray(response) ? response : []);
+                            const currentVal = catSelect.value;
+                            catSelect.innerHTML = '<option value="">اختر فئة...</option>' +
+                                cats.map(cat => {
+                                    const id   = cat.Category_ID || cat.id;
+                                    const name = cat.Category_Name || cat.category_name || cat.name;
+                                    return `<option value="${id}" data-name="${name}" ${currentVal == id ? 'selected' : ''}>${name}</option>`;
+                                }).join('');
+                        })
+                        .catch(() => {});
+                }
+            }, 700);
         } else {
             if (msg) { msg.textContent = data.message || 'فشلت الإضافة'; msg.style.color = '#e53935'; }
         }

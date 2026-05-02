@@ -68,12 +68,24 @@ exports.unifiedLogin = async (req, res) => {
 
     // حفظ Session - موحد لكل الأدوار
     // مهم: نحدد القيم دي قبل الـ save() عشان تتكتب في الـ database
-    req.session.userId        = user[idField];
+
+    // تحديد الـ ID بناءً على الدور (نستخدم عدة احتمالات لاسم العمود)
+    let resolvedId;
+    if (userRole === 'Client') {
+      resolvedId = user.Customer_ID || user.Customer_Id || user.customer_id;
+    } else {
+      resolvedId = user.Employee_ID || user.Employee_Id || user.employee_id;
+    }
+    if (!resolvedId) {
+      console.error('[unifiedLogin] Cannot resolve user ID! idField=', idField, 'user keys:', Object.keys(user));
+    }
+
+    req.session.userId        = resolvedId;
     req.session.email         = user.Email;
     req.session.role          = userRole;
     req.session.authenticated = true;
     req.session.user = {
-      id:    user[idField],
+      id:    resolvedId,
       name:  user[nameField],
       email: user.Email,
       role:  userRole
@@ -144,18 +156,29 @@ exports.unifiedLogin = async (req, res) => {
  * تسجيل الخروج الموحد
  */
 exports.unifiedLogout = (req, res) => {
+  // Validate CSRF token for POST requests - IMPORTANT: do this BEFORE destroying session
+  const submittedToken = (req.body && req.body._csrf) || (req.query && req.query._csrf) || '';
+  const validCsrf = submittedToken && req.session?.csrfToken && submittedToken === req.session.csrfToken;
+
+  if (!validCsrf) {
+    if (req.path.startsWith('/api')) {
+      return res.status(403).json({ success: false, message: 'طلب غير صالح' });
+    }
+    return res.status(403).render('error', { message: 'طلب غير صالح' });
+  }
+
   req.session.destroy((err) => {
     if (err) {
       Logger.error('Logout error', err);
     }
-    
+
     if (req.path.startsWith('/api')) {
       return res.json({
         success: true,
         message: 'تم تسجيل الخروج بنجاح'
       });
     }
-    
+
     res.redirect('/login');
   });
 };
@@ -163,20 +186,43 @@ exports.unifiedLogout = (req, res) => {
 /**
  * التحقق من حالة تسجيل الدخول
  */
-exports.checkAuth = (req, res) => {
-  // Debug: log session info
+exports.checkAuth = async (req, res) => {
+  // Debug: log session info (kept for dev)
   console.log('[checkAuth] Session ID:', req.sessionID);
   console.log('[checkAuth] Session userId:', req.session.userId);
   console.log('[checkAuth] Session user:', req.session.user);
   console.log('[checkAuth] Session authenticated:', req.session.authenticated);
-  
+
+  // If session appears empty, attempt to re‑hydrate from MySQL directly
+  if (!req.session.user && !req.session.userId && !req.session.authenticated) {
+    if (req.cookies) {
+      const sessionCookie = req.cookies[process.env.SESSION_KEY || 'session_cookie'];
+      if (sessionCookie) {
+        try {
+          const [rows] = await db.query(
+            'SELECT data FROM sessions WHERE session_id = ? AND expires > NOW()',
+            [sessionCookie]
+          );
+          if (rows && rows.length > 0 && rows[0].data) {
+            const parsed = JSON.parse(rows[0].data);
+            // Merge DB session data into req.session (fresh object)
+            Object.assign(req.session, parsed);
+            console.log('[checkAuth] Session re‑hydrated from DB');
+          }
+        } catch (e) {
+          console.error('Error re‑hydrating session from DB:', e);
+        }
+      }
+    }
+  }
+
   // التحقق من أي من الطرق الممكنة لتخزين الـ session
   const isAuthenticated = !!(
     req.session.user ||
     req.session.userId ||
     req.session.authenticated
   );
-  
+
   if (isAuthenticated) {
     const user = req.session.user || {
       id:    req.session.userId,
@@ -184,14 +230,14 @@ exports.checkAuth = (req, res) => {
       email: req.session.email || '',
       role:  req.session.role || 'Client'
     };
-    
+
     return res.json({
       success: true,
       authenticated: true,
       user
     });
   }
-  
+
   return res.json({
     success: true,
     authenticated: false

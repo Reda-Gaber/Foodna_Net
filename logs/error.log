@@ -50316,3 +50316,136 @@
   "sqlState": "23000",
   "sqlMessage": "Column 'Description' cannot be null"
 }
+[2026-04-26T02:31:08.491Z] ERROR: Unhandled error {
+  "message": "Cannot read properties of undefined (reading 'session_cookie')",
+  "stack": "TypeError: Cannot read properties of undefined (reading 'session_cookie')\n    at isAuthenticated (D:\\programming\\projects\\Foodna_Net\\core\\middlewares\\sessionHandler.js:91:32)\n    at requireCustomer (D:\\programming\\projects\\Foodna_Net\\core\\middlewares\\authMiddleware.js:70:22)\n    at Layer.handleRequest (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:342:13)\n    at D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:297:9\n    at processParams (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:582:12)\n    at next (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:186:3)\n    at router (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:60:12)\n    at Layer.handleRequest (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\layer.js:152:17)"
+}
+[2026-04-26T02:31:29.377Z] ERROR: Unhandled error {
+  "message": "Cannot read properties of undefined (reading 'session_cookie')",
+  "stack": "TypeError: Cannot read properties of undefined (reading 'session_cookie')\n    at isAuthenticated (D:\\programming\\projects\\Foodna_Net\\core\\middlewares\\sessionHandler.js:91:32)\n    at requireCustomer (D:\\programming\\projects\\Foodna_Net\\core\\middlewares\\authMiddleware.js:70:22)\n    at Layer.handleRequest (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:342:13)\n    at D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:297:9\n    at processParams (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:582:12)\n    at next (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:186:3)\n    at router (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:60:12)\n    at Layer.handleRequest (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\layer.js:152:17)"
+}
+[2026-04-26T02:33:26.636Z] ERROR: Unhandled error {
+  "message": "Cannot read properties of undefined (reading 'session_cookie')",
+  "stack": "TypeError: Cannot read properties of undefined (reading 'session_cookie')\n    at isAuthenticated (D:\\programming\\projects\\Foodna_Net\\core\\middlewares\\sessionHandler.js:91:32)\n    at requireCustomer (D:\\programming\\projects\\Foodna_Net\\core\\middlewares\\authMiddleware.js:70:22)\n    at Layer.handleRequest (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:342:13)\n    at D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:297:9\n    at processParams (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:582:12)\n    at next (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:186:3)\n    at router (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:60:12)\n    at Layer.handleRequest (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\layer.js:152:17)"
+}
+[2026-04-26T02:39:11.110Z] ERROR: Unhandled error {
+  "message": "Cannot read properties of undefined (reading 'session_cookie')",
+  "stack": "TypeError: Cannot read properties of undefined (reading 'session_cookie')\n    at exports.checkAuth (D:\\programming\\projects\\Foodna_Net\\modules\\auth\\unified-auth.controller.js:175:38)\n    at Layer.handleRequest (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\layer.js:152:17)\n    at next (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\route.js:157:13)\n    at Route.dispatch (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\route.js:117:3)\n    at handle (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:435:11)\n    at Layer.handleRequest (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\layer.js:152:17)\n    at D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:295:15\n    at processParams (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:582:12)\n    at next (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:186:3)"
+}
+[2026-04-26T02:45:26.096Z] ERROR: Unhandled error {
+  "message": "Cannot read properties of undefined (reading 'session_cookie')",
+  "stack": "TypeError: Cannot read properties of undefined (reading 'session_cookie')\n    at exports.checkAuth (D:\\programming\\projects\\Foodna_Net\\modules\\auth\\unified-auth.controller.js:187:38)\n    at Layer.handleRequest (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\layer.js:152:17)\n    at next (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\route.js:157:13)\n    at Route.dispatch (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\route.js:117:3)\n    at handle (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:435:11)\n    at Layer.handleRequest (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\layer.js:152:17)\n    at D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:295:15\n    at processParams (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:582:12)\n    at next (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:186:3)"
+}
+[2026-04-28T00:54:50.211Z] ERROR: Unhandled error {
+  "message": "Cannot read properties of undefined (reading '_csrf')",
+  "stack": "TypeError: Cannot read properties of undefined (reading '_csrf')\n    at exports.unifiedLogout (D:\\programming\\projects\\Foodna_Net\\modules\\auth\\unified-auth.controller.js:160:35)\n    at Layer.handleRequest (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\layer.js:152:17)\n    at next (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\route.js:157:13)\n    at Route.dispatch (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\route.js:117:3)\n    at handle (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:435:11)\n    at Layer.handleRequest (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\layer.js:152:17)\n    at D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:295:15\n    at processParams (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:582:12)\n    at next (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:186:3)"
+}
+[2026-04-28T01:11:25.544Z] ERROR: Order creation error {
+  "message": "Cannot add or update a child row: a foreign key constraint fails (`foodna_online`.`orders`, CONSTRAINT `fk_orders_customer` FOREIGN KEY (`Customer_ID`) REFERENCES `customers` (`Customer_ID`) ON DELETE SET NULL)",
+  "stack": "Error: Cannot add or update a child row: a foreign key constraint fails (`foodna_online`.`orders`, CONSTRAINT `fk_orders_customer` FOREIGN KEY (`Customer_ID`) REFERENCES `customers` (`Customer_ID`) ON DELETE SET NULL)\n    at PromisePoolConnection.query (D:\\programming\\projects\\Foodna_Net\\node_modules\\mysql2\\lib\\promise\\connection.js:29:22)\n    at Order.create (D:\\programming\\projects\\Foodna_Net\\modules\\customer\\order.model.js:21:46)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async exports.createOrder (D:\\programming\\projects\\Foodna_Net\\modules\\customer\\order.controller.js:84:21)",
+  "code": "ER_NO_REFERENCED_ROW_2",
+  "errno": 1452,
+  "sql": "INSERT INTO Orders (Customer_ID, Total_Amount, Order_Status, Delivery_Address, Payment_Method, Created_At)\n         VALUES (8, 45, 'Pending', 'alex - رضا - 0125555555', 'cash', NOW())",
+  "sqlState": "23000",
+  "sqlMessage": "Cannot add or update a child row: a foreign key constraint fails (`foodna_online`.`orders`, CONSTRAINT `fk_orders_customer` FOREIGN KEY (`Customer_ID`) REFERENCES `customers` (`Customer_ID`) ON DELETE SET NULL)"
+}
+[2026-04-28T01:11:31.635Z] ERROR: Order creation error {
+  "message": "Cannot add or update a child row: a foreign key constraint fails (`foodna_online`.`orders`, CONSTRAINT `fk_orders_customer` FOREIGN KEY (`Customer_ID`) REFERENCES `customers` (`Customer_ID`) ON DELETE SET NULL)",
+  "stack": "Error: Cannot add or update a child row: a foreign key constraint fails (`foodna_online`.`orders`, CONSTRAINT `fk_orders_customer` FOREIGN KEY (`Customer_ID`) REFERENCES `customers` (`Customer_ID`) ON DELETE SET NULL)\n    at PromisePoolConnection.query (D:\\programming\\projects\\Foodna_Net\\node_modules\\mysql2\\lib\\promise\\connection.js:29:22)\n    at Order.create (D:\\programming\\projects\\Foodna_Net\\modules\\customer\\order.model.js:21:46)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async exports.createOrder (D:\\programming\\projects\\Foodna_Net\\modules\\customer\\order.controller.js:84:21)",
+  "code": "ER_NO_REFERENCED_ROW_2",
+  "errno": 1452,
+  "sql": "INSERT INTO Orders (Customer_ID, Total_Amount, Order_Status, Delivery_Address, Payment_Method, Created_At)\n         VALUES (8, 45, 'Pending', 'alex - رضا - 0125555555', 'cash', NOW())",
+  "sqlState": "23000",
+  "sqlMessage": "Cannot add or update a child row: a foreign key constraint fails (`foodna_online`.`orders`, CONSTRAINT `fk_orders_customer` FOREIGN KEY (`Customer_ID`) REFERENCES `customers` (`Customer_ID`) ON DELETE SET NULL)"
+}
+[2026-04-28T15:05:56.827Z] ERROR: Unhandled error {
+  "message": "Cannot read properties of undefined (reading '_csrf')",
+  "stack": "TypeError: Cannot read properties of undefined (reading '_csrf')\n    at exports.unifiedLogout (D:\\programming\\projects\\Foodna_Net\\modules\\auth\\unified-auth.controller.js:160:35)\n    at Layer.handleRequest (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\layer.js:152:17)\n    at next (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\route.js:157:13)\n    at Route.dispatch (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\route.js:117:3)\n    at handle (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:435:11)\n    at Layer.handleRequest (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\layer.js:152:17)\n    at D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:295:15\n    at processParams (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:582:12)\n    at next (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:186:3)"
+}
+[2026-04-28T15:25:22.407Z] ERROR: Unhandled error {
+  "message": "Cannot read properties of undefined (reading '_csrf')",
+  "stack": "TypeError: Cannot read properties of undefined (reading '_csrf')\n    at exports.unifiedLogout (D:\\programming\\projects\\Foodna_Net\\modules\\auth\\unified-auth.controller.js:160:35)\n    at Layer.handleRequest (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\layer.js:152:17)\n    at next (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\route.js:157:13)\n    at Route.dispatch (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\route.js:117:3)\n    at handle (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:435:11)\n    at Layer.handleRequest (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\layer.js:152:17)\n    at D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:295:15\n    at processParams (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:582:12)\n    at next (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:186:3)"
+}
+[2026-04-28T15:33:51.595Z] ERROR: Unhandled error {
+  "message": "Cannot read properties of undefined (reading '_csrf')",
+  "stack": "TypeError: Cannot read properties of undefined (reading '_csrf')\n    at exports.unifiedLogout (D:\\programming\\projects\\Foodna_Net\\modules\\auth\\unified-auth.controller.js:160:35)\n    at Layer.handleRequest (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\layer.js:152:17)\n    at next (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\route.js:157:13)\n    at Route.dispatch (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\route.js:117:3)\n    at handle (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:435:11)\n    at Layer.handleRequest (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\layer.js:152:17)\n    at D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:295:15\n    at processParams (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:582:12)\n    at next (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:186:3)"
+}
+[2026-04-28T15:34:03.512Z] ERROR: Unhandled error {
+  "message": "Cannot read properties of undefined (reading '_csrf')",
+  "stack": "TypeError: Cannot read properties of undefined (reading '_csrf')\n    at exports.unifiedLogout (D:\\programming\\projects\\Foodna_Net\\modules\\auth\\unified-auth.controller.js:160:35)\n    at Layer.handleRequest (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\layer.js:152:17)\n    at next (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\route.js:157:13)\n    at Route.dispatch (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\route.js:117:3)\n    at handle (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:435:11)\n    at Layer.handleRequest (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\layer.js:152:17)\n    at D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:295:15\n    at processParams (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:582:12)\n    at next (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:186:3)"
+}
+[2026-04-28T15:34:22.775Z] ERROR: Unhandled error {
+  "message": "Cannot read properties of undefined (reading '_csrf')",
+  "stack": "TypeError: Cannot read properties of undefined (reading '_csrf')\n    at exports.unifiedLogout (D:\\programming\\projects\\Foodna_Net\\modules\\auth\\unified-auth.controller.js:160:35)\n    at Layer.handleRequest (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\layer.js:152:17)\n    at next (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\route.js:157:13)\n    at Route.dispatch (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\route.js:117:3)\n    at handle (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:435:11)\n    at Layer.handleRequest (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\layer.js:152:17)\n    at D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:295:15\n    at processParams (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:582:12)\n    at next (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:186:3)"
+}
+[2026-04-28T15:45:38.144Z] ERROR: Unhandled error {
+  "message": "Cannot read properties of undefined (reading '_csrf')",
+  "stack": "TypeError: Cannot read properties of undefined (reading '_csrf')\n    at exports.unifiedLogout (D:\\programming\\projects\\Foodna_Net\\modules\\auth\\unified-auth.controller.js:160:35)\n    at Layer.handleRequest (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\layer.js:152:17)\n    at next (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\route.js:157:13)\n    at Route.dispatch (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\route.js:117:3)\n    at handle (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:435:11)\n    at Layer.handleRequest (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\layer.js:152:17)\n    at D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:295:15\n    at processParams (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:582:12)\n    at next (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:186:3)"
+}
+[2026-04-28T15:46:27.712Z] ERROR: Unhandled error {
+  "message": "Cannot read properties of undefined (reading '_csrf')",
+  "stack": "TypeError: Cannot read properties of undefined (reading '_csrf')\n    at exports.unifiedLogout (D:\\programming\\projects\\Foodna_Net\\modules\\auth\\unified-auth.controller.js:160:35)\n    at Layer.handleRequest (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\layer.js:152:17)\n    at next (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\route.js:157:13)\n    at Route.dispatch (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\route.js:117:3)\n    at handle (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:435:11)\n    at Layer.handleRequest (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\layer.js:152:17)\n    at D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:295:15\n    at processParams (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:582:12)\n    at next (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:291:5)\n    at router.handle (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\index.js:186:3)"
+}
+[2026-04-28T16:56:54.800Z] ERROR: Order creation error {
+  "message": "Cannot add or update a child row: a foreign key constraint fails (`foodna_online`.`orders`, CONSTRAINT `fk_orders_customer` FOREIGN KEY (`Customer_ID`) REFERENCES `customers` (`Customer_ID`) ON DELETE SET NULL)",
+  "stack": "Error: Cannot add or update a child row: a foreign key constraint fails (`foodna_online`.`orders`, CONSTRAINT `fk_orders_customer` FOREIGN KEY (`Customer_ID`) REFERENCES `customers` (`Customer_ID`) ON DELETE SET NULL)\n    at PromisePoolConnection.query (D:\\programming\\projects\\Foodna_Net\\node_modules\\mysql2\\lib\\promise\\connection.js:29:22)\n    at Order.create (D:\\programming\\projects\\Foodna_Net\\modules\\customer\\order.model.js:21:46)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async exports.createOrder (D:\\programming\\projects\\Foodna_Net\\modules\\customer\\order.controller.js:84:21)",
+  "code": "ER_NO_REFERENCED_ROW_2",
+  "errno": 1452,
+  "sql": "INSERT INTO Orders (Customer_ID, Total_Amount, Order_Status, Delivery_Address, Payment_Method, Created_At)\n         VALUES (8, 33.25, 'Pending', 'اسكندرية - رضا - 0125555555', 'cash', NOW())",
+  "sqlState": "23000",
+  "sqlMessage": "Cannot add or update a child row: a foreign key constraint fails (`foodna_online`.`orders`, CONSTRAINT `fk_orders_customer` FOREIGN KEY (`Customer_ID`) REFERENCES `customers` (`Customer_ID`) ON DELETE SET NULL)"
+}
+[2026-04-28T16:57:00.667Z] ERROR: Order creation error {
+  "message": "Cannot add or update a child row: a foreign key constraint fails (`foodna_online`.`orders`, CONSTRAINT `fk_orders_customer` FOREIGN KEY (`Customer_ID`) REFERENCES `customers` (`Customer_ID`) ON DELETE SET NULL)",
+  "stack": "Error: Cannot add or update a child row: a foreign key constraint fails (`foodna_online`.`orders`, CONSTRAINT `fk_orders_customer` FOREIGN KEY (`Customer_ID`) REFERENCES `customers` (`Customer_ID`) ON DELETE SET NULL)\n    at PromisePoolConnection.query (D:\\programming\\projects\\Foodna_Net\\node_modules\\mysql2\\lib\\promise\\connection.js:29:22)\n    at Order.create (D:\\programming\\projects\\Foodna_Net\\modules\\customer\\order.model.js:21:46)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async exports.createOrder (D:\\programming\\projects\\Foodna_Net\\modules\\customer\\order.controller.js:84:21)",
+  "code": "ER_NO_REFERENCED_ROW_2",
+  "errno": 1452,
+  "sql": "INSERT INTO Orders (Customer_ID, Total_Amount, Order_Status, Delivery_Address, Payment_Method, Created_At)\n         VALUES (8, 33.25, 'Pending', 'اسكندرية - رضا - 0125555555', 'cash', NOW())",
+  "sqlState": "23000",
+  "sqlMessage": "Cannot add or update a child row: a foreign key constraint fails (`foodna_online`.`orders`, CONSTRAINT `fk_orders_customer` FOREIGN KEY (`Customer_ID`) REFERENCES `customers` (`Customer_ID`) ON DELETE SET NULL)"
+}
+[2026-04-28T16:58:20.746Z] ERROR: Order creation error {
+  "message": "Cannot add or update a child row: a foreign key constraint fails (`foodna_online`.`orders`, CONSTRAINT `fk_orders_customer` FOREIGN KEY (`Customer_ID`) REFERENCES `customers` (`Customer_ID`) ON DELETE SET NULL)",
+  "stack": "Error: Cannot add or update a child row: a foreign key constraint fails (`foodna_online`.`orders`, CONSTRAINT `fk_orders_customer` FOREIGN KEY (`Customer_ID`) REFERENCES `customers` (`Customer_ID`) ON DELETE SET NULL)\n    at PromisePoolConnection.query (D:\\programming\\projects\\Foodna_Net\\node_modules\\mysql2\\lib\\promise\\connection.js:29:22)\n    at Order.create (D:\\programming\\projects\\Foodna_Net\\modules\\customer\\order.model.js:21:46)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async exports.createOrder (D:\\programming\\projects\\Foodna_Net\\modules\\customer\\order.controller.js:84:21)",
+  "code": "ER_NO_REFERENCED_ROW_2",
+  "errno": 1452,
+  "sql": "INSERT INTO Orders (Customer_ID, Total_Amount, Order_Status, Delivery_Address, Payment_Method, Created_At)\n         VALUES (8, 33.25, 'Pending', 'اسكندرية - رضا - 0125555555', 'cash', NOW())",
+  "sqlState": "23000",
+  "sqlMessage": "Cannot add or update a child row: a foreign key constraint fails (`foodna_online`.`orders`, CONSTRAINT `fk_orders_customer` FOREIGN KEY (`Customer_ID`) REFERENCES `customers` (`Customer_ID`) ON DELETE SET NULL)"
+}
+[2026-04-28T17:05:45.220Z] ERROR: Order creation error {
+  "message": "db is not defined",
+  "stack": "ReferenceError: db is not defined\n    at exports.createOrder (D:\\programming\\projects\\Foodna_Net\\modules\\customer\\order.controller.js:36:29)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)"
+}
+[2026-04-29T00:13:19.767Z] ERROR: Unhandled error {
+  "message": "Expected property name or '}' in JSON at position 1 (line 1 column 2)",
+  "stack": "SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)\n    at JSON.parse (<anonymous>)\n    at parse (D:\\programming\\projects\\Foodna_Net\\node_modules\\body-parser\\lib\\types\\json.js:77:19)\n    at D:\\programming\\projects\\Foodna_Net\\node_modules\\body-parser\\lib\\read.js:123:18\n    at AsyncResource.runInAsyncScope (node:async_hooks:228:14)\n    at invokeCallback (D:\\programming\\projects\\Foodna_Net\\node_modules\\raw-body\\index.js:238:16)\n    at done (D:\\programming\\projects\\Foodna_Net\\node_modules\\raw-body\\index.js:227:7)\n    at IncomingMessage.onEnd (D:\\programming\\projects\\Foodna_Net\\node_modules\\raw-body\\index.js:287:7)\n    at IncomingMessage.emit (node:events:508:28)\n    at endReadableNT (node:internal/streams/readable:1729:12)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)",
+  "expose": true,
+  "statusCode": 400,
+  "status": 400,
+  "body": "{\\",
+  "type": "entity.parse.failed"
+}
+[2026-04-29T01:42:28.740Z] ERROR: Validate coupon error {
+  "message": "الحد الأدنى للشراء هو 200.00",
+  "stack": "Error: الحد الأدنى للشراء هو 200.00\n    at Coupon.calculateDiscount (D:\\programming\\projects\\Foodna_Net\\modules\\admin\\coupon.model.js:90:13)\n    at exports.validateCoupon (D:\\programming\\projects\\Foodna_Net\\modules\\admin\\coupon.controller.js:76:31)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)"
+}
+[2026-04-30T01:19:39.318Z] ERROR: Unhandled error {
+  "message": "Failed to lookup view \"customer/orders\" in views directory \"D:\\programming\\projects\\Foodna_Net\\views\"",
+  "stack": "Error: Failed to lookup view \"customer/orders\" in views directory \"D:\\programming\\projects\\Foodna_Net\\views\"\n    at app.render (D:\\programming\\projects\\Foodna_Net\\node_modules\\express\\lib\\application.js:562:17)\n    at ServerResponse.render (D:\\programming\\projects\\Foodna_Net\\node_modules\\express\\lib\\response.js:909:7)\n    at D:\\programming\\projects\\Foodna_Net\\routes\\customer.routes.js:82:7\n    at Layer.handleRequest (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\layer.js:152:17)\n    at next (D:\\programming\\projects\\Foodna_Net\\node_modules\\router\\lib\\route.js:157:13)\n    at requireCustomer (D:\\programming\\projects\\Foodna_Net\\core\\middlewares\\authMiddleware.js:82:3)",
+  "view": {
+    "defaultEngine": "ejs",
+    "ext": ".ejs",
+    "name": "customer/orders",
+    "root": "D:\\programming\\projects\\Foodna_Net\\views"
+  }
+}
+[2026-05-02T02:58:46.542Z] ERROR: Unhandled error {
+  "message": "ENOENT: no such file or directory, open 'D:\\programming\\projects\\Foodna_Net\\public\\uploads\\avatars\\1777690726529_froaxb.jpg'",
+  "stack": "Error: ENOENT: no such file or directory, open 'D:\\programming\\projects\\Foodna_Net\\public\\uploads\\avatars\\1777690726529_froaxb.jpg'",
+  "errno": -4058,
+  "code": "ENOENT",
+  "syscall": "open",
+  "path": "D:\\programming\\projects\\Foodna_Net\\public\\uploads\\avatars\\1777690726529_froaxb.jpg",
+  "storageErrors": []
+}

@@ -64,7 +64,8 @@ class ProductController {
 
             const data = {
                 name:        req.body.name,
-                category:    req.body.category,
+                category:    req.body.category || req.body.category_id,
+                category_id: req.body.category_id,
                 description: req.body.description || '',  // استخدام string فارغة بدلاً من null
                 quantity:    Number.isNaN(parsedQuantity) ? null : parsedQuantity,
                 price:       Number.isNaN(parsedPrice)    ? null : parsedPrice,
@@ -119,6 +120,7 @@ class ProductController {
             const data = {
                 name:        (req.body.name        !== undefined && req.body.name        !== '') ? req.body.name        : product.Product_Name,
                 category:    (req.body.category    !== undefined && req.body.category    !== '') ? req.body.category    : product.Category,
+                category_id: (req.body.category_id !== undefined && req.body.category_id !== '') ? parseInt(req.body.category_id) : product.Category_ID,
                 description: (req.body.description !== undefined)                               ? req.body.description : product.Description,
                 quantity:    parsedQuantity === undefined ? (product.Quantity_Available ?? null) : (Number.isNaN(parsedQuantity) ? null : parsedQuantity),
                 price:       parsedPrice    === undefined ? (product.Price              ?? null) : (Number.isNaN(parsedPrice)    ? null : parsedPrice),

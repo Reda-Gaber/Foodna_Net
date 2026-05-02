@@ -288,11 +288,13 @@ window.addEventListener('scroll', scrollUps);
 // ============================
 async function buildCategoryNav() {
     try {
-        const res = await fetch('/api/products?limit=1000');
-        const products = await res.json();
+        const res = await fetch('/admin/api/categories');
 
-        // استخراج الفئات الفريدة
-        const categories = [...new Set(products.map(p => p.Category).filter(Boolean))];
+
+        const response = await res.json();
+        // جلب التصنيفات من جدول التصنيفات مباشرة
+        const categoriesRaw = response.data || response.categories || (Array.isArray(response) ? response : []);
+        const categories = categoriesRaw.map(c => c.Category_Name || c.category_name || c.name).filter(Boolean);
 
         const nav = document.getElementById('menu-categories-nav');
         if (nav && categories.length) {
@@ -342,4 +344,3 @@ async function buildCategoryNav() {
 })();
 
 buildCategoryNav();
-

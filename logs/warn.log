@@ -158,3 +158,8 @@
   "syscall": "unlink",
   "path": "D:\\programming\\projects\\Foodna_Net\\public\\images\\products\\1762909185861-969414054.png"
 }
+[2026-04-26T01:59:14.129Z] WARN: GROQ_API_KEY not configured in environment
+[2026-04-26T02:19:54.935Z] WARN: GROQ_API_KEY not configured in environment
+[2026-04-26T02:30:47.307Z] WARN: GROQ_API_KEY not configured in environment
+[2026-04-26T02:32:33.210Z] WARN: GROQ_API_KEY not configured in environment
+[2026-04-26T02:35:45.112Z] WARN: GROQ_API_KEY not configured in environment

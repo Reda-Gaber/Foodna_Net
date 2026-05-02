@@ -9,14 +9,47 @@
   let subtotal = 0;
   let discountAmount = 0;
   let selectedPayment = 'cash';
+  let currentOrderId  = null; // الطلب الحالي للـ grace period
+  let graceInterval   = null; // مؤقت فترة السماح
+
+  // CURRENT_USER بيجي من الـ EJS (session data) — null لو مش logged in
+  const isLoggedIn = !!(window.CURRENT_USER);
+
+  // ===================== التحقق من تسجيل الدخول أولاً =====================
+  // نتحقق من الـ session قبل أي حاجة تانية
+  async function checkAuthBeforeCheckout() {
+    try {
+      const res = await fetch('/auth/api/auth/check', {
+        credentials: 'include'
+      });
+      const data = await res.json();
+
+      if (!data.authenticated) {
+        // احفظ السلة عشان ترجعها بعد تسجيل الدخول
+        try {
+          const currentCart = window.cartState?.getItems?.() || 
+                              JSON.parse(localStorage.getItem('cart') || '[]');
+          if (currentCart.length > 0) {
+            localStorage.setItem('pendingCart', JSON.stringify(currentCart));
+          }
+        } catch(e) {}
+
+        // روّح لصفحة الـ login مع الـ next parameter
+        window.location.href = '/login?next=' + encodeURIComponent('/checkout');
+        return false;
+      }
+      return true;
+    } catch(e) {
+      // لو فشل الـ check، متوقفش الصفحة — خليها تشتغل
+      return true;
+    }
+  }
 
   // ===================== تحميل السلة =====================
   function loadCartItems() {
-    // جرب من cartState أولاً
     if (window.cartState && typeof window.cartState.getItems === 'function') {
       cartItems = window.cartState.getItems();
     } else {
-      // fallback إلى localStorage
       try {
         cartItems = JSON.parse(localStorage.getItem('cart') || '[]');
       } catch (e) {
@@ -39,7 +72,8 @@
           <p>لا توجد منتجات في السلة</p>
           <a href="/" class="back-to-shop-btn">ارجع للتسوق</a>
         </div>`;
-      document.getElementById('confirm-order-btn').disabled = true;
+      const confirmBtn = document.getElementById('confirm-order-btn');
+      if (confirmBtn) confirmBtn.disabled = true;
       return;
     }
 
@@ -66,17 +100,17 @@
     subtotal = cartItems.reduce((sum, item) => sum + (Number(item.price) * Number(item.quantity)), 0);
     const grandTotal = Math.max(0, subtotal - discountAmount);
 
-    const sub = document.getElementById('subtotal-val');
-    const grand = document.getElementById('grand-total-val');
+    const sub     = document.getElementById('subtotal-val');
+    const grand   = document.getElementById('grand-total-val');
     const discRow = document.getElementById('discount-row');
     const discVal = document.getElementById('discount-val');
 
-    if (sub) sub.textContent = subtotal.toFixed(2) + ' جنيه';
+    if (sub)   sub.textContent   = subtotal.toFixed(2) + ' جنيه';
     if (grand) grand.textContent = grandTotal.toFixed(2) + ' جنيه';
 
     if (discountAmount > 0) {
       if (discRow) discRow.style.display = 'flex';
-      if (discVal) discVal.textContent = '- ' + discountAmount.toFixed(2) + ' جنيه';
+      if (discVal) discVal.textContent   = '- ' + discountAmount.toFixed(2) + ' جنيه';
     } else {
       if (discRow) discRow.style.display = 'none';
     }
@@ -90,15 +124,13 @@
       selectedPayment = this.dataset.method;
       this.querySelector('input[type=radio]').checked = true;
 
-      // إظهار/إخفاء نماذج الدفع
-      const cardForm = document.getElementById('card-form-section');
+      const cardForm   = document.getElementById('card-form-section');
       const onlineForm = document.getElementById('online-form-section');
-      if (cardForm) cardForm.style.display = selectedPayment === 'card' ? 'block' : 'none';
+      if (cardForm)   cardForm.style.display   = selectedPayment === 'card'   ? 'block' : 'none';
       if (onlineForm) onlineForm.style.display = selectedPayment === 'online' ? 'block' : 'none';
     });
   });
 
-  // خيارات المحافظ الإلكترونية
   document.querySelectorAll('.wallet-opt').forEach(opt => {
     opt.addEventListener('click', function () {
       document.querySelectorAll('.wallet-opt').forEach(o => o.classList.remove('active'));
@@ -115,17 +147,15 @@
 
     const display = document.getElementById('card-num-display');
     if (display) {
-      const padded = val.replace(/\S{4}/g, m => m + ' ').trim().padEnd(19, '•');
       display.textContent = val || '•••• •••• •••• ••••';
     }
 
-    // تحديد نوع البطاقة
     const icon = document.getElementById('card-brand-icon');
     if (icon) {
       const num = val.replace(/\s/g, '');
-      if (num.startsWith('4')) icon.className = 'ri-visa-line';
+      if (num.startsWith('4'))      icon.className = 'ri-visa-line';
       else if (num.startsWith('5')) icon.className = 'ri-mastercard-line';
-      else icon.className = 'ri-bank-card-line';
+      else                          icon.className = 'ri-bank-card-line';
     }
   };
 
@@ -137,7 +167,7 @@
     if (display) display.textContent = val || 'MM/YY';
   };
 
-  // ===================== تطبيق الكوبون (من الـ backend) =====================
+  // ===================== تطبيق الكوبون =====================
   window.applyCoupon = async function () {
     const code = (document.getElementById('coupon-input')?.value || '').trim().toUpperCase();
     if (!code) {
@@ -149,7 +179,7 @@
     if (btn) { btn.disabled = true; btn.textContent = '...'; }
 
     try {
-      const response = await fetch('/cashier/api/coupon/validate', {
+      const response = await fetch('/admin/api/coupons/validate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -165,11 +195,9 @@
         return;
       }
 
-      // استخدم الـ discount المحسوب من الـ backend لو موجود
       if (data.data?.discount !== undefined) {
         discountAmount = parseFloat(data.data.discount) || 0;
       } else {
-        // احسبه يدوياً من بيانات الكوبون
         const coupon = data.data?.coupon || data.data;
         if (coupon.Discount_Type === 'percentage') {
           discountAmount = subtotal * (parseFloat(coupon.Discount_Value) / 100);
@@ -194,28 +222,35 @@
     const el = document.getElementById('coupon-msg');
     if (!el) return;
     el.textContent = text;
-    el.className = 'coupon-msg ' + type;
+    el.className   = 'coupon-msg ' + type;
   }
 
   // ===================== تأكيد الطلب =====================
   window.submitCheckoutOrder = async function () {
-    // التحقق من البيانات المدخلة
-    const name = document.getElementById('full-name')?.value?.trim();
-    const phone = document.getElementById('phone-number')?.value?.trim();
     const address = document.getElementById('delivery-address')?.value?.trim();
+    let name, phone;
 
-    if (!name) { showCheckoutMsg('أدخل اسمك الكامل', 'error'); return; }
-    if (!phone || phone.length < 10) { showCheckoutMsg('أدخل رقم هاتف صحيح', 'error'); return; }
+    if (!isLoggedIn) {
+      // غير مسجل: اطلب الاسم والتليفون من الفورم
+      name  = document.getElementById('full-name')?.value?.trim();
+      phone = document.getElementById('phone-number')?.value?.trim();
+      if (!name)                       { showCheckoutMsg('أدخل اسمك الكامل', 'error'); return; }
+      if (!phone || phone.length < 10) { showCheckoutMsg('أدخل رقم هاتف صحيح', 'error'); return; }
+    } else {
+      // مسجل: ناخد البيانات من الـ session
+      name  = window.CURRENT_USER?.name  || '';
+      phone = window.CURRENT_USER?.phone || '';
+    }
+
     if (!address) { showCheckoutMsg('أدخل عنوان التوصيل', 'error'); return; }
 
-    // التحقق من بيانات البطاقة
     if (selectedPayment === 'card') {
       const cardNum = document.getElementById('card-number')?.value?.replace(/\s/g, '');
-      const expiry = document.getElementById('card-expiry')?.value;
-      const cvv = document.getElementById('card-cvv')?.value;
+      const expiry  = document.getElementById('card-expiry')?.value;
+      const cvv     = document.getElementById('card-cvv')?.value;
       if (!cardNum || cardNum.length < 16) { showCheckoutMsg('أدخل رقم بطاقة صحيح (16 رقم)', 'error'); return; }
-      if (!expiry || expiry.length < 5) { showCheckoutMsg('أدخل تاريخ انتهاء البطاقة', 'error'); return; }
-      if (!cvv || cvv.length < 3) { showCheckoutMsg('أدخل CVV البطاقة', 'error'); return; }
+      if (!expiry || expiry.length < 5)    { showCheckoutMsg('أدخل تاريخ انتهاء البطاقة', 'error'); return; }
+      if (!cvv || cvv.length < 3)          { showCheckoutMsg('أدخل CVV البطاقة', 'error'); return; }
     }
 
     if (selectedPayment === 'online') {
@@ -228,19 +263,17 @@
       return;
     }
 
-    // إرسال للـ backend
     const btn = document.getElementById('confirm-order-btn');
     if (btn) {
-      btn.disabled = true;
+      btn.disabled  = true;
       btn.innerHTML = '<i class="ri-loader-4-line" style="animation:spin 1s linear infinite"></i> جاري تأكيد الطلب...';
     }
 
     showCheckoutMsg('جاري معالجة طلبك...', 'info');
 
     try {
-      // إرسال الطلب للـ API
       const grandTotal = Math.max(0, subtotal - discountAmount);
-      
+
       const response = await fetch('/api/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -248,26 +281,27 @@
         body: JSON.stringify({
           items: cartItems.map(item => ({
             productId: item.id,
-            quantity: item.quantity,
-            price: item.price
+            quantity:  item.quantity,
+            price:     item.price
           })),
-          totalAmount: grandTotal,
+          totalAmount:     grandTotal,
           deliveryAddress: `${address} - ${name} - ${phone}`,
-          paymentMethod: selectedPayment,
-          notes: document.getElementById('order-notes')?.value || ''
+          paymentMethod:   selectedPayment,
+          notes:           document.getElementById('order-notes')?.value || ''
         })
       });
 
+      // ===================================================
+      // الـ FIX الأساسي: لو الـ session انتهت أثناء الجلسة
+      // نروح لصفحة الـ login مع next=/checkout
+      // ===================================================
       if (response.status === 401) {
-        // حفظ السلة الحالية قبل الـ redirect
         try {
           localStorage.setItem('pendingCart', JSON.stringify(cartItems));
-          localStorage.setItem('checkoutIntent', 'true');
-          localStorage.setItem('postAuthRedirect', '/checkout');
         } catch(e) {}
-        showCheckoutMsg('يجب تسجيل الدخول أولاً، جاري تحويلك...', 'error');
+        showCheckoutMsg('انتهت جلستك، جاري تحويلك لتسجيل الدخول...', 'error');
         setTimeout(() => {
-          window.location.href = '/user/register';
+          window.location.href = '/login?next=' + encodeURIComponent('/checkout');
         }, 1200);
         return;
       }
@@ -278,9 +312,11 @@
         throw new Error(data.message || 'فشل في إنشاء الطلب');
       }
 
-      // نجاح
-      const orderNum = data.data?.orderNumber || data.data?.Order_ID || '—';
-      document.getElementById('success-order-num').textContent = '#' + orderNum;
+      // نجاح ✅
+      const orderNum = data.data?.orderNumber || data.data?.orderId || data.data?.Order_ID || '—';
+      const successNumEl = document.getElementById('success-order-num');
+      if (successNumEl) successNumEl.textContent = '#' + orderNum;
+      currentOrderId = orderNum;
 
       // مسح السلة
       if (window.cartState && typeof window.cartState.clear === 'function') {
@@ -288,13 +324,14 @@
       } else {
         localStorage.removeItem('cart');
       }
+      localStorage.removeItem('pendingCart');
 
-      showSuccessModal();
+      showSuccessModal(orderNum);
 
     } catch (err) {
       showCheckoutMsg('❌ ' + (err.message || 'حدث خطأ، حاول مرة أخرى'), 'error');
       if (btn) {
-        btn.disabled = false;
+        btn.disabled  = false;
         btn.innerHTML = '<i class="ri-check-double-line"></i> تأكيد الطلب';
       }
     }
@@ -303,56 +340,118 @@
   function showCheckoutMsg(text, type) {
     const el = document.getElementById('checkout-msg');
     if (!el) return;
-    el.textContent = text;
-    el.className = 'checkout-msg-bar ' + type;
+    el.textContent   = text;
+    el.className     = 'checkout-msg-bar ' + type;
     el.style.display = 'block';
     if (type !== 'error') {
       setTimeout(() => { el.style.display = 'none'; }, 5000);
     }
   }
 
-  // ===================== مودال النجاح =====================
-  function showSuccessModal() {
-    const modal = document.getElementById('order-success-modal');
+  // ===================== مودال النجاح + Grace Period =====================
+  function showSuccessModal(orderId) {
+    const modal   = document.getElementById('order-success-modal');
     const overlay = document.getElementById('modal-overlay');
-    if (modal) modal.style.display = 'block';
+    if (modal)   modal.style.display   = 'block';
     if (overlay) overlay.style.display = 'block';
+
+    // بدء العداد 3 دقائق
+    startGraceTimer(orderId);
   }
 
-  window.closeSuccessModal = function () {
-    const modal = document.getElementById('order-success-modal');
-    const overlay = document.getElementById('modal-overlay');
-    if (modal) modal.style.display = 'none';
-    if (overlay) overlay.style.display = 'none';
+  function startGraceTimer(orderId) {
+    const GRACE_SECONDS = 3 * 60; // 3 دقائق
+    let remaining = GRACE_SECONDS;
+    const timerEl   = document.getElementById('grace-timer');
+    const sectionEl = document.getElementById('grace-period-section');
+
+    if (graceInterval) clearInterval(graceInterval);
+
+    graceInterval = setInterval(() => {
+      remaining--;
+      const mins = Math.floor(remaining / 60);
+      const secs = remaining % 60;
+      if (timerEl) timerEl.textContent = ` ${mins}:${secs.toString().padStart(2, '0')}`;
+
+      if (remaining <= 0) {
+        clearInterval(graceInterval);
+        // إخفاء أزرار التعديل والإلغاء بعد انتهاء الوقت
+        if (sectionEl) sectionEl.style.display = 'none';
+      }
+    }, 1000);
+  }
+
+  // تعديل الطلب — يرجع لصفحة الـ checkout مع نفس الطلب
+  window.graceEditOrder = function () {
+    if (!currentOrderId) return;
+    clearInterval(graceInterval);
+    window.location.href = '/checkout?edit=' + currentOrderId;
   };
 
-  // ===================== CSS لأنيميشن الـ spinner =====================
+  // إلغاء الطلب خلال فترة السماح
+  window.graceCancelOrder = async function () {
+    if (!currentOrderId) return;
+    const editBtn   = document.getElementById('grace-edit-btn');
+    const cancelBtn = document.getElementById('grace-cancel-btn');
+    if (cancelBtn) { cancelBtn.disabled = true; cancelBtn.textContent = 'جاري الإلغاء...'; }
+    if (editBtn)   editBtn.disabled = true;
+
+    try {
+      const res = await fetch('/api/orders/' + currentOrderId, {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        clearInterval(graceInterval);
+        // أغلق المودال وروح الرئيسية
+        window.closeSuccessModal();
+        window.location.href = '/';
+      } else {
+        if (cancelBtn) { cancelBtn.disabled = false; cancelBtn.textContent = 'إلغاء الطلب'; }
+        if (editBtn)   editBtn.disabled = false;
+        alert(data.message || 'فشل الإلغاء، حاول مرة أخرى');
+      }
+    } catch (e) {
+      if (cancelBtn) { cancelBtn.disabled = false; cancelBtn.textContent = 'إلغاء الطلب'; }
+      if (editBtn)   editBtn.disabled = false;
+      alert('حدث خطأ في الاتصال');
+    }
+  };
+
+  window.closeSuccessModal = function () {
+    const modal   = document.getElementById('order-success-modal');
+    const overlay = document.getElementById('modal-overlay');
+    if (modal)   modal.style.display   = 'none';
+    if (overlay) overlay.style.display = 'none';
+    if (graceInterval) clearInterval(graceInterval);
+  };
+
+  // ===================== CSS spinner =====================
   const spinStyle = document.createElement('style');
   spinStyle.textContent = `@keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }`;
   document.head.appendChild(spinStyle);
 
   // ===================== تهيئة =====================
-  function init() {
-    // استرجاع السلة المعلقة لو في checkoutIntent
-    const intent = localStorage.getItem('checkoutIntent');
-    if (intent) {
-      try {
-        const pendingCart = JSON.parse(localStorage.getItem('pendingCart') || '[]');
-        if (pendingCart.length > 0) {
-          if (window.cartState && typeof window.cartState.addItem === 'function') {
-            // امسح السلة الحالية أولاً عشان ما تتضافش
-            if (typeof window.cartState.clear === 'function') window.cartState.clear();
-            pendingCart.forEach(item => window.cartState.addItem(item));
-          } else {
-            localStorage.setItem('cart', JSON.stringify(pendingCart));
-          }
-          localStorage.removeItem('pendingCart');
+  async function init() {
+    // استرجاع السلة المعلقة لو في pendingCart
+    try {
+      const pendingCart = JSON.parse(localStorage.getItem('pendingCart') || '[]');
+      if (pendingCart.length > 0) {
+        if (window.cartState && typeof window.cartState.clear === 'function') {
+          window.cartState.clear();
+          pendingCart.forEach(item => window.cartState.addItem?.(item));
+        } else {
+          localStorage.setItem('cart', JSON.stringify(pendingCart));
         }
-      } catch (e) { /* ignore */ }
-      // امسح الـ intent بس بعد ما الـ cart اتستعاد
-      localStorage.removeItem('checkoutIntent');
-      localStorage.removeItem('postAuthRedirect');
-    }
+        localStorage.removeItem('pendingCart');
+      }
+    } catch(e) {}
+
+    // التحقق من تسجيل الدخول — لو مش مسجل يروح login
+    const isAuth = await checkAuthBeforeCheckout();
+    if (!isAuth) return;
 
     loadCartItems();
   }
@@ -370,7 +469,6 @@
       applyBtn._bound = true;
     }
 
-    // Payment cards should be interactive after DOM is ready
     document.querySelectorAll('.payment-method-card').forEach(card => {
       if (card._bound) return;
       card.addEventListener('click', function () {
@@ -380,9 +478,9 @@
         const radio = this.querySelector('input[type=radio]');
         if (radio) radio.checked = true;
 
-        const cardForm = document.getElementById('card-form-section');
+        const cardForm   = document.getElementById('card-form-section');
         const onlineForm = document.getElementById('online-form-section');
-        if (cardForm) cardForm.style.display = selectedPayment === 'card' ? 'block' : 'none';
+        if (cardForm)   cardForm.style.display   = selectedPayment === 'card'   ? 'block' : 'none';
         if (onlineForm) onlineForm.style.display = selectedPayment === 'online' ? 'block' : 'none';
       });
       card._bound = true;

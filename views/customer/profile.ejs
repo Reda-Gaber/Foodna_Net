@@ -2,99 +2,684 @@
 <%- include('parts/navbar') %>
 
 <style>
-  .profile-container {
-    max-width: 800px;
-    margin: 40px auto;
-    padding: 20px;
-  }
-  
-  .profile-header {
-    text-align: center;
-    margin-bottom: 30px;
-  }
-  
-  .profile-header h1 {
-    color: var(--primary-color);
-    margin-bottom: 10px;
-  }
-  
-  .profile-card {
-    background: var(--card-bg);
-    border-radius: 12px;
-    padding: 30px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  }
-  
-  .profile-info {
-    margin-bottom: 20px;
-  }
-  
-  .profile-info label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: var(--text-muted);
-  }
-  
-  .profile-info p {
-    font-size: 1.1rem;
-    margin: 0;
-  }
-  
-  .btn {
-    padding: 10px 20px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: all 0.3s;
-  }
-  
-  .btn-primary {
-    background: var(--primary-color);
-    color: white;
-  }
-  
-  .btn-danger {
-    background: #dc3545;
-    color: white;
-  }
-  
-  .profile-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-  }
+:root {
+  --brand:      #e62a32;
+  --brand-dark: #b71c1c;
+  --brand-bg:   #fff0f0;
+  --ink:        #1a1a2e;
+  --muted:      #6b7280;
+  --border:     #eef0f4;
+  --card:       #ffffff;
+  --bg:         #f5f6fa;
+  --success:    #10b981;
+  --radius:     16px;
+  --shadow:     0 2px 20px rgba(0,0,0,.07);
+}
+*,*::before,*::after { box-sizing: border-box; }
+body { background: var(--bg); margin: 0; font-family: 'Cairo', 'Tajawal', sans-serif; direction: rtl; }
+
+/* ── Hero ── */
+.ph-hero {
+  background: linear-gradient(135deg, #e62a32 0%, #7b0d0d 100%);
+  padding: 56px 20px 96px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  margin-top: 48px;
+}
+.ph-hero::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; left: 0; right: 0;
+  height: 48px;
+  background: var(--bg);
+  clip-path: ellipse(55% 100% at 50% 100%);
+}
+.ph-avatar-ring {
+  width: 108px; height: 108px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.15);
+  border: 4px solid rgba(255,255,255,.8);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  color: #fff;
+  margin-bottom: 14px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,.25);
+}
+.ph-avatar-ring img { width: 100%; height: 100%; object-fit: cover; }
+.ph-hero h2 { color: #fff; font-size: 1.5rem; font-weight: 800; margin: 0 0 4px; }
+.ph-hero p  { color: rgba(255,255,255,.7); margin: 0; font-size: .95rem; }
+
+/* ── Tabs container ── */
+.ph-wrap {
+  max-width: 740px;
+  margin: -48px auto 40px;
+  padding: 0 16px;
+  position: relative;
+  z-index: 2;
+}
+
+/* ── Tab nav ── */
+.ph-tabs {
+  display: flex;
+  background: var(--card);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+.ph-tab {
+  flex: 1;
+  padding: 15px 8px;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: .95rem;
+  font-weight: 700;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all .22s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border-bottom: 3px solid transparent;
+}
+.ph-tab.active { color: var(--brand); border-bottom-color: var(--brand); background: var(--brand-bg); }
+.ph-tab:hover:not(.active) { background: #fafafa; }
+
+/* ── Panels ── */
+.ph-panel { display: none; }
+.ph-panel.active { display: block; }
+
+/* ── Card ── */
+.ph-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 24px;
+  margin-bottom: 16px;
+}
+.ph-card-head {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--ink);
+  margin: 0 0 20px;
+  padding-bottom: 14px;
+  border-bottom: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ph-card-head i { color: var(--brand); font-size: 1.1rem; }
+
+/* ── Fields ── */
+.ph-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media(max-width:520px){ .ph-row { grid-template-columns: 1fr; } }
+.ph-field { margin-bottom: 16px; }
+.ph-field label {
+  display: block;
+  font-size: .82rem;
+  font-weight: 700;
+  color: var(--muted);
+  margin-bottom: 6px;
+  letter-spacing: .3px;
+}
+.ph-field input,
+.ph-field textarea {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: .95rem;
+  color: var(--ink);
+  background: #fafbfc;
+  transition: border-color .2s, box-shadow .2s;
+  direction: rtl;
+}
+.ph-field input:focus,
+.ph-field textarea:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(230,42,50,.1);
+  background: #fff;
+}
+.ph-field textarea { resize: vertical; min-height: 80px; }
+
+/* ── Buttons ── */
+.ph-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: .95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .2s;
+  width: 100%;
+}
+.ph-btn-primary { background: var(--brand); color: #fff; }
+.ph-btn-primary:hover { background: var(--brand-dark); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(230,42,50,.35); }
+.ph-btn-primary:disabled { background: #f3a0a4; cursor: not-allowed; transform: none; box-shadow: none; }
+.ph-btn-outline { background: #fff; border: 1.5px solid var(--border); color: var(--muted); }
+.ph-btn-outline:hover { border-color: var(--brand); color: var(--brand); }
+.ph-btn-danger { background: #fef2f2; color: #dc2626; border: 1.5px solid #fecaca; }
+.ph-btn-danger:hover { background: #dc2626; color: #fff; }
+.ph-btn-gap { display: flex; flex-direction: column; gap: 10px; }
+
+/* ── Password fields ── */
+.ph-pass-wrap { position: relative; }
+.ph-pass-wrap input { padding-left: 42px; }
+.ph-eye {
+  position: absolute;
+  left: 12px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: color .2s;
+}
+.ph-eye:hover { color: var(--brand); }
+
+/* ── Orders ── */
+.ord-card {
+  background: var(--card);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  margin-bottom: 14px;
+  overflow: hidden;
+  border-right: 4px solid var(--border);
+  transition: border-color .2s, transform .2s;
+}
+.ord-card:hover { border-right-color: var(--brand); transform: translateX(-3px); }
+.ord-top {
+  padding: 18px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.ord-id { font-weight: 800; color: var(--ink); font-size: 1rem; }
+.ord-badge {
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: .8rem;
+  font-weight: 700;
+}
+.b-pending   { background: #fff7ed; color: #c2410c; }
+.b-processing{ background: #eff6ff; color: #1d4ed8; }
+.b-shipped   { background: #f0fdf4; color: #15803d; }
+.b-delivered { background: #dcfce7; color: #166534; }
+.b-cancelled { background: #fef2f2; color: #dc2626; }
+
+.ord-meta {
+  padding: 0 20px 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: .85rem;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+}
+.ord-meta span { display: flex; align-items: center; gap: 5px; }
+.ord-foot {
+  padding: 14px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.ord-total { font-size: 1.15rem; font-weight: 800; color: var(--brand); }
+.ord-actions { display: flex; gap: 8px; }
+.ord-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: .83rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .2s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.ord-btn-blue { background: #eff6ff; color: #1d4ed8; }
+.ord-btn-blue:hover { background: #1d4ed8; color: #fff; }
+.ord-btn-red  { background: #fef2f2; color: #dc2626; }
+.ord-btn-red:hover  { background: #dc2626; color: #fff; }
+.ord-btn-red:disabled { background: #f3f4f6; color: #9ca3af; cursor: not-allowed; }
+
+.ord-empty {
+  text-align: center;
+  padding: 56px 20px;
+  color: var(--muted);
+}
+.ord-empty i { font-size: 3.5rem; color: #e5e7eb; display: block; margin-bottom: 14px; }
+.ord-empty h3 { color: #374151; margin: 0 0 8px; }
+.ord-loading { text-align: center; padding: 48px 20px; color: var(--muted); }
+.spin { width: 38px; height: 38px; border: 3px solid #f0f0f0; border-top-color: var(--brand); border-radius: 50%; animation: spin .9s linear infinite; margin: 0 auto 14px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Toast ── */
+.ph-toast {
+  position: fixed;
+  bottom: 28px; left: 50%;
+  transform: translateX(-50%) translateY(90px);
+  padding: 13px 26px;
+  border-radius: 12px;
+  font-size: .93rem;
+  font-weight: 700;
+  color: #fff;
+  background: var(--ink);
+  box-shadow: 0 8px 24px rgba(0,0,0,.2);
+  z-index: 9999;
+  transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ph-toast.show { transform: translateX(-50%) translateY(0); }
+.ph-toast.ok  { background: var(--success); }
+.ph-toast.err { background: #dc2626; }
 </style>
 
-<div class="profile-container">
-  <div class="profile-header">
-    <h1>الملف الشخصي</h1>
-    <p>مرحباً، <%= user?.name || 'عميل' %></p>
-  </div>
-  
-  <div class="profile-card">
-    <div class="profile-info">
-      <label>الاسم</label>
-      <p><%= user?.name || '-' %></p>
-    </div>
-    
-    <div class="profile-info">
-      <label>البريد الإلكتروني</label>
-      <p><%= user?.email || '-' %></p>
-    </div>
-    
-    <div class="profile-info">
-      <label>نوع الحساب</label>
-      <p>عميل</p>
-    </div>
-    
-    <div class="profile-actions">
-      <a href="/user/api/update" class="btn btn-primary">تعديل البيانات</a>
-      <a href="/user/api/update-password" class="btn btn-primary">تغيير كلمة المرور</a>
-      <a href="/auth/logout" class="btn btn-danger">تسجيل الخروج</a>
+<!-- Hero -->
+<div class="ph-hero">
+  <div class="ph-avatar-ring" id="avatarRing" onclick="document.getElementById('avatarInput').click()" 
+       style="cursor:pointer;position:relative;" title="اضغط لتغيير الصورة">
+    <% if (user && user.Avatar) { %>
+      <img src="<%= user.Avatar %>" alt="صورتك" id="avatarImg" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />
+    <% } else { %>
+      <i class="ri-user-3-line" id="avatarIcon"></i>
+    <% } %>
+    <div style="position:absolute;bottom:0;right:0;background:var(--brand,#e62a32);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;border:2px solid #fff;">
+      <i class="ri-camera-line" style="color:#fff;font-size:.85rem;"></i>
     </div>
   </div>
+  <input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="uploadAvatar(this)" />
+  <div id="avatarProgress" style="display:none;margin-top:8px;">
+    <div style="background:rgba(255,255,255,.3);border-radius:20px;height:4px;width:120px;margin:0 auto;">
+      <div id="avatarBar" style="background:#fff;height:4px;border-radius:20px;width:0%;transition:width .3s;"></div>
+    </div>
+    <p style="color:rgba(255,255,255,.9);font-size:.8rem;margin:6px 0 0;">جاري رفع الصورة...</p>
+  </div>
+  <h2 id="heroName"><%= (user && (user.Customer_Name || user.name)) || 'مستخدم' %></h2>
+  <p><i class="ri-mail-line"></i> <span id="heroEmail"><%= (user && (user.Email || user.email)) || '' %></span></p>
 </div>
+
+<!-- Main wrap -->
+<div class="ph-wrap">
+
+  <!-- Tab nav -->
+  <div class="ph-tabs">
+    <button class="ph-tab active" onclick="phTab('info',this)">
+      <i class="ri-user-line"></i> بياناتي
+    </button>
+    <button class="ph-tab" onclick="phTab('orders',this)">
+      <i class="ri-shopping-bag-2-line"></i> طلباتي
+    </button>
+    <button class="ph-tab" onclick="phTab('security',this)">
+      <i class="ri-shield-keyhole-line"></i> الأمان
+    </button>
+  </div>
+
+  <!-- ══ TAB: INFO ══ -->
+  <div id="ph-info" class="ph-panel active">
+    <div class="ph-card">
+      <div class="ph-card-head"><i class="ri-edit-2-line"></i> تعديل البيانات الشخصية</div>
+      <form id="infoForm">
+        <div class="ph-row">
+          <div class="ph-field">
+            <label>الاسم الكامل</label>
+            <input type="text" name="name" value="<%= user?.Customer_Name || user?.name || '' %>" placeholder="اسمك الكامل" required />
+          </div>
+          <div class="ph-field">
+            <label>البريد الإلكتروني</label>
+            <input type="email" name="email" value="<%= user?.Email || user?.email || '' %>" placeholder="example@mail.com" required />
+          </div>
+        </div>
+        <div class="ph-field">
+          <label>رقم الهاتف</label>
+          <input type="tel" name="phone" value="<%= user?.Phone || '' %>" placeholder="01xxxxxxxxx" />
+        </div>
+        <div class="ph-field">
+          <label>عنوان التوصيل الافتراضي</label>
+          <textarea name="address" placeholder="الشارع، المبنى، الدور، الشقة..."><%= user?.Address || '' %></textarea>
+        </div>
+        <button type="submit" class="ph-btn ph-btn-primary" id="saveInfoBtn">
+          <i class="ri-save-3-line"></i> حفظ التغييرات
+        </button>
+      </form>
+    </div>
+
+    <div class="ph-card">
+      <div class="ph-card-head"><i class="ri-logout-box-r-line"></i> تسجيل الخروج</div>
+      <button type="button" class="ph-btn ph-btn-danger" onclick="doLogout()">
+        <i class="ri-logout-box-line"></i> تسجيل الخروج من الحساب
+      </button>
+    </div>
+  </div>
+
+  <!-- ══ TAB: ORDERS ══ -->
+  <div id="ph-orders" class="ph-panel">
+    <div id="ordLoading" class="ord-loading">
+      <div class="spin"></div>
+      <p>جاري تحميل طلباتك...</p>
+    </div>
+    <div id="ordEmpty" class="ord-empty" style="display:none">
+      <i class="ri-shopping-bag-line"></i>
+      <h3>لا توجد طلبات بعد</h3>
+      <p>ابدأ بطلب وجبتك المفضلة الآن!</p>
+      <a href="/menu" class="ph-btn ph-btn-primary" style="width:auto;display:inline-flex;margin-top:8px;">
+        <i class="ri-restaurant-line"></i> تصفح القائمة
+      </a>
+    </div>
+    <div id="ordList"></div>
+  </div>
+
+  <!-- ══ TAB: SECURITY ══ -->
+  <div id="ph-security" class="ph-panel">
+    <div class="ph-card">
+      <div class="ph-card-head"><i class="ri-lock-password-line"></i> تغيير كلمة المرور</div>
+      <form id="passForm">
+        <div class="ph-field">
+          <label>كلمة المرور الحالية</label>
+          <div class="ph-pass-wrap">
+            <input type="password" name="currentPassword" id="curPass" placeholder="••••••••" />
+            <i class="ri-eye-off-line ph-eye" onclick="togglePass('curPass',this)"></i>
+          </div>
+        </div>
+        <div class="ph-field">
+          <label>كلمة المرور الجديدة</label>
+          <div class="ph-pass-wrap">
+            <input type="password" name="newPassword" id="newPass" placeholder="••••••••" />
+            <i class="ri-eye-off-line ph-eye" onclick="togglePass('newPass',this)"></i>
+          </div>
+        </div>
+        <div class="ph-field">
+          <label>تأكيد كلمة المرور</label>
+          <div class="ph-pass-wrap">
+            <input type="password" name="confirmPassword" id="confPass" placeholder="••••••••" />
+            <i class="ri-eye-off-line ph-eye" onclick="togglePass('confPass',this)"></i>
+          </div>
+        </div>
+        <button type="submit" class="ph-btn ph-btn-primary" id="savePassBtn">
+          <i class="ri-key-2-line"></i> تحديث كلمة المرور
+        </button>
+      </form>
+    </div>
+  </div>
+
+</div><!-- /ph-wrap -->
+
+<div id="phToast" class="ph-toast"></div>
+
+<script>
+// ── Tabs ──
+function phTab(name, btn) {
+  document.querySelectorAll('.ph-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.ph-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('ph-' + name).classList.add('active');
+  btn.classList.add('active');
+  if (name === 'orders') loadOrders();
+}
+
+// ── Toast ──
+function toast(msg, type = '') {
+  const t = document.getElementById('phToast');
+  const icons = { ok: '✓', err: '✕', '': 'ℹ' };
+  t.innerHTML = `<span>${icons[type] || 'ℹ'}</span> ${msg}`;
+  t.className = 'ph-toast ' + type + ' show';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// ── Toggle password ──
+function togglePass(id, icon) {
+  const inp = document.getElementById(id);
+  const show = inp.type === 'password';
+  inp.type = show ? 'text' : 'password';
+  icon.className = (show ? 'ri-eye-line' : 'ri-eye-off-line') + ' ph-eye';
+}
+
+// ── Update profile ──
+document.getElementById('infoForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = document.getElementById('saveInfoBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="ri-loader-4-line"></i> جاري الحفظ...';
+  const body = Object.fromEntries(new FormData(e.target));
+  try {
+    const res  = await fetch('/user/api/update', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify(body)
+    });
+    const data = await res.json();
+    if (res.ok && data.success) toast('تم حفظ البيانات بنجاح ✓', 'ok');
+    else toast(data.message || 'حدث خطأ', 'err');
+  } catch { toast('خطأ في الاتصال', 'err'); }
+  finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="ri-save-3-line"></i> حفظ التغييرات';
+  }
+});
+
+// ── Update password ──
+document.getElementById('passForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = document.getElementById('savePassBtn');
+  const fd  = new FormData(e.target);
+  const np  = fd.get('newPassword');
+  const cp  = fd.get('confirmPassword');
+  if (np !== cp) { toast('كلمتا المرور غير متطابقتين', 'err'); return; }
+  btn.disabled = true;
+  btn.innerHTML = '<i class="ri-loader-4-line"></i> جاري التحديث...';
+  try {
+    const res  = await fetch('/user/api/update-password', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ currentPassword: fd.get('currentPassword'), newPassword: np })
+    });
+    const data = await res.json();
+    if (res.ok && data.success) { toast('تم تغيير كلمة المرور ✓', 'ok'); e.target.reset(); }
+    else toast(data.message || 'حدث خطأ', 'err');
+  } catch { toast('خطأ في الاتصال', 'err'); }
+  finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="ri-key-2-line"></i> تحديث كلمة المرور';
+  }
+});
+
+// ── Orders ──
+const statusMap = {
+  Pending:    { ar: 'قيد الانتظار', cls: 'b-pending' },
+  Processing: { ar: 'تحت التجهيز',  cls: 'b-processing' },
+  Shipped:    { ar: 'في الطريق',    cls: 'b-shipped' },
+  Delivered:  { ar: 'تم التسليم',   cls: 'b-delivered' },
+  Cancelled:  { ar: 'ملغى',         cls: 'b-cancelled' }
+};
+const payMap = { cash: 'دفع عند الاستلام', card: 'بطاقة ائتمان', online: 'محفظة إلكترونية' };
+
+let ordersLoaded = false;
+
+async function loadOrders() {
+  if (ordersLoaded) return;
+  try {
+    const res  = await fetch('/api/orders', { credentials: 'include' });
+    if (res.status === 401) { window.location.href = '/login'; return; }
+    const data = await res.json();
+    document.getElementById('ordLoading').style.display = 'none';
+    const orders = data.data || data;
+    if (Array.isArray(orders) && orders.length) {
+      renderOrders(orders);
+      ordersLoaded = true;
+    } else {
+      document.getElementById('ordEmpty').style.display = 'block';
+    }
+  } catch {
+    document.getElementById('ordLoading').innerHTML = '<p style="color:#dc2626;text-align:center">خطأ في تحميل الطلبات، حاول مرة أخرى</p>';
+  }
+}
+
+function renderOrders(orders) {
+  document.getElementById('ordList').innerHTML = orders.map(o => {
+    const s    = statusMap[o.Order_Status] || { ar: o.Order_Status, cls: '' };
+    const date = new Date(o.Created_At).toLocaleDateString('ar-EG', { year:'numeric', month:'long', day:'numeric' });
+    const canCancel = o.Order_Status === 'Pending';
+    return `
+    <div class="ord-card">
+      <div class="ord-top">
+        <div class="ord-id"><i class="ri-receipt-2-line" style="color:var(--brand)"></i> طلب #${o.Order_ID}</div>
+        <span class="ord-badge ${s.cls}">${s.ar}</span>
+      </div>
+      <div class="ord-meta">
+        <span><i class="ri-calendar-event-line"></i>${date}</span>
+        <span><i class="ri-map-pin-2-line"></i>${o.Delivery_Address || 'في المتجر'}</span>
+        <span><i class="ri-bank-card-line"></i>${payMap[o.Payment_Method] || o.Payment_Method || ''}</span>
+      </div>
+      <div class="ord-foot">
+        <div class="ord-total">${parseFloat(o.Total_Amount || 0).toFixed(2)} جنيه</div>
+        <div class="ord-actions">
+          ${canCancel ? `<button class="ord-btn ord-btn-red" onclick="cancelOrd(${o.Order_ID},this)">
+            <i class="ri-close-circle-line"></i> إلغاء
+          </button>` : ''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function cancelOrd(id, btn) {
+  if (!confirm('هل تريد إلغاء الطلب #' + id + '؟')) return;
+  btn.disabled = true;
+  btn.textContent = 'جاري الإلغاء...';
+  try {
+    const res  = await fetch('/api/orders/' + id, { method: 'DELETE', credentials: 'include' });
+    const data = await res.json();
+    if (res.ok && data.success) {
+      toast('تم إلغاء الطلب #' + id + ' ✓', 'ok');
+      ordersLoaded = false;
+      document.getElementById('ordList').innerHTML = '';
+      document.getElementById('ordLoading').style.display = 'block';
+      loadOrders();
+    } else {
+      toast(data.message || 'فشل الإلغاء', 'err');
+      btn.disabled = false;
+      btn.innerHTML = '<i class="ri-close-circle-line"></i> إلغاء';
+    }
+  } catch {
+    toast('خطأ في الاتصال', 'err');
+    btn.disabled = false;
+  }
+}
+
+// ── Upload Avatar ──
+async function uploadAvatar(input) {
+  const file = input.files && input.files[0];
+  if (!file) return;
+
+  // preview فوري
+  const ring = document.getElementById('avatarRing');
+  const reader = new FileReader();
+  reader.onload = e => {
+    ring.querySelector('i') && ring.querySelector('i').remove();
+    let img = document.getElementById('avatarImg');
+    if (!img) {
+      img = document.createElement('img');
+      img.id = 'avatarImg';
+      img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%;';
+      ring.insertBefore(img, ring.firstChild);
+    }
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+
+  // رفع الصورة
+  const progress = document.getElementById('avatarProgress');
+  const bar      = document.getElementById('avatarBar');
+  if (progress) progress.style.display = 'block';
+
+  // simulate progress
+  let pct = 0;
+  const tick = setInterval(() => {
+    pct = Math.min(pct + 10, 85);
+    if (bar) bar.style.width = pct + '%';
+  }, 100);
+
+  try {
+    const fd = new FormData();
+    fd.append('avatar', file);
+    const res  = await fetch('/user/api/update', {
+      method: 'POST',
+      credentials: 'include',
+      body: fd
+    });
+    const data = await res.json();
+    clearInterval(tick);
+    if (bar) bar.style.width = '100%';
+    setTimeout(() => { if (progress) progress.style.display = 'none'; }, 600);
+    if (res.ok && data.success) {
+      toast('تم تحديث الصورة الشخصية ✓', 'ok');
+    } else {
+      toast(data.message || 'فشل رفع الصورة', 'err');
+    }
+  } catch(e) {
+    clearInterval(tick);
+    if (progress) progress.style.display = 'none';
+    toast('خطأ في الاتصال', 'err');
+  }
+  input.value = '';
+}
+
+// ── Load full profile data ──
+(async function() {
+  try {
+    const res  = await fetch('/user/api/me', { credentials: 'include' });
+    if (!res.ok) return;
+    const json = await res.json();
+    const u    = json.data || {};
+    const set  = (sel, val) => { const el = document.querySelector(sel); if (el && val) el.value = val; };
+    set('[name="name"]',    u.name);
+    set('[name="email"]',   u.email);
+    set('[name="phone"]',   u.phone);
+    set('[name="address"]', u.address);
+    // Hero
+    const h2 = document.querySelector('.ph-hero h2');
+    const p  = document.querySelector('.ph-hero p');
+    if (h2 && u.name)  h2.textContent = u.name;
+    if (p  && u.email) p.innerHTML = '<i class="ri-mail-line"></i> ' + u.email;
+    // Avatar
+    if (u.avatar) {
+      const ring = document.querySelector('.ph-avatar-ring');
+      if (ring) ring.innerHTML = '<img src="' + u.avatar + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />';
+    }
+  } catch(e) {}
+})();
+
+// ── Logout ──
+async function doLogout() {
+  try { await fetch('/user/logout', { credentials: 'include' }); } catch(_) {}
+  try { localStorage.clear(); } catch(_) {}
+  window.location.replace('/user/register');
+}
+
+// فتح tab الطلبات لو في URL ?tab=orders
+if (new URLSearchParams(location.search).get('tab') === 'orders') {
+  phTab('orders', document.querySelectorAll('.ph-tab')[1]);
+}
+</script>
 
 <%- include('parts/footer') %>

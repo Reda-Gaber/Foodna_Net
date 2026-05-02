@@ -16,7 +16,7 @@ const Logger = require('./core/utils/logger');
 
 // Import Routes
 const unifiedAuth = require("./modules/auth/unified-auth.routes");
-const employeeAuth = require("./modules/auth/employee-login"); // للتوافق مع الكود القديم
+const employeeAuth = require("./modules/auth/employee-login");
 const customerRoutes = require("./routes/customer.routes");
 const adminRoutes = require("./routes/admin.routes");
 const cashierRoutes = require("./modules/cashier/cashier.routes");
@@ -33,23 +33,21 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // ==================== Security Middleware ====================
-app.use(helmetConfig); // حماية Headers
-app.use(compression()); // ضغط الاستجابات
+app.use(helmetConfig);
+app.use(compression());
 app.use(cors({
   origin: process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000'],
   credentials: true
 }));
 
 // ==================== Session Configuration ====================
-// نحتاج إلى connection pool للـ session store
 const mysql = require('mysql2');
 const sessionDbHost = process.env.DB_HOST || 'localhost';
 const sessionUseSsl = !['localhost', '127.0.0.1', '::1'].includes(sessionDbHost);
 const sessionDbPort = process.env.DB_PORT
   ? Number(process.env.DB_PORT)
-  : sessionUseSsl
-    ? 4000
-    : 3306;
+  : sessionUseSsl ? 4000 : 3306;
+
 const dbPool = mysql.createPool({
   host: sessionDbHost,
   user: process.env.DB_USER || 'root',
@@ -65,7 +63,7 @@ const dbPool = mysql.createPool({
 });
 
 const sessionStore = new MySqlStore({
-  expiration: 8 * 60 * 60 * 1000, // 8 ساعات
+  expiration: 8 * 60 * 60 * 1000,
   createDatabaseTable: true,
   schema: {
     tableName: 'sessions',
@@ -83,14 +81,14 @@ app.use(session({
   store: sessionStore,
   resave: false,
   saveUninitialized: false,
-  rolling: true, // تجديد الـ session مع كل طلب
-  proxy: true, // مهم لـ Vercel
+  rolling: true,
+  proxy: true,
   cookie: {
-    maxAge: parseInt(process.env.SESSION_MAX_AGE) || 8 * 60 * 60 * 1000, // 8 ساعات
-    secure: process.env.NODE_ENV === 'production', // HTTPS فقط في الإنتاج
-    httpOnly: true, // لا يمكن الوصول من JavaScript
-    sameSite: 'lax', // lax أفضل للـ cross-origin
-    path: '/' // مسار واضح للـ cookie
+    maxAge: parseInt(process.env.SESSION_MAX_AGE) || 8 * 60 * 60 * 1000,
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true,
+    sameSite: 'lax',
+    path: '/'
   }
 }));
 
@@ -99,33 +97,83 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(express.json({ limit: '10mb' }));
 
 // ==================== Static Files ====================
-// خدمة الملفات الثابتة من مجلد public
 app.use(express.static(path.join(__dirname, "public")));
-// مسار إضافي للصور (للتوافق مع الكود القديم)
 app.use('/images', express.static(path.join(__dirname, "public/images")));
 
 // ==================== View Engine ====================
 app.set("view engine", "ejs");
+app.set('view cache', false);
 app.set("views", path.join(__dirname, "views"));
 
 // ==================== Rate Limiting ====================
 app.use('/api', apiLimiter);
 
+// ============================================================
+// helper: يشيك على أي طريقة حفظ للـ session
+// ============================================================
+function isLoggedIn(req) {
+  return !!(
+    req.session && (
+      req.session.userId        ||
+      req.session.user?.id      ||
+      req.session.authenticated
+    )
+  );
+}
+
+// ============================================================
+// Middleware: حماية API Routes
+// بيرجع 401 JSON بدل redirect عشان الـ frontend يتعامل معاه
+// ============================================================
+function requireApiLogin(req, res, next) {
+  if (!isLoggedIn(req)) {
+    return res.status(401).json({
+      success: false,
+      message: 'يجب تسجيل الدخول أولاً',
+      redirect: '/login?next=' + encodeURIComponent(req.originalUrl)
+    });
+  }
+  next();
+}
+
 // ==================== Routes ====================
-// Unified Authentication (يجب أن يكون أول route)
+
+// Unified Authentication
 app.use("/auth", unifiedAuth);
-// PUBLIC API Routes (بدون مصادقة)
+
+// مسار /login المباشر
+app.get("/login", (req, res) => {
+  if (isLoggedIn(req)) {
+    const next = req.query.next ? decodeURIComponent(req.query.next) : '/';
+    return res.redirect(next);
+  }
+  res.redirect("/auth/login");
+});
+app.post("/login", (req, res, next) => {
+  const authController = require("./modules/auth/unified-auth.controller");
+  return authController.unifiedLogin(req, res, next);
+});
+
+// ==================== Public API Routes ====================
+// chatbot ومنتجات — بدون مصادقة
 app.use("/api", chatbotRoutes);
-// ملاحظة مهمة: /api/products يجب أن يكون متاح بدون مصادقة (عام)
-const productsPublicRouter = require("./modules/customer/products.routes");
-app.use("/api/products", productsPublicRouter);
-// Customer API routes (تتطلب مصادقة)
-app.use("/api", cartRoutes);
-app.use("/api", orderRoutes);
+app.use("/api/products", require("./modules/customer/products.routes"));
+
+// تقييمات المنتجات — GET عام بدون مصادقة
+// /api/products/:productId/reviews
 app.use("/api", reviewRoutes);
+
+// ==================== Protected API Routes ====================
+// كل الـ routes دي بتبدأ بـ /cart أو /orders أو /reviews
+// يعني الـ URL الكامل: /api/cart, /api/orders, /api/reviews
+app.use("/api", requireApiLogin, cartRoutes);
+app.use("/api", requireApiLogin, orderRoutes);
+
+// Admin API
 app.use("/admin/api", categoryRoutes);
 app.use("/admin/api", couponRoutes);
-// Legacy routes (للتوافق)
+
+// ==================== Page Routes ====================
 app.use("/", employeeAuth);
 app.use("/", customerRoutes);
 app.use("/admin", adminRoutes);
@@ -133,34 +181,25 @@ app.use("/cashier", cashierRoutes);
 app.use("/chef", chefRoutes);
 app.use("/kitchen", kitchenRoutes);
 
-// ==================== Error Handling Middleware ====================
+// ==================== Error Handling ====================
 app.use((err, req, res, next) => {
   Logger.error('Unhandled error', err);
-  
   if (req.path.startsWith('/api')) {
     return res.status(err.status || 500).json({
       success: false,
-      message: process.env.NODE_ENV === 'production' 
-        ? 'حدث خطأ في الخادم' 
-        : err.message,
+      message: process.env.NODE_ENV === 'production' ? 'حدث خطأ في الخادم' : err.message,
       ...(process.env.NODE_ENV !== 'production' && { stack: err.stack })
     });
   }
-  
   res.status(err.status || 500).render('error', {
-    message: process.env.NODE_ENV === 'production'
-      ? 'حدث خطأ في الخادم'
-      : err.message
+    message: process.env.NODE_ENV === 'production' ? 'حدث خطأ في الخادم' : err.message
   });
 });
 
 // ==================== 404 Handler ====================
 app.use((req, res) => {
   if (req.path.startsWith('/api')) {
-    return res.status(404).json({
-      success: false,
-      message: 'المسار غير موجود'
-    });
+    return res.status(404).json({ success: false, message: 'المسار غير موجود' });
   }
   res.status(404).render('error', { message: 'الصفحة غير موجودة' });
 });

@@ -31,22 +31,35 @@ router.post("/emp/login", async (req, res) => {
     }
 
     // Save Session
+    req.session.userId = employee.Employee_ID;
+    req.session.email = employee.Email;
+    req.session.role = employee.Role;
+    req.session.authenticated = true;
     req.session.user = {
       id: employee.Employee_ID,
       name: employee.Employee_Name,
+      email: employee.Email,
       role: employee.Role,
     };
 
-    switch (employee.Role) {
-      case "Admin":
-        return res.redirect("/admin/dashboard");
-      case "Cashier":
-        return res.redirect("/cashier");
-      case "Chef": 
-        return res.redirect("/chef");
-      default:
-        return res.redirect("/dashboard");
-    }
+    // Save session before redirect
+    req.session.save((err) => {
+      if (err) {
+        console.error("Session save error:", err);
+        return res.status(500).json({ message: "Server Error" });
+      }
+
+      switch (employee.Role) {
+        case "Admin":
+          return res.redirect("/admin/dashboard");
+        case "Cashier":
+          return res.redirect("/cashier");
+        case "Chef": 
+          return res.redirect("/chef");
+        default:
+          return res.redirect("/dashboard");
+      }
+    });
 
   } catch (err) {
     console.error("Login error:", err);

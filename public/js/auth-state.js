@@ -71,6 +71,40 @@
   };
 
   /**
+   * Log out: clear auth state, storage, then redirect.
+   * @param {string} [next] - Optional URL to redirect to after logout.
+   */
+  window.logout = function(next) {
+    const target = next || '/user/register';
+
+    // Clear global auth state
+    window.auth = {
+      authenticated: false,
+      user: null,
+      initialized: false
+    };
+
+    // Clear all auth-related storage
+    try {
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('user');
+      localStorage.removeItem('postAuthRedirect');
+      localStorage.removeItem('checkoutIntent');
+      sessionStorage.removeItem('authToken');
+      sessionStorage.removeItem('user');
+    } catch (e) {
+      // ignore storage errors in restricted contexts
+    }
+
+    // Request backend logout, then redirect
+    try {
+      fetch('/auth/logout', { method: 'POST', credentials: 'include' }).catch(() => {});
+    } finally {
+      window.location.href = target;
+    }
+  };
+
+  /**
    * Helper to redirect to login with next parameter
    */
   window.redirectToLogin = function(currentPath) {

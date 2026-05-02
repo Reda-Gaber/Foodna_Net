@@ -16,11 +16,12 @@ class Product {
             // 1️⃣ إضافة المنتج في جدول Products
             const [resultProduct] = await connection.query(
                 `INSERT INTO Products 
-                 (Product_Name, Category, Description, Image, Quantity, Price, Discount, Supplier_ID)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+                 (Product_Name, Category, Category_ID, Description, Image, Quantity, Price, Discount, Supplier_ID)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
                 [
                     data.name,
                     data.category,
+                    data.category_id || null,
                     data.description || '',  // استخدام string فارغة بدلاً من null
                     imageFilename,
                     data.quantity,
@@ -67,12 +68,13 @@ class Product {
             // 1️⃣ تحديث بيانات المنتج
             await connection.query(
                 `UPDATE Products SET
-                 Product_Name = ?, Category = ?, Description = ?,
+                 Product_Name = ?, Category = ?, Category_ID = ?, Description = ?,
                  Image = ?, Quantity = ?, Price = ?, Discount = ?, Supplier_ID = ?
                  WHERE Product_ID = ?`,
                 [
                     data.name,
                     data.category,
+                    data.category_id || null,
                     data.description || '',  // استخدام string فارغة بدلاً من null
                     imageFilename,
                     data.quantity,
