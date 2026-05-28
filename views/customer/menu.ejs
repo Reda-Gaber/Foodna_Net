@@ -1,0 +1,32 @@
+<%- include("parts/head.ejs") %>
+<%- include("parts/navbar.ejs") %>
+
+<!-- start Menu header -->
+<div class="my-account sub-pages">
+  <div class="heading-of-sub-pages">
+    <div class="head-of-page">القائمة</div>
+    <div class="content-of-sub-pages" id="menu-categories-nav">
+      <a href="/"><span>الرئيسية</span></a>
+      <a href="/menu" id="cat-all-link"><span>الكل</span></a>
+      <!-- الفئات الديناميكية من JS -->
+    </div>
+  </div>
+</div>
+<!-- end Menu header -->
+
+<!-- شريط اسم الفئة المختارة -->
+<div id="category-title-bar" style="display:none; background:var(--section-background,#f6f6f6); padding:14px 20px; text-align:center; border-bottom:2px solid var(--main-color,#e62a32);">
+  <h2 id="category-title-text" style="font-family:var(--font-1,'Kufam',sans-serif); color:var(--title-color,#1a1a4e); font-size:1.3rem; margin:0;"></h2>
+</div>
+
+<!-- شبكة المنتجات -->
+<div class="category-one">
+  <div class="container">
+    <div class="productss">
+      <div class="products-grid_1" id="menu-products-grid"></div>
+    </div>
+  </div>
+</div>
+
+<script src="/js/customer.menu.js"></script>
+<%- include("parts/footer.ejs") %>

@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نقاط البيع - Foodna Shop</title>
+    <link rel="stylesheet" href="/css/design-system.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600&family=Montserrat:wght@400;500;600&family=Oswald:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/sweetalert-config.js"></script>
+    <style>
+        body { background: var(--section-background); min-height: 100vh; }
+
+        /* ===== HEADER ===== */
+        .cashier-header {
+            background: var(--main-color);
+            color: var(--white-color);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-md);
+            margin-bottom: 0;
+        }
+        .cashier-header h1 { color: var(--white-color); margin-bottom: var(--spacing-xs); }
+        .cashier-header p { margin-bottom: 0; color: rgba(255,255,255,0.85); }
+
+        /* ===== TABS ===== */
+        .page-tabs {
+            background: var(--white-color);
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            gap: 0;
+            padding: 0 var(--spacing-lg);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        .tab-btn {
+            padding: var(--spacing-md) var(--spacing-xl);
+            border: none;
+            background: transparent;
+            font-family: var(--font-1);
+            font-size: var(--h3-font-size);
+            font-weight: var(--font-semi-bold);
+            color: #888;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+        .tab-btn:hover { color: var(--main-color); }
+        .tab-btn.active {
+            color: var(--main-color);
+            border-bottom-color: var(--main-color);
+        }
+        .tab-badge {
+            background: var(--main-color);
+            color: white;
+            border-radius: 999px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            min-width: 20px;
+            height: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 5px;
+        }
+
+        /* ===== TAB PANELS ===== */
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        /* ===== POS LAYOUT ===== */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: var(--spacing-lg);
+            padding: var(--spacing-lg);
+        }
+        .products-section {
+            background: var(--white-color);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-sm);
+        }
+        .search-bar {
+            width: 100%;
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: var(--h3-font-size);
+            font-family: var(--font-1);
+        }
+        .search-bar:focus { border-color: var(--main-color); outline: none; }
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: var(--spacing-md);
+            max-height: 70vh;
+            overflow-y: auto;
+            padding: var(--spacing-sm);
+        }
+        .product-card {
+            background: var(--white-color);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .product-card:hover { border-color: var(--main-color); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        .product-image { width: 100%; height: 120px; object-fit: cover; border-radius: var(--radius-sm); margin-bottom: var(--spacing-sm); background: #f0f0f0; opacity: 0; transition: opacity 0.2s ease; }
+        .product-image.loaded { opacity: 1; }
+        .product-name { font-weight: var(--font-semi-bold); color: var(--title-color); margin-bottom: var(--spacing-xs); font-size: var(--h3-font-size); }
+        .product-price { color: var(--main-color); font-weight: var(--font-semi-bold); font-size: var(--h2-font-size); margin-bottom: var(--spacing-sm); }
+
+        /* ===== CART ===== */
+        .cart-section {
+            background: var(--white-color);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 56px;
+            max-height: calc(100vh - 70px);
+            display: flex;
+            flex-direction: column;
+        }
+        .cart-items { flex: 1; overflow-y: auto; max-height: 460px; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: var(--spacing-md); border-bottom: 1px dashed var(--border-color); }
+        .cart-item-info { flex: 1; }
+        .cart-item-name { font-weight: var(--font-medium); color: var(--title-color); margin-bottom: var(--spacing-xs); }
+        .cart-item-price { color: var(--text-color); font-size: 0.875rem; }
+        .quantity-controls { display: flex; align-items: center; gap: var(--spacing-sm); margin: var(--spacing-sm) 0; }
+        .qty-btn { width: 32px; height: 32px; border: 1px solid var(--border-color); background: var(--section-background); border-radius: var(--radius-sm); cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: var(--font-semi-bold); }
+        .qty-btn:hover { background: var(--border-color); }
+        .quantity { min-width: 40px; text-align: center; font-weight: var(--font-semi-bold); }
+        .cart-summary { border-top: 2px solid var(--border-color); padding-top: var(--spacing-sm); margin-top: var(--spacing-sm); }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: var(--spacing-sm); }
+        .summary-total { font-size: var(--h1-font-size); font-weight: var(--font-semi-bold); color: var(--main-color); border-top: 2px solid var(--main-color); padding-top: var(--spacing-sm); margin-top: var(--spacing-sm); }
+        .payment-methods { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--spacing-sm); margin-bottom: var(--spacing-md); }
+        .payment-method { padding: var(--spacing-sm); border: 2px solid var(--border-color); border-radius: var(--radius-md); text-align: center; cursor: pointer; transition: all 0.3s ease; }
+        .payment-method:hover { border-color: var(--main-color); }
+        .payment-method.active { border-color: var(--main-color); background: #fff5f5; }
+        .payment-method input { display: none; }
+        .empty-cart { text-align: center; padding: var(--spacing-xl); color: var(--text-color); }
+
+        /* ===== ORDERS SECTION ===== */
+        .orders-panel { padding: var(--spacing-lg); }
+
+        .orders-toolbar {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+            flex-wrap: wrap;
+        }
+        .orders-toolbar h2 { margin-bottom: 0; flex: 1; }
+
+        .filter-tabs {
+            display: flex;
+            gap: var(--spacing-sm);
+            background: var(--section-background);
+            padding: 4px;
+            border-radius: var(--radius-md);
+        }
+        .filter-tab {
+            padding: var(--spacing-xs) var(--spacing-md);
+            border: none;
+            background: transparent;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-family: var(--font-1);
+            font-size: 0.875rem;
+            font-weight: var(--font-medium);
+            color: #666;
+            transition: all 0.2s;
+        }
+        .filter-tab.active { background: var(--white-color); color: var(--main-color); box-shadow: var(--shadow-sm); font-weight: var(--font-semi-bold); }
+
+        .btn-refresh {
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: var(--white-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-family: var(--font-1);
+            color: #444;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+        .btn-refresh:hover { border-color: var(--main-color); color: var(--main-color); }
+        .btn-refresh.spinning i { animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ===== ORDERS TABLE ===== */
+        .orders-table-wrap {
+            background: var(--white-color);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: var(--font-1);
+        }
+        .orders-table thead {
+            background: #f9fafb;
+            border-bottom: 2px solid var(--border-color);
+        }
+        .orders-table th {
+            padding: var(--spacing-md) var(--spacing-lg);
+            text-align: right;
+            font-weight: var(--font-semi-bold);
+            color: #444;
+            font-size: 0.875rem;
+            white-space: nowrap;
+        }
+        .orders-table td {
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+            font-size: 0.9rem;
+            color: #333;
+        }
+        .orders-table tbody tr:last-child td { border-bottom: none; }
+        .orders-table tbody tr:hover { background: #fafafa; }
+
+        /* ===== STATUS BADGES ===== */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: var(--font-semi-bold);
+            white-space: nowrap;
+        }
+        .status-badge::before { content: '●'; font-size: 0.5rem; }
+        .status-Pending    { background: #fff7ed; color: #d97706; }
+        .status-Processing { background: #eff6ff; color: #2563eb; }
+        .status-Ready      { background: #f0fdf4; color: #16a34a; }
+        .status-Delivered  { background: #f0fdf4; color: #15803d; }
+        .status-Cancelled  { background: #fff1f2; color: #be123c; }
+
+        /* ===== STATUS SELECT ===== */
+        .status-select {
+            padding: 5px 8px;
+            border: 1.5px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-family: var(--font-1);
+            font-size: 0.82rem;
+            background: var(--white-color);
+            cursor: pointer;
+            transition: border-color 0.2s;
+            min-width: 130px;
+        }
+        .status-select:focus { outline: none; border-color: var(--main-color); }
+
+        /* ===== ORDER DETAILS DRAWER ===== */
+        .order-id-link {
+            color: var(--main-color);
+            font-weight: var(--font-semi-bold);
+            cursor: pointer;
+            text-decoration: none;
+            background: none;
+            border: none;
+            font-family: var(--font-1);
+            font-size: 0.9rem;
+        }
+        .order-id-link:hover { text-decoration: underline; }
+
+        /* Drawer overlay */
+        .drawer-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
+            z-index: 200;
+        }
+        .drawer-overlay.open { display: block; }
+
+        .order-drawer {
+            position: fixed;
+            top: 0;
+            left: -520px;
+            width: 480px;
+            max-width: 95vw;
+            height: 100vh;
+            background: var(--white-color);
+            box-shadow: var(--shadow-lg);
+            z-index: 201;
+            transition: left 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .order-drawer.open { left: 0; }
+
+        .drawer-header {
+            padding: var(--spacing-lg);
+            background: var(--main-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .drawer-header h3 { color: white; margin-bottom: 0; font-size: 1.1rem; }
+        .drawer-close {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .drawer-close:hover { background: rgba(255,255,255,0.35); }
+
+        .drawer-body { padding: var(--spacing-lg); overflow-y: auto; flex: 1; }
+
+        .drawer-info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+        .info-card {
+            background: var(--section-background);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+        }
+        .info-card label { display: block; font-size: 0.75rem; color: #888; margin-bottom: 3px; }
+        .info-card span { font-weight: var(--font-semi-bold); color: var(--title-color); font-size: 0.9rem; }
+
+        .drawer-items-title {
+            font-weight: var(--font-semi-bold);
+            color: var(--title-color);
+            margin-bottom: var(--spacing-md);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .drawer-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-sm) 0;
+            border-bottom: 1px dashed var(--border-color);
+            font-size: 0.9rem;
+        }
+        .drawer-item:last-child { border-bottom: none; }
+        .drawer-item-name { color: var(--title-color); font-weight: var(--font-medium); }
+        .drawer-item-qty { color: #888; font-size: 0.8rem; margin-top: 2px; }
+        .drawer-item-price { color: var(--main-color); font-weight: var(--font-semi-bold); }
+
+        .drawer-total {
+            margin-top: var(--spacing-lg);
+            padding: var(--spacing-md);
+            background: #fff5f5;
+            border-radius: var(--radius-md);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: var(--font-semi-bold);
+            font-size: 1rem;
+            color: var(--main-color);
+        }
+
+        /* ===== EMPTY STATE ===== */
+        .empty-state {
+            text-align: center;
+            padding: 3rem var(--spacing-lg);
+            color: #999;
+        }
+        .empty-state i { font-size: 3.5rem; display: block; margin-bottom: var(--spacing-md); color: #ddd; }
+        .empty-state p { font-size: 1rem; margin-bottom: 0; }
+
+        /* ===== LOADING SKELETON ===== */
+        .skeleton-row td { padding: var(--spacing-md) var(--spacing-lg); }
+        .skeleton-cell {
+            height: 14px;
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.4s infinite;
+            border-radius: 4px;
+        }
+        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+
+        @media (max-width: 992px) {
+            .main-layout { grid-template-columns: 1fr; }
+            .cart-section { position: static; max-height: none; }
+            .orders-toolbar { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="cashier-header">
+        <div class="container">
+            <h1><i class="ri-cash-register-line"></i> نقاط البيع — Foodna Shop</h1>
+            <p>مرحباً، <%= user.name %> &nbsp;|&nbsp; <span id="currentTime"></span></p>
+        </div>
+    </div>
+
+    <!-- Page Tabs -->
+    <div class="page-tabs">
+        <button class="tab-btn active" data-tab="pos">
+            <i class="ri-store-2-line"></i> نقطة البيع
+        </button>
+        <button class="tab-btn" data-tab="orders">
+            <i class="ri-clipboard-line"></i> إدارة الطلبات
+            <span class="tab-badge" id="pendingBadge" style="display:none">0</span>
+        </button>
+    </div>
+
+    <!-- ========================= TAB: POS ========================= -->
+    <div class="tab-panel active" id="tab-pos">
+        <div class="container">
+            <div class="main-layout">
+
+                <!-- قسم المنتجات -->
+                <section class="products-section">
+                    <h2 class="card-title">المنتجات</h2>
+                    <input type="text" id="searchInput" class="search-bar" placeholder="ابحث عن منتج..."/>
+                    <div id="productsGrid" class="products-grid">
+                        <div class="skeleton-cell" style="height:120px; border-radius:8px;"></div>
+                        <div class="skeleton-cell" style="height:120px; border-radius:8px;"></div>
+                        <div class="skeleton-cell" style="height:120px; border-radius:8px;"></div>
+                        <div class="skeleton-cell" style="height:120px; border-radius:8px;"></div>
+                    </div>
+                </section>
+
+                <!-- قسم السلة -->
+                <aside class="cart-section">
+                    <h2 class="card-title">سلة الطلبات</h2>
+                    <div id="cartItems" class="cart-items">
+                        <div class="empty-cart">
+                            <i class="ri-shopping-cart-line" style="font-size:3rem;color:var(--border-color);"></i>
+                            <p>السلة فارغة</p>
+                        </div>
+                    </div>
+
+                    <div class="cart-summary">
+                        <div class="summary-row summary-total">
+                            <span>الإجمالي:</span>
+                            <span><span id="totalAmount">0.00</span> جنيه</span>
+                        </div>
+                    </div>
+
+                    <div class="payment-section" style="margin-top:var(--spacing-md)">
+                        <label class="form-label">طريقة الدفع</label>
+                        <div class="payment-methods">
+                            <label class="payment-method active">
+                                <input type="radio" name="paymentMethod" value="cash" checked>
+                                <i class="ri-money-dollar-circle-line" style="font-size:1.5rem;display:block;margin-bottom:0.4rem;"></i>
+                                نقدي
+                            </label>
+                            <label class="payment-method">
+                                <input type="radio" name="paymentMethod" value="card">
+                                <i class="ri-bank-card-line" style="font-size:1.5rem;display:block;margin-bottom:0.4rem;"></i>
+                                بطاقة
+                            </label>
+                        </div>
+                    </div>
+
+                    <button id="checkoutBtn" class="btn btn-primary" style="width:100%;margin-top:var(--spacing-md);" disabled>
+                        <i class="ri-check-line"></i> إتمام الدفع
+                    </button>
+                </aside>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================= TAB: ORDERS ========================= -->
+    <div class="tab-panel" id="tab-orders">
+        <div class="orders-panel">
+
+            <div class="orders-toolbar">
+                <h2><i class="ri-clipboard-line"></i> إدارة الطلبات</h2>
+
+                <div class="filter-tabs">
+                    <button class="filter-tab active" data-filter="all">الكل</button>
+                    <button class="filter-tab" data-filter="active">نشطة</button>
+                    <button class="filter-tab" data-filter="completed">مكتملة</button>
+                </div>
+
+                <button class="btn-refresh" id="refreshOrdersBtn">
+                    <i class="ri-refresh-line"></i> تحديث
+                </button>
+            </div>
+
+            <div class="orders-table-wrap">
+                <table class="orders-table">
+                    <thead>
+                        <tr>
+                            <th>رقم الطلب</th>
+                            <th>العميل</th>
+                            <th>الإجمالي</th>
+                            <th>طريقة الدفع</th>
+                            <th>وقت الطلب</th>
+                            <th>الحالة الحالية</th>
+                            <th>تغيير الحالة</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody">
+                        <!-- skeleton -->
+                        <tr class="skeleton-row"><td><div class="skeleton-cell" style="width:60px"></div></td><td><div class="skeleton-cell" style="width:100px"></div></td><td><div class="skeleton-cell" style="width:70px"></div></td><td><div class="skeleton-cell" style="width:80px"></div></td><td><div class="skeleton-cell" style="width:110px"></div></td><td><div class="skeleton-cell" style="width:90px"></div></td><td><div class="skeleton-cell" style="width:130px"></div></td></tr>
+                        <tr class="skeleton-row"><td><div class="skeleton-cell" style="width:60px"></div></td><td><div class="skeleton-cell" style="width:120px"></div></td><td><div class="skeleton-cell" style="width:70px"></div></td><td><div class="skeleton-cell" style="width:80px"></div></td><td><div class="skeleton-cell" style="width:110px"></div></td><td><div class="skeleton-cell" style="width:90px"></div></td><td><div class="skeleton-cell" style="width:130px"></div></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ========================= ORDER DETAILS DRAWER ========================= -->
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+    <div class="order-drawer" id="orderDrawer">
+        <div class="drawer-header">
+            <h3><i class="ri-file-list-3-line"></i> تفاصيل الطلب <span id="drawerOrderId"></span></h3>
+            <button class="drawer-close" id="closeDrawerBtn"><i class="ri-close-line"></i></button>
+        </div>
+        <div class="drawer-body" id="drawerBody">
+            <!-- filled by JS -->
+        </div>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    // ─── State ───────────────────────────────────────────
+    let products     = [];
+    let cart         = [];
+    let allOrders    = [];
+    let currentFilter = 'all';
+
+    const STATUS_LABELS = {
+        'Pending':    'انتظار',
+        'Processing': 'قيد التحضير',
+        'Ready':      'جاهز',
+        'Delivered':  'تم التسليم',
+        'Cancelled':  'ملغى'
+    };
+    const PAYMENT_LABELS = {
+        'cash': 'نقدي', 'card': 'بطاقة',
+        'online': 'أونلاين', 'transfer': 'تحويل',
+        'mobile': 'محفظة', 'wallet': 'محفظة', 'other': 'أخرى'
+    };
+
+    // ─── Helpers ─────────────────────────────────────────
+    function fmtTime(ts) {
+        if (!ts) return '—';
+        const d = new Date(ts);
+        return d.toLocaleString('ar-EG', { year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' });
+    }
+    function fmtMoney(v) { return parseFloat(v || 0).toFixed(2); }
+
+    // ─── Clock ───────────────────────────────────────────
+    function updateTime() { document.getElementById('currentTime').textContent = new Date().toLocaleTimeString('ar-EG'); }
+    setInterval(updateTime, 1000); updateTime();
+
+    // ═══════════════════════════════════════════════════════
+    //  TAB SWITCHING
+    // ═══════════════════════════════════════════════════════
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const target = btn.dataset.tab;
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('tab-' + target).classList.add('active');
+            if (target === 'orders') fetchOrders();
+        });
+    });
+
+    // ═══════════════════════════════════════════════════════
+    //  POS — PRODUCTS
+    // ═══════════════════════════════════════════════════════
+    async function fetchProducts() {
+        try {
+            const res  = await fetch('/cashier/api/products', { credentials: 'include' });
+            const data = await res.json();
+            if (data.success && data.data) {
+                products = data.data;
+                // رسم الـ grid مرة واحدة بس عند أول تحميل
+                renderProductsGrid();
+            } else {
+                showError(data.message || 'فشل في جلب المنتجات', 'خطأ');
+            }
+        } catch { showError('تعذّر الاتصال بالسيرفر', 'خطأ'); }
+    }
+
+    // يرسم الـ grid كامل مرة واحدة عند التحميل فقط
+    function renderProductsGrid() {
+        const grid = document.getElementById('productsGrid');
+        if (!products.length) {
+            grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;padding:2rem;color:#888;">لا توجد منتجات</p>';
+            return;
+        }
+        grid.innerHTML = products.map(p => `
+            <div class="product-card" data-product-id="${p.Product_ID}">
+                <img src="/images/products/${p.Image || ''}" alt="${p.Product_Name}" class="product-image" onload="this.classList.add('loaded')" onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'180\' height=\'120\' viewBox=\'0 0 180 120\'%3E%3Crect width=\'180\' height=\'120\' fill=\'%23f3f4f6\'/%3E%3Ctext x=\'90\' y=\'55\' font-family=\'Arial\' font-size=\'28\' fill=\'%23d1d5db\' text-anchor=\'middle\'%3E🍽%3C/text%3E%3Ctext x=\'90\' y=\'80\' font-family=\'Arial\' font-size=\'10\' fill=\'%239ca3af\' text-anchor=\'middle\'%3Eلا توجد صورة%3C/text%3E%3C/svg%3E';this.classList.add('loaded')"/>
+                <div class="product-name">${p.Product_Name}</div>
+                <div class="product-price">${fmtMoney(p.Price)} جنيه</div>
+            </div>`).join('');
+        grid.querySelectorAll('.product-card').forEach(card => {
+            card.addEventListener('click', () => addToCart(parseInt(card.dataset.productId)));
+        });
+    }
+
+    // البحث يخفي/يظهر الكروت بدون ما يعمل re-render للـ DOM
+    function renderProducts(filter = '') {
+        const grid = document.getElementById('productsGrid');
+        const cards = grid.querySelectorAll('.product-card');
+        if (!filter.trim()) {
+            // لو البحث فاضي — اظهر كل الكروت
+            cards.forEach(c => c.style.display = '');
+            return;
+        }
+        const lower = filter.toLowerCase();
+        cards.forEach(card => {
+            const id   = card.dataset.productId;
+            const name = card.querySelector('.product-name')?.textContent?.toLowerCase() || '';
+            card.style.display = (name.includes(lower) || id.includes(filter)) ? '' : 'none';
+        });
+        // لو مفيش نتايج خالص
+        const visible = [...cards].filter(c => c.style.display !== 'none');
+        const noResult = grid.querySelector('.no-result-msg');
+        if (!visible.length) {
+            if (!noResult) {
+                const msg = document.createElement('p');
+                msg.className = 'no-result-msg';
+                msg.style = 'grid-column:1/-1;text-align:center;padding:2rem;color:#888;';
+                msg.textContent = 'لا توجد منتجات مطابقة';
+                grid.appendChild(msg);
+            }
+        } else if (noResult) {
+            noResult.remove();
+        }
+    }
+
+    function addToCart(productId) {
+        const product = products.find(p => p.Product_ID === productId);
+        if (!product) return;
+        const existing = cart.find(i => i.productId === productId);
+        if (existing) existing.quantity++;
+        else cart.push({ productId: product.Product_ID, name: product.Product_Name, price: parseFloat(product.Price || 0), quantity: 1 });
+        renderCart();
+        showSuccess(`تمت إضافة ${product.Product_Name}`, 'تمت الإضافة', 1);
+    }
+
+    function renderCart() {
+        const container = document.getElementById('cartItems');
+        if (!cart.length) {
+            container.innerHTML = `<div class="empty-cart"><i class="ri-shopping-cart-line" style="font-size:3rem;color:var(--border-color);"></i><p>السلة فارغة</p></div>`;
+            document.getElementById('checkoutBtn').disabled = true;
+            document.getElementById('totalAmount').textContent = '0.00';
+            return;
+        }
+        container.innerHTML = cart.map(item => `
+            <div class="cart-item">
+                <div class="cart-item-info">
+                    <div class="cart-item-name">${item.name}</div>
+                    <div class="cart-item-price">${fmtMoney(item.price)} × ${item.quantity} = ${fmtMoney(item.price * item.quantity)} جنيه</div>
+                </div>
+                <div class="quantity-controls">
+                    <button class="qty-btn qty-minus" data-id="${item.productId}">−</button>
+                    <span class="quantity">${item.quantity}</span>
+                    <button class="qty-btn qty-plus"  data-id="${item.productId}">+</button>
+                </div>
+                <button class="btn btn-danger remove-btn" data-id="${item.productId}" style="padding:var(--spacing-xs) var(--spacing-sm);">
+                    <i class="ri-delete-bin-line"></i>
+                </button>
+            </div>`).join('');
+        container.querySelectorAll('.qty-minus').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); updateQty(parseInt(b.dataset.id), -1); }));
+        container.querySelectorAll('.qty-plus').forEach(b  => b.addEventListener('click', e => { e.stopPropagation(); updateQty(parseInt(b.dataset.id),  1); }));
+        container.querySelectorAll('.remove-btn').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); removeFromCart(parseInt(b.dataset.id)); }));
+        document.getElementById('checkoutBtn').disabled = false;
+        const total = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+        document.getElementById('totalAmount').textContent = fmtMoney(total);
+    }
+
+    function updateQty(id, delta) {
+        const item = cart.find(i => i.productId === id);
+        if (!item) return;
+        item.quantity += delta;
+        if (item.quantity <= 0) removeFromCart(id);
+        else renderCart();
+    }
+    function removeFromCart(id) {
+        cart = cart.filter(i => i.productId !== id);
+        renderCart();
+    }
+
+    // Payment method toggle
+    document.querySelectorAll('.payment-method').forEach(m => {
+        m.addEventListener('click', () => {
+            document.querySelectorAll('.payment-method').forEach(x => x.classList.remove('active'));
+            m.classList.add('active');
+            m.querySelector('input').checked = true;
+        });
+    });
+
+    // Checkout
+    document.getElementById('checkoutBtn').addEventListener('click', checkout);
+    document.getElementById('searchInput').addEventListener('input', e => renderProducts(e.target.value));
+
+    async function checkout() {
+        if (!cart.length) { showError('السلة فارغة', 'خطأ'); return; }
+        const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
+        const total = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+        const { isConfirmed } = await Swal.fire({
+            title: 'تأكيد الدفع',
+            text: `إتمام الدفع بمبلغ ${fmtMoney(total)} جنيه؟`,
+            icon: 'question', showCancelButton: true,
+            confirmButtonText: 'نعم، تأكيد', cancelButtonText: 'إلغاء',
+            confirmButtonColor: '#50c878', cancelButtonColor: '#e94e77'
+        });
+        if (!isConfirmed) return;
+        try {
+            const res = await fetch('/cashier/api/orders', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'include',
+                body: JSON.stringify({ items: cart.map(i => ({ productId: i.productId, quantity: i.quantity, price: i.price })), totalAmount: total, paymentMethod: paymentMethod.value, customerId: null, notes: '' })
+            });
+            const data = await res.json();
+            if (data.success) {
+                await showSuccess(`تم إنشاء الطلب! رقم الطلب: ${data.data.orderNumber}`, 'نجح الدفع', 3);
+                cart = []; renderCart();
+            } else showError(data.message || 'فشل في إتمام الطلب', 'خطأ');
+        } catch { showError('حدث خطأ في الاتصال', 'خطأ'); }
+    }
+
+    // ═══════════════════════════════════════════════════════
+    //  ORDERS TAB
+    // ═══════════════════════════════════════════════════════
+    async function fetchOrders() {
+        const btn = document.getElementById('refreshOrdersBtn');
+        btn.classList.add('spinning');
+        try {
+            const url = currentFilter === 'all' ? '/cashier/api/authenticated/orders' : `/cashier/api/authenticated/orders?status=${currentFilter}`;
+            const res  = await fetch(url, { credentials: 'include' });
+            const data = await res.json();
+            if (data.success) {
+                allOrders = data.data || [];
+                renderOrdersTable(allOrders);
+                updatePendingBadge();
+            } else {
+                renderOrdersEmpty('فشل في جلب الطلبات');
+            }
+        } catch (e) {
+            renderOrdersEmpty('تعذّر الاتصال بالسيرفر');
+        } finally {
+            btn.classList.remove('spinning');
+        }
+    }
+
+    function updatePendingBadge() {
+        const pending = allOrders.filter(o => o.Order_Status === 'Pending' || o.Order_Status === 'Processing').length;
+        const badge = document.getElementById('pendingBadge');
+        if (pending > 0) { badge.textContent = pending; badge.style.display = 'inline-flex'; }
+        else badge.style.display = 'none';
+    }
+
+    function renderOrdersTable(orders) {
+        const tbody = document.getElementById('ordersTableBody');
+        if (!orders.length) { renderOrdersEmpty('لا توجد طلبات في هذا القسم'); return; }
+
+        tbody.innerHTML = orders.map(o => {
+            const status = o.Order_Status || 'Pending';
+            const payLabel = PAYMENT_LABELS[o.Payment_Method?.toLowerCase()] || o.Payment_Method || '—';
+            return `
+            <tr data-order-id="${o.Order_ID}">
+                <td>
+                    <button class="order-id-link" data-order-id="${o.Order_ID}">#${o.Order_ID}</button>
+                </td>
+                <td>${o.Customer_Name || '<span style="color:#aaa">زبون مباشر</span>'}</td>
+                <td style="font-weight:600;color:var(--main-color)">${fmtMoney(o.Total_Amount)} جنيه</td>
+                <td>${payLabel}</td>
+                <td style="color:#666;font-size:0.82rem">${fmtTime(o.Created_At)}</td>
+                <td><span class="status-badge status-${status}">${STATUS_LABELS[status] || status}</span></td>
+                <td>
+                    <select class="status-select" data-order-id="${o.Order_ID}" data-current="${status}">
+                        <option value="Pending"    ${status==='Pending'    ? 'selected':''}> انتظار</option>
+                        <option value="Processing" ${status==='Processing' ? 'selected':''}> قيد التحضير</option>
+                        <option value="Ready"      ${status==='Ready'      ? 'selected':''}> جاهز</option>
+                        <option value="Delivered"  ${status==='Delivered'  ? 'selected':''}> تم التسليم</option>
+                        <option value="Cancelled"  ${status==='Cancelled'  ? 'selected':''}> ملغى</option>
+                    </select>
+                </td>
+            </tr>`;
+        }).join('');
+
+        // Status change listener
+        tbody.querySelectorAll('.status-select').forEach(sel => {
+            sel.addEventListener('change', async function () {
+                const orderId  = this.dataset.orderId;
+                const newStatus = this.value;
+                const prevStatus = this.dataset.current;
+                await updateOrderStatus(orderId, newStatus, prevStatus, this);
+            });
+        });
+
+        // Open drawer on order ID click
+        tbody.querySelectorAll('.order-id-link').forEach(btn => {
+            btn.addEventListener('click', () => openOrderDrawer(parseInt(btn.dataset.orderId)));
+        });
+    }
+
+    function renderOrdersEmpty(msg) {
+        document.getElementById('ordersTableBody').innerHTML = `
+            <tr><td colspan="7">
+                <div class="empty-state">
+                    <i class="ri-inbox-2-line"></i>
+                    <p>${msg}</p>
+                </div>
+            </td></tr>`;
+    }
+
+    // ─── Update Order Status ──────────────────────────────
+    async function updateOrderStatus(orderId, newStatus, prevStatus, selectEl) {
+        // Optimistic UI — update badge immediately
+        const row = document.querySelector(`tr[data-order-id="${orderId}"]`);
+        if (row) {
+            const badge = row.querySelector('.status-badge');
+            if (badge) {
+                badge.className = `status-badge status-${newStatus}`;
+                badge.textContent = STATUS_LABELS[newStatus] || newStatus;
+            }
+        }
+
+        try {
+            const res = await fetch(`/cashier/api/authenticated/orders/${orderId}/status`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ status: newStatus })
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                // Update local data
+                const order = allOrders.find(o => o.Order_ID == orderId);
+                if (order) order.Order_Status = newStatus;
+                selectEl.dataset.current = newStatus;
+                updatePendingBadge();
+                showSuccess(`تم تحديث حالة الطلب #${orderId} إلى "${STATUS_LABELS[newStatus]}"`, 'تم التحديث', 2);
+            } else {
+                // Rollback
+                selectEl.value = prevStatus;
+                if (row) {
+                    const badge = row.querySelector('.status-badge');
+                    if (badge) { badge.className = `status-badge status-${prevStatus}`; badge.textContent = STATUS_LABELS[prevStatus] || prevStatus; }
+                }
+                showError(data.message || 'فشل في تحديث الحالة', 'خطأ');
+            }
+        } catch {
+            // Rollback on network error
+            selectEl.value = prevStatus;
+            if (row) {
+                const badge = row.querySelector('.status-badge');
+                if (badge) { badge.className = `status-badge status-${prevStatus}`; badge.textContent = STATUS_LABELS[prevStatus] || prevStatus; }
+            }
+            showError('تعذّر الاتصال بالسيرفر', 'خطأ');
+        }
+    }
+
+    // ─── Filter Tabs ──────────────────────────────────────
+    document.querySelectorAll('.filter-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            currentFilter = tab.dataset.filter;
+            fetchOrders();
+        });
+    });
+
+    document.getElementById('refreshOrdersBtn').addEventListener('click', fetchOrders);
+
+    // ─── Order Drawer ─────────────────────────────────────
+    async function openOrderDrawer(orderId) {
+        document.getElementById('drawerOrderId').textContent = `#${orderId}`;
+        document.getElementById('drawerBody').innerHTML = `<div style="text-align:center;padding:3rem"><div class="skeleton-cell" style="height:14px;margin-bottom:12px"></div><div class="skeleton-cell" style="height:14px;width:70%"></div></div>`;
+        document.getElementById('drawerOverlay').classList.add('open');
+        document.getElementById('orderDrawer').classList.add('open');
+
+        try {
+            const res  = await fetch(`/cashier/api/authenticated/orders/${orderId}/receipt`, { credentials: 'include' });
+            const data = await res.json();
+            if (!data.success) throw new Error(data.message);
+
+            const { order, items, discount } = data.data;
+            const status = order.Order_Status || 'Pending';
+            const total  = parseFloat(order.Total_Amount || 0);
+
+            document.getElementById('drawerBody').innerHTML = `
+                <div class="drawer-info-grid">
+                    <div class="info-card">
+                        <label>رقم الطلب</label>
+                        <span>#${order.Order_ID}</span>
+                    </div>
+                    <div class="info-card">
+                        <label>الحالة</label>
+                        <span class="status-badge status-${status}" style="font-size:0.78rem">${STATUS_LABELS[status] || status}</span>
+                    </div>
+                    <div class="info-card">
+                        <label>طريقة الدفع</label>
+                        <span>${PAYMENT_LABELS[order.Payment_Method?.toLowerCase()] || order.Payment_Method || '—'}</span>
+                    </div>
+                    <div class="info-card">
+                        <label>وقت الطلب</label>
+                        <span style="font-size:0.8rem">${fmtTime(order.Created_At)}</span>
+                    </div>
+                </div>
+
+                <p class="drawer-items-title"><i class="ri-list-check"></i> المنتجات (${items.length} صنف)</p>
+                ${items.map(item => `
+                    <div class="drawer-item">
+                        <div>
+                            <div class="drawer-item-name">${item.Product_Name || item.name}</div>
+                            <div class="drawer-item-qty">الكمية: ${item.Quantity || item.quantity}</div>
+                        </div>
+                        <div class="drawer-item-price">${fmtMoney((item.Price || item.price) * (item.Quantity || item.quantity))} جنيه</div>
+                    </div>`).join('')}
+
+                ${discount > 0 ? `<div style="margin-top:var(--spacing-md);padding:var(--spacing-sm) var(--spacing-md);background:#fff9c4;border-radius:var(--radius-sm);font-size:0.88rem;color:#856404;"><i class="ri-coupon-line"></i> خصم مطبّق: <strong>${fmtMoney(discount)} جنيه</strong></div>` : ''}
+
+                <div class="drawer-total">
+                    <span>الإجمالي النهائي</span>
+                    <span>${fmtMoney(total)} جنيه</span>
+                </div>`;
+        } catch (e) {
+            document.getElementById('drawerBody').innerHTML = `<div class="empty-state"><i class="ri-error-warning-line"></i><p>تعذّر تحميل تفاصيل الطلب</p></div>`;
+        }
+    }
+
+    function closeDrawer() {
+        document.getElementById('drawerOverlay').classList.remove('open');
+        document.getElementById('orderDrawer').classList.remove('open');
+    }
+    document.getElementById('closeDrawerBtn').addEventListener('click', closeDrawer);
+    document.getElementById('drawerOverlay').addEventListener('click', closeDrawer);
+
+    // ─── Boot ─────────────────────────────────────────────
+    fetchProducts();
+});
+</script>
+</body>
+</html>

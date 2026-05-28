@@ -1,0 +1,147 @@
+/**
+ * RTL Fixes - إصلاحات للاتجاه من اليمين لليسار
+ * يضمن أن جميع العناصر تعمل بشكل صحيح مع RTL
+ */
+
+/* إصلاحات عامة */
+[dir="rtl"] {
+    direction: rtl;
+    text-align: right;
+}
+
+[dir="rtl"] .text-left {
+    text-align: right !important;
+}
+
+[dir="rtl"] .text-right {
+    text-align: left !important;
+}
+
+/* إصلاحات Flexbox */
+[dir="rtl"] .d-flex {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .justify-start {
+    justify-content: flex-end;
+}
+
+[dir="rtl"] .justify-end {
+    justify-content: flex-start;
+}
+
+/* إصلاحات Grid */
+[dir="rtl"] .grid {
+    direction: rtl;
+}
+
+/* إصلاحات Borders */
+[dir="rtl"] .border-left {
+    border-right: 1px solid var(--border-color);
+    border-left: none;
+}
+
+[dir="rtl"] .border-right {
+    border-left: 1px solid var(--border-color);
+    border-right: none;
+}
+
+/* إصلاحات Padding/Margin */
+[dir="rtl"] .ml-auto {
+    margin-right: auto;
+    margin-left: 0;
+}
+
+[dir="rtl"] .mr-auto {
+    margin-left: auto;
+    margin-right: 0;
+}
+
+/* إصلاحات Sidebar */
+[dir="rtl"] .sidebar {
+    right: 0;
+    left: auto;
+    border-left: 1px solid var(--border-color);
+    border-right: none;
+}
+
+/* إصلاحات Navigation */
+[dir="rtl"] .nav-item.active {
+    border-right: 3px solid var(--main-color);
+    border-left: none;
+}
+
+/* إصلاحات Tables */
+[dir="rtl"] .table th,
+[dir="rtl"] .table td {
+    text-align: right;
+}
+
+/* إصلاحات Forms */
+[dir="rtl"] .form-control {
+    text-align: right;
+}
+
+[dir="rtl"] input[type="text"],
+[dir="rtl"] input[type="email"],
+[dir="rtl"] input[type="password"],
+[dir="rtl"] textarea {
+    text-align: right;
+    direction: rtl;
+}
+
+/* إصلاحات Buttons */
+[dir="rtl"] .btn-group {
+    flex-direction: row-reverse;
+}
+
+/* إصلاحات Dropdowns */
+[dir="rtl"] .dropdown-menu {
+    right: 0;
+    left: auto;
+    text-align: right;
+}
+
+/* إصلاحات Modals */
+[dir="rtl"] .modal-header {
+    flex-direction: row-reverse;
+}
+
+/* إصلاحات Cards */
+[dir="rtl"] .card-header {
+    text-align: right;
+}
+
+/* إصلاحات Badges */
+[dir="rtl"] .badge {
+    direction: rtl;
+}
+
+/* إصلاحات Swiper */
+[dir="rtl"] .swiper {
+    direction: rtl;
+}
+
+[dir="rtl"] .swiper-button-next {
+    left: 10px;
+    right: auto;
+}
+
+[dir="rtl"] .swiper-button-prev {
+    right: 10px;
+    left: auto;
+}
+
+/* إصلاحات Icons */
+[dir="rtl"] .icon-left {
+    margin-right: 0;
+    margin-left: var(--spacing-sm);
+}
+
+[dir="rtl"] .icon-right {
+    margin-left: 0;
+    margin-right: var(--spacing-sm);
+}
+
+
+

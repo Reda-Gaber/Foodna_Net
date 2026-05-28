@@ -1,0 +1,886 @@
+[2026-01-28T20:39:24.274Z] AUDIT: Action: ORDER_CREATED, User: 291108 {
+  "orderId": 1,
+  "totalAmount": 1401
+}
+[2026-01-28T20:41:01.864Z] AUDIT: Action: ORDER_CREATED, User: 291108 {
+  "orderId": 2,
+  "totalAmount": 100
+}
+[2026-01-28T20:44:52.679Z] AUDIT: Action: ORDER_CREATED, User: 291108 {
+  "orderId": 3,
+  "totalAmount": 100
+}
+[2026-01-28T20:46:47.824Z] AUDIT: Action: ORDER_CREATED, User: 291108 {
+  "orderId": 4,
+  "totalAmount": 111
+}
+[2026-01-28T21:03:02.575Z] AUDIT: Action: ORDER_CREATED, User: 291108 {
+  "orderId": 5,
+  "totalAmount": 100
+}
+[2026-01-28T21:05:32.967Z] AUDIT: Action: ORDER_CREATED, User: 291108 {
+  "orderId": 6,
+  "totalAmount": 100
+}
+[2026-02-01T20:48:26.352Z] AUDIT: Action: USER_LOGIN, User: 10 {
+  "email": "cashier@foodna.com",
+  "role": "Cashier"
+}
+[2026-02-01T21:11:38.435Z] AUDIT: Action: USER_LOGIN, User: 10 {
+  "email": "cashier@foodna.com",
+  "role": "Cashier"
+}
+[2026-02-01T21:11:48.319Z] AUDIT: Action: CASHIER_ORDER_CREATED, User: 10 {
+  "orderId": 7,
+  "totalAmount": 100,
+  "finalAmount": 100
+}
+[2026-02-01T21:15:09.756Z] AUDIT: Action: USER_LOGIN, User: 9 {
+  "email": "chef@foodna.com",
+  "role": "Chef"
+}
+[2026-02-01T21:16:23.114Z] AUDIT: Action: USER_LOGIN, User: 10 {
+  "email": "cashier@foodna.com",
+  "role": "Cashier"
+}
+[2026-02-01T21:16:23.166Z] AUDIT: Action: CASHIER_ORDER_CREATED, User: 10 {
+  "orderId": 8,
+  "totalAmount": 200,
+  "finalAmount": 200
+}
+[2026-02-04T15:20:20.977Z] AUDIT: Action: EMPLOYEE_LOGIN, User: 2 {
+  "email": "chef@foodna.com",
+  "role": "Chef"
+}
+[2026-02-04T15:21:14.271Z] AUDIT: Action: EMPLOYEE_LOGIN, User: 2 {
+  "email": "chef@foodna.com",
+  "role": "Chef"
+}
+[2026-02-04T15:24:09.723Z] AUDIT: Action: KITCHEN_ORDER_UPDATED, User: 9 {
+  "orderId": 5,
+  "status": "Shipped"
+}
+[2026-02-04T15:24:12.701Z] AUDIT: Action: KITCHEN_ORDER_UPDATED, User: 9 {
+  "orderId": 5,
+  "status": "Shipped"
+}
+[2026-02-04T15:30:13.401Z] AUDIT: Action: KITCHEN_ORDER_UPDATED, User: 9 {
+  "orderId": 15,
+  "status": "Shipped"
+}
+[2026-02-15T17:26:50.712Z] AUDIT: Action: PRODUCT_CREATED, User: 8 {
+  "productId": 113
+}
+[2026-02-15T17:28:37.409Z] AUDIT: Action: PRODUCT_CREATED, User: 8 {
+  "productId": 114
+}
+[2026-02-15T17:34:55.987Z] AUDIT: Action: PRODUCT_CREATED, User: 8 {
+  "productId": 115
+}
+[2026-02-15T17:38:19.825Z] AUDIT: Action: PRODUCT_CREATED, User: 8 {
+  "productId": 116
+}
+[2026-02-15T17:38:26.702Z] AUDIT: Action: PRODUCT_CREATED, User: 8 {
+  "productId": 117
+}
+[2026-02-15T17:38:26.939Z] AUDIT: Action: PRODUCT_CREATED, User: 8 {
+  "productId": 118
+}
+[2026-02-15T17:38:27.543Z] AUDIT: Action: PRODUCT_CREATED, User: 8 {
+  "productId": 119
+}
+[2026-02-15T17:55:49.034Z] AUDIT: Action: PRODUCT_CREATED, User: 8 {
+  "productId": 120
+}
+[2026-02-15T18:52:35.242Z] AUDIT: Action: PRODUCT_UPDATED, User: 8 {
+  "productId": 69
+}
+[2026-02-15T18:53:01.922Z] AUDIT: Action: PRODUCT_UPDATED, User: 8 {
+  "productId": 67
+}
+[2026-02-15T18:53:27.415Z] AUDIT: Action: PRODUCT_UPDATED, User: 8 {
+  "productId": 67
+}
+[2026-02-15T18:54:23.150Z] AUDIT: Action: PRODUCT_UPDATED, User: 8 {
+  "productId": 94
+}
+[2026-02-15T18:56:13.946Z] AUDIT: Action: PRODUCT_UPDATED, User: 8 {
+  "productId": 120
+}
+[2026-02-15T18:59:30.125Z] AUDIT: Action: PRODUCT_UPDATED, User: 8 {
+  "productId": 67
+}
+[2026-02-15T18:59:43.622Z] AUDIT: Action: PRODUCT_UPDATED, User: 8 {
+  "productId": 67
+}
+[2026-02-15T19:00:56.996Z] AUDIT: Action: PRODUCT_UPDATED, User: 8 {
+  "productId": 72
+}
+[2026-02-15T19:03:11.032Z] AUDIT: Action: PRODUCT_UPDATED, User: 8 {
+  "productId": 71
+}
+[2026-02-15T19:07:05.869Z] AUDIT: Action: PRODUCT_UPDATED, User: 8 {
+  "productId": 67
+}
+[2026-02-15T21:04:55.005Z] AUDIT: Action: PRODUCT_CREATED, User: 8 {
+  "productId": 121
+}
+[2026-02-15T21:05:39.061Z] AUDIT: Action: PRODUCT_DELETED, User: 8 {
+  "productId": 121
+}
+[2026-02-15T21:06:10.562Z] AUDIT: Action: PRODUCT_UPDATED, User: 8 {
+  "productId": 114
+}
+[2026-02-16T21:12:29.456Z] AUDIT: Action: PRODUCT_UPDATED, User: 9 {
+  "productId": 70
+}
+[2026-02-17T21:07:40.147Z] AUDIT: Action: PRODUCT_CREATED, User: 8 {
+  "productId": 122
+}
+[2026-02-17T21:07:50.138Z] AUDIT: Action: PRODUCT_DELETED, User: 8 {
+  "productId": 78
+}
+[2026-02-17T21:08:02.478Z] AUDIT: Action: PRODUCT_UPDATED, User: 8 {
+  "productId": 80
+}
+[2026-02-17T22:22:43.658Z] AUDIT: Action: PUBLIC_ORDER_CREATED, User: system {
+  "orderId": 23,
+  "totalAmount": 322,
+  "finalAmount": 322
+}
+[2026-02-17T22:23:28.170Z] AUDIT: Action: PUBLIC_ORDER_CREATED, User: system {
+  "orderId": 24,
+  "totalAmount": 322,
+  "finalAmount": 322
+}
+[2026-02-17T22:24:10.405Z] AUDIT: Action: PUBLIC_ORDER_CREATED, User: system {
+  "orderId": 25,
+  "totalAmount": 70,
+  "finalAmount": 70
+}
+[2026-02-17T22:24:58.178Z] AUDIT: Action: PUBLIC_ORDER_CREATED, User: system {
+  "orderId": 26,
+  "totalAmount": 70,
+  "finalAmount": 70
+}
+[2026-02-17T22:27:59.073Z] AUDIT: Action: PUBLIC_ORDER_CREATED, User: system {
+  "orderId": 27,
+  "totalAmount": 45,
+  "finalAmount": 45
+}
+[2026-02-17T22:39:23.377Z] AUDIT: Action: KITCHEN_ORDER_UPDATED, User: 9 {
+  "orderId": 2,
+  "status": "Completed"
+}
+[2026-02-17T22:39:31.718Z] AUDIT: Action: KITCHEN_ORDER_UPDATED, User: 9 {
+  "orderId": 1,
+  "status": "Completed"
+}
+[2026-02-17T22:40:30.790Z] AUDIT: Action: PUBLIC_ORDER_CREATED, User: system {
+  "orderId": 28,
+  "totalAmount": 70,
+  "finalAmount": 70
+}
+[2026-02-17T22:40:41.469Z] AUDIT: Action: KITCHEN_ORDER_UPDATED, User: 9 {
+  "orderId": 28,
+  "status": "Completed"
+}
+[2026-02-17T22:42:01.149Z] AUDIT: Action: KITCHEN_ORDER_UPDATED, User: 9 {
+  "orderId": 27,
+  "status": "Completed"
+}
+[2026-02-18T15:06:10.411Z] AUDIT: Action: PUBLIC_ORDER_CREATED, User: system {
+  "orderId": 29,
+  "totalAmount": 70,
+  "finalAmount": 70
+}
+[2026-02-18T15:08:26.084Z] AUDIT: Action: PUBLIC_ORDER_CREATED, User: system {
+  "orderId": 30,
+  "totalAmount": 45,
+  "finalAmount": 45
+}
+[2026-02-18T16:46:25.258Z] AUDIT: Action: ORDER_CREATED, User: 431984 {
+  "orderId": 31,
+  "totalAmount": 158,
+  "paymentMethod": "cash",
+  "phone": "01245678911"
+}
+[2026-02-20T19:31:55.345Z] AUDIT: Action: ORDER_CREATED, User: 679168 {
+  "orderId": 32,
+  "totalAmount": 35,
+  "paymentMethod": "cash",
+  "phone": "01245678911"
+}
+[2026-02-20T19:54:54.540Z] AUDIT: Action: PRODUCT_UPDATED, User: 8 {
+  "productId": 67
+}
+[2026-02-20T19:55:25.520Z] AUDIT: Action: PRODUCT_UPDATED, User: 8 {
+  "productId": 69
+}
+[2026-02-20T20:04:01.420Z] AUDIT: Action: PRODUCT_UPDATED, User: 8 {
+  "productId": 69
+}
+[2026-02-20T20:10:27.017Z] AUDIT: Action: PRODUCT_UPDATED, User: 8 {
+  "productId": 69
+}
+[2026-02-21T20:02:49.091Z] AUDIT: Action: PRODUCT_UPDATED, User: 8 {
+  "productId": 69
+}
+[2026-02-21T20:04:01.496Z] AUDIT: Action: PRODUCT_UPDATED, User: 8 {
+  "productId": 67
+}
+[2026-02-21T20:04:13.057Z] AUDIT: Action: PRODUCT_UPDATED, User: 8 {
+  "productId": 67
+}
+[2026-02-21T20:10:54.367Z] AUDIT: Action: PRODUCT_UPDATED, User: 8 {
+  "productId": 67
+}
+[2026-02-21T20:17:55.925Z] AUDIT: Action: PRODUCT_UPDATED, User: 8 {
+  "productId": 70
+}
+[2026-02-21T20:30:55.344Z] AUDIT: Action: PRODUCT_UPDATED, User: 8 {
+  "productId": 99
+}
+[2026-02-23T23:07:39.515Z] AUDIT: Action: ORDER_CREATED, User: 165961 {
+  "orderId": 33,
+  "totalAmount": 98,
+  "paymentMethod": "card",
+  "phone": "01073529463"
+}
+[2026-02-23T23:11:06.270Z] AUDIT: Action: KITCHEN_ORDER_UPDATED, User: 9 {
+  "orderId": 33,
+  "status": "Completed"
+}
+[2026-02-23T23:22:41.406Z] AUDIT: Action: PRODUCT_DELETED, User: 8 {
+  "productId": 115
+}
+[2026-02-23T23:22:45.000Z] AUDIT: Action: PRODUCT_DELETED, User: 8 {
+  "productId": 122
+}
+[2026-02-23T23:22:48.565Z] AUDIT: Action: PRODUCT_DELETED, User: 8 {
+  "productId": 120
+}
+[2026-02-23T23:22:55.190Z] AUDIT: Action: PRODUCT_DELETED, User: 8 {
+  "productId": 116
+}
+[2026-02-23T23:22:59.014Z] AUDIT: Action: PRODUCT_DELETED, User: 8 {
+  "productId": 117
+}
+[2026-02-23T23:23:02.291Z] AUDIT: Action: PRODUCT_DELETED, User: 8 {
+  "productId": 118
+}
+[2026-02-23T23:23:05.327Z] AUDIT: Action: PRODUCT_DELETED, User: 8 {
+  "productId": 119
+}
+[2026-02-23T23:23:11.670Z] AUDIT: Action: PRODUCT_DELETED, User: 8 {
+  "productId": 71
+}
+[2026-02-23T23:23:25.986Z] AUDIT: Action: PRODUCT_DELETED, User: 8 {
+  "productId": 114
+}
+[2026-02-23T23:23:59.028Z] AUDIT: Action: ORDER_CREATED, User: 165961 {
+  "orderId": 34,
+  "totalAmount": 60,
+  "paymentMethod": "cash",
+  "phone": "01245678911"
+}
+[2026-02-23T23:33:01.190Z] AUDIT: Action: PRODUCT_CREATED, User: 8 {
+  "productId": 123
+}
+[2026-02-23T23:33:43.887Z] AUDIT: Action: PRODUCT_DELETED, User: 8 {
+  "productId": 98
+}
+[2026-02-23T23:33:47.480Z] AUDIT: Action: PRODUCT_DELETED, User: 8 {
+  "productId": 97
+}
+[2026-02-23T23:33:54.504Z] AUDIT: Action: PRODUCT_DELETED, User: 8 {
+  "productId": 87
+}
+[2026-02-23T23:34:03.396Z] AUDIT: Action: PRODUCT_DELETED, User: 8 {
+  "productId": 88
+}
+[2026-02-23T23:34:18.933Z] AUDIT: Action: PRODUCT_DELETED, User: 8 {
+  "productId": 77
+}
+[2026-02-25T01:30:42.462Z] AUDIT: Action: PUBLIC_ORDER_CREATED, User: system {
+  "orderId": 35,
+  "totalAmount": 115,
+  "finalAmount": 115
+}
+[2026-02-25T01:31:53.249Z] AUDIT: Action: KITCHEN_ORDER_UPDATED, User: 9 {
+  "orderId": 34,
+  "status": "Completed"
+}
+[2026-04-14T00:43:17.608Z] AUDIT: Action: ORDER_CREATED, User: 106829 {
+  "orderId": 35,
+  "totalAmount": 93,
+  "paymentMethod": "card",
+  "phone": "01298786749"
+}
+[2026-04-14T00:47:42.993Z] AUDIT: Action: ORDER_CREATED, User: 106829 {
+  "orderId": 36,
+  "totalAmount": 50,
+  "paymentMethod": "card",
+  "phone": "01299999999"
+}
+[2026-04-14T00:49:48.381Z] AUDIT: Action: ORDER_CREATED, User: 106829 {
+  "orderId": 37,
+  "totalAmount": 50,
+  "paymentMethod": "cash",
+  "phone": "01299999999"
+}
+[2026-04-18T04:04:03.464Z] AUDIT: Action: PRODUCT_DELETED, User: 8 {
+  "productId": 75
+}
+[2026-04-18T04:06:09.047Z] AUDIT: Action: PRODUCT_DELETED, User: 8 {
+  "productId": 72
+}
+[2026-04-18T04:06:39.268Z] AUDIT: Action: PRODUCT_DELETED, User: 8 {
+  "productId": 85
+}
+[2026-04-18T04:06:50.009Z] AUDIT: Action: PRODUCT_DELETED, User: 8 {
+  "productId": 95
+}
+[2026-04-18T04:07:31.451Z] AUDIT: Action: PRODUCT_DELETED, User: 8 {
+  "productId": 69
+}
+[2026-04-18T04:07:45.984Z] AUDIT: Action: PRODUCT_DELETED, User: 8 {
+  "productId": 74
+}
+[2026-04-18T04:07:52.599Z] AUDIT: Action: PRODUCT_DELETED, User: 8 {
+  "productId": 84
+}
+[2026-04-21T01:53:32.631Z] AUDIT: Action: ORDER_CREATED, User: 711224 {
+  "orderId": 30035,
+  "totalAmount": 96,
+  "paymentMethod": "cash",
+  "phone": "01299999999"
+}
+[2026-04-21T02:26:32.012Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-04-21T02:29:33.371Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-04-21T02:33:14.974Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-04-21T02:33:20.677Z] AUDIT: Action: USER_LOGIN, User: 9 {
+  "email": "chef@foodna.com",
+  "role": "Chef"
+}
+[2026-04-21T02:33:27.395Z] AUDIT: Action: USER_LOGIN, User: 10 {
+  "email": "cashier@foodna.com",
+  "role": "Cashier"
+}
+[2026-04-21T02:35:20.738Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-04-21T02:35:45.472Z] AUDIT: Action: USER_LOGIN, User: 10 {
+  "email": "cashier@foodna.com",
+  "role": "Cashier"
+}
+[2026-04-21T02:36:05.299Z] AUDIT: Action: USER_LOGIN, User: 10 {
+  "email": "cashier@foodna.com",
+  "role": "Cashier"
+}
+[2026-04-21T02:36:47.722Z] AUDIT: Action: PUBLIC_ORDER_CREATED, User: system {
+  "orderId": 60035,
+  "totalAmount": 175,
+  "finalAmount": 175
+}
+[2026-04-21T02:38:59.071Z] AUDIT: Action: PUBLIC_ORDER_CREATED, User: system {
+  "orderId": 60036,
+  "totalAmount": 70,
+  "finalAmount": 70
+}
+[2026-04-21T02:42:01.011Z] AUDIT: Action: USER_LOGIN, User: 10 {
+  "email": "cashier@foodna.com",
+  "role": "Cashier"
+}
+[2026-04-21T02:47:03.390Z] AUDIT: Action: USER_LOGIN, User: 10 {
+  "email": "cashier@foodna.com",
+  "role": "Cashier"
+}
+[2026-04-21T02:48:24.529Z] AUDIT: Action: PUBLIC_ORDER_CREATED, User: system {
+  "orderId": 60037,
+  "totalAmount": 45,
+  "finalAmount": 45
+}
+[2026-04-21T02:48:33.744Z] AUDIT: Action: PUBLIC_ORDER_CREATED, User: system {
+  "orderId": 60038,
+  "totalAmount": 190,
+  "finalAmount": 190
+}
+[2026-04-21T02:51:36.615Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-04-21T02:51:55.589Z] AUDIT: Action: USER_LOGIN, User: 9 {
+  "email": "chef@foodna.com",
+  "role": "Chef"
+}
+[2026-04-21T02:52:49.541Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-04-21T02:57:07.314Z] AUDIT: Action: USER_LOGIN, User: 9 {
+  "email": "chef@foodna.com",
+  "role": "Chef"
+}
+[2026-04-21T02:58:04.608Z] AUDIT: Action: USER_LOGIN, User: 9 {
+  "email": "chef@foodna.com",
+  "role": "Chef"
+}
+[2026-04-21T02:59:14.894Z] AUDIT: Action: USER_LOGIN, User: 9 {
+  "email": "chef@foodna.com",
+  "role": "Chef"
+}
+[2026-04-21T03:08:11.469Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-04-22T15:08:36.275Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-04-22T15:26:23.790Z] AUDIT: Action: PRODUCT_DELETED, User: 8 {
+  "productId": 67
+}
+[2026-04-22T15:30:06.612Z] AUDIT: Action: PRODUCT_CREATED, User: 8 {
+  "productId": 60124
+}
+[2026-04-22T15:31:58.118Z] AUDIT: Action: PRODUCT_DELETED, User: 8 {
+  "productId": 70
+}
+[2026-04-22T15:52:18.269Z] AUDIT: Action: CATEGORY_UPDATED, User: 8 {
+  "categoryId": "1"
+}
+[2026-04-22T15:57:26.244Z] AUDIT: Action: PRODUCT_UPDATED, User: 8 {
+  "productId": 103
+}
+[2026-04-22T16:27:19.424Z] AUDIT: Action: PRODUCT_UPDATED, User: 8 {
+  "productId": 94
+}
+[2026-04-22T16:27:47.325Z] AUDIT: Action: USER_LOGIN, User: 9 {
+  "email": "chef@foodna.com",
+  "role": "Chef"
+}
+[2026-04-22T16:28:21.640Z] AUDIT: Action: USER_LOGIN, User: 10 {
+  "email": "cashier@foodna.com",
+  "role": "Cashier"
+}
+[2026-04-22T16:28:38.178Z] AUDIT: Action: PUBLIC_ORDER_CREATED, User: system {
+  "orderId": 90035,
+  "totalAmount": 100,
+  "finalAmount": 100
+}
+[2026-04-22T19:22:44.440Z] AUDIT: Action: PUBLIC_ORDER_CREATED, User: system {
+  "orderId": 120035,
+  "totalAmount": 115,
+  "finalAmount": 115
+}
+[2026-04-22T20:13:13.114Z] AUDIT: Action: PUBLIC_ORDER_CREATED, User: system {
+  "orderId": 120036,
+  "totalAmount": 120,
+  "finalAmount": 120
+}
+[2026-04-22T20:13:34.810Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-04-22T20:13:55.804Z] AUDIT: Action: COUPON_CREATED, User: 8 {
+  "couponId": 1,
+  "code": "S100"
+}
+[2026-04-23T20:04:02.211Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-04-23T20:06:19.736Z] AUDIT: Action: USER_LOGIN, User: 10 {
+  "email": "cashier@foodna.com",
+  "role": "Cashier"
+}
+[2026-04-23T20:06:33.182Z] AUDIT: Action: PUBLIC_ORDER_CREATED, User: system {
+  "orderId": 150035,
+  "totalAmount": 165,
+  "finalAmount": 165
+}
+[2026-04-23T20:07:55.225Z] AUDIT: Action: PUBLIC_ORDER_CREATED, User: system {
+  "orderId": 150036,
+  "totalAmount": 45,
+  "finalAmount": 45
+}
+[2026-04-23T20:08:50.455Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-04-23T20:09:39.765Z] AUDIT: Action: USER_LOGIN, User: 10 {
+  "email": "cashier@foodna.com",
+  "role": "Cashier"
+}
+[2026-04-25T05:03:48.223Z] AUDIT: Action: USER_LOGIN, User: undefined {
+  "email": "codemasterreda@gmail.com",
+  "role": "Client"
+}
+[2026-04-25T05:09:48.492Z] AUDIT: Action: USER_LOGIN, User: undefined {
+  "email": "codemasterreda@gmail.com",
+  "role": "Client"
+}
+[2026-04-25T05:10:25.797Z] AUDIT: Action: USER_LOGIN, User: undefined {
+  "email": "codemasterreda@gmail.com",
+  "role": "Client"
+}
+[2026-04-26T01:34:41.504Z] AUDIT: Action: USER_LOGIN, User: undefined {
+  "email": "codemasterreda@gmail.com",
+  "role": "Client"
+}
+[2026-04-26T02:39:19.467Z] AUDIT: Action: USER_LOGIN, User: undefined {
+  "email": "codemasterreda@gmail.com",
+  "role": "Client"
+}
+[2026-04-26T02:45:38.038Z] AUDIT: Action: USER_LOGIN, User: undefined {
+  "email": "codemasterreda@gmail.com",
+  "role": "Client"
+}
+[2026-04-26T02:46:02.445Z] AUDIT: Action: ORDER_CREATED, User: 835150 {
+  "orderId": 180035,
+  "totalAmount": 48,
+  "paymentMethod": "cash"
+}
+[2026-04-28T01:09:18.909Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-04-28T01:09:39.270Z] AUDIT: Action: CATEGORY_UPDATED, User: 8 {
+  "categoryId": "1"
+}
+[2026-04-28T16:56:32.265Z] AUDIT: Action: PRODUCT_UPDATED, User: 8 {
+  "productId": 99
+}
+[2026-04-28T17:18:15.085Z] AUDIT: Action: USER_LOGIN, User: undefined {
+  "email": "codemasterreda@gmail.com",
+  "role": "Client"
+}
+[2026-04-28T17:18:42.411Z] AUDIT: Action: ORDER_CREATED, User: 835150 {
+  "orderId": 270035,
+  "totalAmount": 33.25,
+  "paymentMethod": "cash"
+}
+[2026-04-28T17:19:14.462Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-04-29T00:59:39.905Z] AUDIT: Action: CATEGORY_DELETED, User: 8 {
+  "categoryId": "1"
+}
+[2026-04-29T01:05:21.578Z] AUDIT: Action: CATEGORY_DELETED, User: 8 {
+  "categoryId": "5"
+}
+[2026-04-29T01:13:32.452Z] AUDIT: Action: CATEGORY_CREATED, User: 8 {
+  "categoryId": 60025,
+  "name": "مشروبات ساخنه"
+}
+[2026-04-29T01:43:03.685Z] AUDIT: Action: COUPON_CREATED, User: 8 {
+  "couponId": 30001,
+  "code": "S101"
+}
+[2026-04-29T01:44:29.566Z] AUDIT: Action: USER_LOGIN, User: undefined {
+  "email": "codemasterreda@gmail.com",
+  "role": "Client"
+}
+[2026-04-29T02:09:01.851Z] AUDIT: Action: USER_LOGIN, User: undefined {
+  "email": "codemasterreda@gmail.com",
+  "role": "Client"
+}
+[2026-04-29T02:33:23.852Z] AUDIT: Action: ORDER_CREATED, User: 835150 {
+  "orderId": 300035,
+  "totalAmount": 90,
+  "paymentMethod": "cash"
+}
+[2026-05-02T02:02:04.815Z] AUDIT: Action: USER_LOGIN, User: undefined {
+  "email": "codemasterreda@gmail.com",
+  "role": "Client"
+}
+[2026-05-02T02:45:01.634Z] AUDIT: Action: USER_LOGIN, User: undefined {
+  "email": "codemasterreda@gmail.com",
+  "role": "Client"
+}
+[2026-05-02T03:37:56.650Z] AUDIT: Action: ORDER_CREATED, User: 835150 {
+  "orderId": 330035,
+  "totalAmount": 48,
+  "paymentMethod": "cash"
+}
+[2026-05-02T03:39:15.963Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-05-22T11:38:02.642Z] AUDIT: Action: USER_LOGIN, User: undefined {
+  "email": "codemasterreda@gmail.com",
+  "role": "Client"
+}
+[2026-05-22T11:39:38.452Z] AUDIT: Action: ORDER_CREATED, User: 835150 {
+  "orderId": 360035,
+  "totalAmount": 48,
+  "paymentMethod": "cash"
+}
+[2026-05-22T11:42:42.676Z] AUDIT: Action: ORDER_CREATED, User: 835150 {
+  "orderId": 360036,
+  "totalAmount": 126.25,
+  "paymentMethod": "cash"
+}
+[2026-05-25T00:00:23.544Z] AUDIT: Action: USER_LOGIN, User: 9 {
+  "email": "chef@foodna.com",
+  "role": "Chef"
+}
+[2026-05-25T00:00:57.244Z] AUDIT: Action: USER_LOGIN, User: 10 {
+  "email": "cashier@foodna.com",
+  "role": "Cashier"
+}
+[2026-05-25T00:01:22.802Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-05-25T00:20:07.154Z] AUDIT: Action: KITCHEN_ORDER_UPDATED, User: 9 {
+  "orderId": 32,
+  "status": "Completed"
+}
+[2026-05-25T00:20:11.223Z] AUDIT: Action: KITCHEN_ORDER_UPDATED, User: 9 {
+  "orderId": 31,
+  "status": "Completed"
+}
+[2026-05-25T00:20:14.102Z] AUDIT: Action: KITCHEN_ORDER_UPDATED, User: 9 {
+  "orderId": 60038,
+  "status": "Completed"
+}
+[2026-05-25T00:20:18.833Z] AUDIT: Action: KITCHEN_ORDER_UPDATED, User: 9 {
+  "orderId": 360036,
+  "status": "Completed"
+}
+[2026-05-25T00:20:22.022Z] AUDIT: Action: KITCHEN_ORDER_UPDATED, User: 9 {
+  "orderId": 360035,
+  "status": "Completed"
+}
+[2026-05-25T00:20:31.093Z] AUDIT: Action: KITCHEN_ORDER_UPDATED, User: 9 {
+  "orderId": 7,
+  "status": "Completed"
+}
+[2026-05-25T00:20:34.640Z] AUDIT: Action: KITCHEN_ORDER_UPDATED, User: 9 {
+  "orderId": 3,
+  "status": "Completed"
+}
+[2026-05-25T00:20:36.524Z] AUDIT: Action: KITCHEN_ORDER_UPDATED, User: 9 {
+  "orderId": 6,
+  "status": "Completed"
+}
+[2026-05-25T00:20:38.540Z] AUDIT: Action: KITCHEN_ORDER_UPDATED, User: 9 {
+  "orderId": 9,
+  "status": "Completed"
+}
+[2026-05-25T00:20:42.433Z] AUDIT: Action: KITCHEN_ORDER_UPDATED, User: 9 {
+  "orderId": 180035,
+  "status": "Completed"
+}
+[2026-05-25T00:21:05.168Z] AUDIT: Action: KITCHEN_ORDER_UPDATED, User: 9 {
+  "orderId": 25,
+  "status": "Completed"
+}
+[2026-05-25T00:21:07.050Z] AUDIT: Action: KITCHEN_ORDER_UPDATED, User: 9 {
+  "orderId": 34,
+  "status": "Completed"
+}
+[2026-05-25T00:21:09.086Z] AUDIT: Action: KITCHEN_ORDER_UPDATED, User: 9 {
+  "orderId": 26,
+  "status": "Completed"
+}
+[2026-05-25T00:21:13.465Z] AUDIT: Action: KITCHEN_ORDER_UPDATED, User: 9 {
+  "orderId": 330035,
+  "status": "Completed"
+}
+[2026-05-25T00:21:16.584Z] AUDIT: Action: KITCHEN_ORDER_UPDATED, User: 9 {
+  "orderId": 120036,
+  "status": "Completed"
+}
+[2026-05-25T00:21:26.958Z] AUDIT: Action: PUBLIC_ORDER_CREATED, User: system {
+  "orderId": 390035,
+  "totalAmount": 190,
+  "finalAmount": 190
+}
+[2026-05-25T00:29:15.990Z] AUDIT: Action: PRODUCT_DELETED, User: 8 {
+  "productId": 94
+}
+[2026-05-25T00:29:36.253Z] AUDIT: Action: PRODUCT_DELETED, User: 8 {
+  "productId": 30124
+}
+[2026-05-25T00:29:44.139Z] AUDIT: Action: PRODUCT_DELETED, User: 8 {
+  "productId": 30125
+}
+[2026-05-25T00:29:49.037Z] AUDIT: Action: PRODUCT_DELETED, User: 8 {
+  "productId": 30126
+}
+[2026-05-25T00:39:53.300Z] AUDIT: Action: KITCHEN_ORDER_UPDATED, User: 9 {
+  "orderId": 21,
+  "status": "Completed"
+}
+[2026-05-25T01:06:23.531Z] AUDIT: Action: PRODUCT_DELETED, User: 8 {
+  "productId": 73
+}
+[2026-05-25T01:06:27.458Z] AUDIT: Action: PRODUCT_DELETED, User: 8 {
+  "productId": 83
+}
+[2026-05-25T01:06:40.788Z] AUDIT: Action: PRODUCT_DELETED, User: 8 {
+  "productId": 93
+}
+[2026-05-25T01:08:18.576Z] AUDIT: Action: PRODUCT_DELETED, User: 8 {
+  "productId": 30127
+}
+[2026-05-25T01:08:29.185Z] AUDIT: Action: PRODUCT_DELETED, User: 8 {
+  "productId": 96
+}
+[2026-05-25T01:08:34.585Z] AUDIT: Action: PRODUCT_DELETED, User: 8 {
+  "productId": 86
+}
+[2026-05-25T01:08:52.182Z] AUDIT: Action: PRODUCT_DELETED, User: 8 {
+  "productId": 76
+}
+[2026-05-25T10:50:53.461Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-05-25T12:00:58.339Z] AUDIT: Action: USER_LOGIN, User: undefined {
+  "email": "codemasterreda@gmail.com",
+  "role": "Client"
+}
+[2026-05-25T12:22:39.290Z] AUDIT: Action: COUPON_CREATED, User: 8 {
+  "couponId": 60001,
+  "code": "S1011"
+}
+[2026-05-25T12:22:49.385Z] AUDIT: Action: COUPON_UPDATED, User: 8 {
+  "couponId": "30001"
+}
+[2026-05-25T12:23:30.115Z] AUDIT: Action: ORDER_CREATED, User: 835150 {
+  "orderId": 420035,
+  "totalAmount": 108,
+  "paymentMethod": "cash"
+}
+[2026-05-25T14:39:48.543Z] AUDIT: Action: ORDER_CREATED, User: 835150 {
+  "orderId": 450035,
+  "totalAmount": 108,
+  "paymentMethod": "cash"
+}
+[2026-05-25T17:46:30.000Z] AUDIT: Action: COUPON_UPDATED, User: 8 {
+  "couponId": "30001"
+}
+[2026-05-25T19:24:30.903Z] AUDIT: Action: PRODUCT_DELETED, User: 8 {
+  "productId": 79
+}
+[2026-05-25T19:26:05.868Z] AUDIT: Action: COUPON_CREATED, User: 8 {
+  "couponId": 90001,
+  "code": "AFOODNA"
+}
+[2026-05-25T19:28:15.112Z] AUDIT: Action: COUPON_CREATED, User: 8 {
+  "couponId": 90002,
+  "code": "X100"
+}
+[2026-05-25T19:28:20.516Z] AUDIT: Action: COUPON_UPDATED, User: 8 {
+  "couponId": "60001"
+}
+[2026-05-25T19:30:02.147Z] AUDIT: Action: ORDER_CREATED, User: 835150 {
+  "orderId": 480035,
+  "totalAmount": 120,
+  "paymentMethod": "cash"
+}
+[2026-05-25T19:33:57.895Z] AUDIT: Action: USER_LOGIN, User: 9 {
+  "email": "chef@foodna.com",
+  "role": "Chef"
+}
+[2026-05-25T19:35:16.812Z] AUDIT: Action: KITCHEN_ORDER_UPDATED, User: 9 {
+  "orderId": 480035,
+  "status": "Completed"
+}
+[2026-05-25T19:35:21.194Z] AUDIT: Action: KITCHEN_ORDER_UPDATED, User: 9 {
+  "orderId": 450035,
+  "status": "Completed"
+}
+[2026-05-25T19:35:23.790Z] AUDIT: Action: KITCHEN_ORDER_UPDATED, User: 9 {
+  "orderId": 150036,
+  "status": "Completed"
+}
+[2026-05-25T19:35:27.561Z] AUDIT: Action: KITCHEN_ORDER_UPDATED, User: 9 {
+  "orderId": 120035,
+  "status": "Completed"
+}
+[2026-05-25T19:35:34.226Z] AUDIT: Action: KITCHEN_ORDER_UPDATED, User: 9 {
+  "orderId": 17,
+  "status": "Completed"
+}
+[2026-05-25T19:36:02.889Z] AUDIT: Action: KITCHEN_ORDER_UPDATED, User: 9 {
+  "orderId": 18,
+  "status": "Completed"
+}
+[2026-05-25T19:37:48.489Z] AUDIT: Action: USER_LOGIN, User: 10 {
+  "email": "cashier@foodna.com",
+  "role": "Cashier"
+}
+[2026-05-25T19:41:44.135Z] AUDIT: Action: CATEGORY_CREATED, User: 8 {
+  "categoryId": 90025,
+  "name": "مشروبات"
+}
+[2026-05-25T20:05:17.952Z] AUDIT: Action: PUBLIC_ORDER_CREATED, User: system {
+  "orderId": 480036,
+  "totalAmount": 500,
+  "finalAmount": 500
+}
+[2026-05-25T20:05:28.785Z] AUDIT: Action: KITCHEN_ORDER_UPDATED, User: 9 {
+  "orderId": 8,
+  "status": "Completed"
+}
+[2026-05-25T20:07:24.696Z] AUDIT: Action: KITCHEN_ORDER_UPDATED, User: 9 {
+  "orderId": 24,
+  "status": "Completed"
+}
+[2026-05-25T20:07:27.636Z] AUDIT: Action: KITCHEN_ORDER_UPDATED, User: 9 {
+  "orderId": 29,
+  "status": "Completed"
+}
+[2026-05-26T20:26:53.611Z] AUDIT: Action: USER_LOGIN, User: 10 {
+  "email": "cashier@foodna.com",
+  "role": "Cashier"
+}
+[2026-05-26T20:30:21.733Z] AUDIT: Action: CASHIER_ORDER_STATUS_UPDATED, User: 10 {
+  "orderId": "390035",
+  "status": "Delivered"
+}
+[2026-05-26T20:40:44.848Z] AUDIT: Action: CASHIER_ORDER_STATUS_UPDATED, User: 10 {
+  "orderId": "420035",
+  "status": "Processing"
+}
+[2026-05-26T20:40:49.205Z] AUDIT: Action: CASHIER_ORDER_STATUS_UPDATED, User: 10 {
+  "orderId": "420035",
+  "status": "Ready"
+}
+[2026-05-26T20:40:52.010Z] AUDIT: Action: CASHIER_ORDER_STATUS_UPDATED, User: 10 {
+  "orderId": "420035",
+  "status": "Delivered"
+}
+[2026-05-26T20:40:54.564Z] AUDIT: Action: CASHIER_ORDER_STATUS_UPDATED, User: 10 {
+  "orderId": "420035",
+  "status": "Cancelled"
+}
+[2026-05-26T23:02:26.469Z] AUDIT: Action: PUBLIC_ORDER_CREATED, User: system {
+  "orderId": 510035,
+  "totalAmount": 185,
+  "finalAmount": 185
+}
+[2026-05-26T23:08:48.699Z] AUDIT: Action: CASHIER_ORDER_STATUS_UPDATED, User: 10 {
+  "orderId": "5",
+  "status": "Pending"
+}
+[2026-05-26T23:08:52.057Z] AUDIT: Action: CASHIER_ORDER_STATUS_UPDATED, User: 10 {
+  "orderId": "5",
+  "status": "Cancelled"
+}

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار جدول المنتجات - Chatbot Products Table Test</title>
+    <link rel="stylesheet" href="../css/chatbot.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+            direction: rtl;
+        }
+        .test-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .test-container h1 {
+            color: #333;
+            text-align: center;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            border-right: 4px solid #e6282a;
+            border-radius: 4px;
+        }
+        .test-section h2 {
+            margin-top: 0;
+            color: #e6282a;
+        }
+        .bot-response {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>✅ اختبار جدول المنتجات التفاعلي</h1>
+        <p style="text-align: center; color: #666;">عرض توضيحي لكيفية عرض الجداول في الدردشة</p>
+
+        <div class="test-section">
+            <h2>🧪 اختبار 1: جدول المنتجات</h2>
+            <p>هذا مثال على كيفية ظهور قائمة المنتجات:</p>
+            
+            <div class="bot-response">
+                <div class="chatbot-message bot-message">
+                    <table class="chatbot-products-table">
+                        <thead>
+                            <tr>
+                                <th>🏷️ الصنف</th>
+                                <th>💰 السعر</th>
+                                <th>📝 الوصف</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>عصير برتقال طازج</td>
+                                <td>20 جنيه</td>
+                                <td>عصير برتقال طبيعي 100%</td>
+                                <td class="action-buttons">
+                                    <button class="btn-order" onclick="alert('تم اختيار: عصير برتقال طازج')">🛒 اطلب الآن</button>
+                                    <button class="btn-details" onclick="alert('طلب المزيد من التفاصيل عن: عصير برتقال طازج')">📋 التفاصيل</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>عصير الشمام والزنجبيل</td>
+                                <td>25 جنيه</td>
+                                <td>خليط صحي ومنعش</td>
+                                <td class="action-buttons">
+                                    <button class="btn-order" onclick="alert('تم اختيار: عصير الشمام والزنجبيل')">🛒 اطلب الآن</button>
+                                    <button class="btn-details" onclick="alert('طلب المزيد من التفاصيل عن: عصير الشمام والزنجبيل')">📋 التفاصيل</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>عصير الفراولة والموز</td>
+                                <td>22 جنيه</td>
+                                <td>عصير صحي وغني بالفيتامينات</td>
+                                <td class="action-buttons">
+                                    <button class="btn-order" onclick="alert('تم اختيار: عصير الفراولة والموز')">🛒 اطلب الآن</button>
+                                    <button class="btn-details" onclick="alert('طلب المزيد من التفاصيل عن: عصير الفراولة والموز')">📋 التفاصيل</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>📋 شرح الميزات:</h2>
+            <ul style="line-height: 1.8;">
+                <li><strong>🛒 اطلب الآن</strong>: يرسل طلب مباشرة للبوت لطلب المنتج</li>
+                <li><strong>📋 التفاصيل</strong>: يطلب معلومات إضافية عن المنتج من البوت</li>
+                <li><strong>تصميم مستجيب</strong>: يعمل على جميع الأجهزة والشاشات</li>
+                <li><strong>دعم اللغة العربية</strong>: محاذاة صحيحة من اليمين لليسار</li>
+                <li><strong>ألوان جذابة</strong>: أزرار خضراء للطلب وزرقاء للتفاصيل</li>
+            </ul>
+        </div>
+
+        <div class="test-section">
+            <h2>🔧 التغييرات التقنية:</h2>
+            <ol style="line-height: 2;">
+                <li><strong>System Prompt</strong>: تم تعديله ليأمر البوت بإرجاع جداول Markdown</li>
+                <li><strong>Frontend Parser</strong>: أضفنا دالة `parseMarkdownTable()` لتحويل Markdown إلى HTML</li>
+                <li><strong>CSS Styling</strong>: تم إضافة أنماط جديدة للجدول والأزرار</li>
+                <li><strong>Button Handlers</strong>: دوال `orderProduct()` و `showProductDetails()` تتعامل مع النقرات</li>
+            </ol>
+        </div>
+
+        <div class="test-section" style="background: #e8f5e9; border-right-color: #4CAF50;">
+            <h2 style="color: #4CAF50;">✨ النتيجة النهائية:</h2>
+            <p>البوت الآن يعيد البيانات بصيغة منظمة (Markdown Table)، والموقع يحولها تلقائياً إلى جدول تفاعلي جميل مع أزرار وظيفية!</p>
+        </div>
+    </div>
+</body>
+</html>
