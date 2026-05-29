@@ -3,8 +3,8 @@
  
 /* الخطوط والألوان الأساسية */
   --section-background: #F6F6F6;
-  --font-1: "Cairo", sans-serif;
-  --font-2: "Oswald", sans-serif;
+  --font-1:   "IBM Plex Sans Arabic", sans-serif;
+  --font-2:  "Kufam", sans-serif;
   --font-product: "Oswald", sans-serif;
   --header-height: 3.5rem;
 
@@ -177,7 +177,7 @@ body {
 body,
 input,
 button {
-  font-family: var(--body-font);
+ 
   font-size: var(--normal-font-size);
 }
 input,
@@ -186,11 +186,7 @@ button {
   outline: none;
 }
 
-h1, h2, h3, h4 {
-  color: var(--title-color);
-  font-family: var(--second-font);
-  font-weight: var(--font-medium);
-}
+
 
 ul {
   list-style: none;
@@ -261,6 +257,8 @@ img {
     border-radius: 12px;
     padding: 40px;
     min-height: 400px;
+    position: relative;
+    top: 40px;
 }
 
 .img-product img{
@@ -269,11 +267,10 @@ img {
     height: auto;
     object-fit: contain;
     transition: transform 0.3s ease;
+     transform: scale(1.07);
 }
 
-.img-product:hover img{
-    transform: scale(1.05);
-}
+
 .text-product{
     display: flex;
     flex-direction: column;
@@ -302,8 +299,9 @@ img {
     font-weight: 500;
     letter-spacing: 0;
     color: var(--text-color);
-    font-size: 16px;
+    font-size: 18px;
     line-height: 1.6;
+    font-family: var(--font-1); 
 }
 
 .text-product .points-one-product{
@@ -334,6 +332,8 @@ img {
     color: var(--first-color);
     font-weight: 500;
     margin: 0;
+    font-size: 16px;
+     font-family: var(--font-1);
 }
 .size-product{
     display: flex;
@@ -441,7 +441,7 @@ img {
 }
  .button-data-id{
   padding: 16px 32px;
-  width: 100%;
+  width: 40%;
   background-color: var(--main-color);
   border-radius: 8px;
   color: white;
@@ -453,6 +453,7 @@ img {
   font-family: var(--body-font);
   transition: all 0.3s ease;
   margin-top: 10px;
+  font-family: var(--font-1);
 }
 
 .button-data-id:hover:not(.activess){
@@ -656,4 +657,10 @@ img {
   .img-product:hover img{
     transform: scale(1.03);
   }
+}
+
+#category-title-bar #category-title-text{
+  font-family: "Kufam", sans-serif;
+  font-size: 34px;
+  font-weight: 700;
 }

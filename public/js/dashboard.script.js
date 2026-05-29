@@ -916,7 +916,7 @@ function renderCustomers() {
             <td class="secondary">جنيه ${customer.totalSpent.toFixed(2)}</td>
             <td class="actions">
                 <div class="action-buttons">
-                    <button class="action-btn delete btn-delete-customer" data-customer-id="${customer.id}" style="font-size: 12px; padding: 5px 10px; background-color: #ef4444; color: white; border: none; border-radius: 4px; cursor: pointer;">حذف</button>
+                    <button class="action-btn delete btn-delete-customer" data-customer-id="${customer.id}" style="font-size: 12px;  background-color: #ef4444; color: white; border: none; border-radius: 4px; cursor: pointer;">حذف</button>
                 </div>
             </td>
         </tr>
@@ -1104,7 +1104,7 @@ function renderOrders() {
             <td class="secondary"><span class="status-badge ${order.status}">${getArabicOrderStatus(order.status)}</span></td>
             <td class="actions">
                 <div class="action-buttons">
-                    <button class="action-btn edit btn-update-order" data-order-id="${order.id}" style="font-size: 12px; padding: 5px 10px;">تحديث</button>
+                    <button class="action-btn edit btn-update-order" data-order-id="${order.id}" style="font-size: 12px;">تحديث</button>
                 </div>
             </td>
         </tr>

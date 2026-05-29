@@ -243,7 +243,7 @@ img {
   padding: 0;
 }
 
-/* Swiper specific overrides - إجبار عرض 3 منتجات كحد أقصى */
+/* Swiper specific overrides - ensure responsive carousel layout */
 .products-card.swiper .swiper-wrapper {
   display: flex !important;
   width: 100% !important;
@@ -253,25 +253,53 @@ img {
   width: auto !important;
   flex: 0 0 calc(33.333% - 13.333px) !important; /* 3 منتجات مع المسافات */
   max-width: calc(33.333% - 13.333px) !important;
-  min-width: calc(33.333% - 13.333px) !important;
+  min-width: 0 !important;
 }
 
 /* Responsive adjustments */
-@media (max-width: 767px) {
+@media (max-width: 991px) {
   .products-card.swiper .swiper-slide {
     flex: 0 0 calc(50% - 7.5px) !important; /* 2 منتجات في الشاشات المتوسطة */
     max-width: calc(50% - 7.5px) !important;
-    min-width: calc(50% - 7.5px) !important;
+    min-width: 0 !important;
   }
 }
 
-@media (max-width: 479px) {
+@media (max-width: 639px) {
   .products-card.swiper .swiper-slide {
     flex: 0 0 100% !important; /* منتج واحد في الشاشات الصغيرة */
     max-width: 100% !important;
-    min-width: 100% !important;
+    min-width: 0 !important;
   }
 }
+
+.products-card.swiper .product {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.products-card.swiper .product img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+}
+
+.products-card.swiper .product-info {
+  text-align: right;
+  padding: 16px;
+}
+
+.products-card.swiper .product .button__actions {
+  position: relative;
+  bottom: 0;
+  margin-top: 16px;
+}
+
+.products-card.swiper .product .button__actions button {
+  width: 100%;
+}
+
 
 /* Special handling for offers slide */
 .slider-for-offers.swiper {
@@ -971,4 +999,9 @@ margin: 10px;
 
 .sub-pages .heading-of-sub-pages .nav_menus_list{
   display: flex;
+}
+#category-title-bar h2{
+  font-family: "Kufam", sans-serif;
+  font-size: 24px;
+  font-weight: 700;
 }

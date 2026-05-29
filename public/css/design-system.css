@@ -16,7 +16,7 @@
   --first-color: hsl(0, 24%, 8%);
   --title-color: hsl(230, 70%, 16%);
   --text-color: #e62a32;
-  --border-color: hsl(230, 50%, 90%);
+  --border-color: hsl(230, 55%, 96%);
   --white-color: hsl(0, 0%, 100%);
   --color-prodect-box: hsl(0, 0%, 100%);
   --body-color: #FFF;
@@ -247,8 +247,9 @@ p {
   background-color: var(--white-color);
   border-radius: var(--radius-md);
   overflow: hidden;
+ border: 7px solid var(--white-color);
+ font-family: "IBM Plex Sans Arabic", sans-serif;
 }
-
 .table thead {
   background-color: var(--section-background);
 }
@@ -260,12 +261,17 @@ p {
   color: var(--title-color);
   font-family: var(--font-1);
   border-bottom: 2px solid var(--border-color);
+  text-align: center;
 }
 
 .table td {
   padding: var(--spacing-md);
   border-bottom: 1px solid var(--border-color);
   color: var(--text-color);
+  text-align: center;
+border-bottom: .4px solid #d6d1d1;
+height: 90px;
+font-weight: 450;
 }
 
 .table tbody tr:hover {
@@ -431,4 +437,6 @@ p {
 }
 
 
-
+.action-btn{
+  padding: 10px 20px;
+}

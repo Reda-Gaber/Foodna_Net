@@ -191,13 +191,14 @@ function displayCategories(requests) {
             const productCard = document.createElement('div');
             productCard.classList.add('product', 'swiper-slide');
             productCard.innerHTML = `
+            ${discount > 0 ? `<div class="product-discount-badge">خصم ${discount.toFixed(0)}%</div>` : ''}
                 <img src="/images/products/${product.Image}" alt="${product.Product_Name}" onerror="this.style.background='#f5f5f5'">
                 <div class="product-info">
                     <h3>${product.Product_Name}</h3>
-                    <div class="points">${product.Quantity} كمية</div>
+                   
                     <div class="price">
-                        ${discount > 0 ? `<span style="text-decoration:line-through;color:#999;font-size:12px;margin-left:5px">${oldPrice.toFixed(2)}</span>` : ''}
-                        <span style="color:var(--main-color);font-weight:bold">${finalPrice.toFixed(2)} جنيه</span>
+                        ${discount > 0 ? ` <span style="text-decoration:line-through;color:#999;font-size:12px;margin-left:5px;"> ${oldPrice.toFixed(2)}</span> ` : ''}
+                       <span style="color:var(--main-color);font-weight:bold;font-family:var(--font-2)">${finalPrice.toFixed(2)} جنيه</span> 
                     </div>
                 </div>
                 <div class="button__actions">
@@ -210,18 +211,18 @@ function displayCategories(requests) {
         });
 
         // إضافة بطاقة "عرض المزيد" إذا كان عدد المنتجات أكثر من 6
-        if (products.length > MAX_DISPLAY) {
-            const viewMoreSlide = document.createElement('div');
-            viewMoreSlide.classList.add('swiper-slide', 'swiper-viewmore-slide');
-            viewMoreSlide.innerHTML = `
-                <a href="/menu?category=${encodeURIComponent(categoryName)}" class="viewmore-card">
-                    <i class="ri-arrow-left-circle-line"></i>
-                    <span>عرض المزيد</span>
-                    <small>+${products.length - MAX_DISPLAY} منتج</small>
-                </a>
-            `;
-            productsGrid.appendChild(viewMoreSlide);
-        }
+        // if (products.length > MAX_DISPLAY) {
+        //     const viewMoreSlide = document.createElement('div');
+        //     viewMoreSlide.classList.add('swiper-slide', 'swiper-viewmore-slide');
+        //     viewMoreSlide.innerHTML = `
+        //         <a href="/menu?category=${encodeURIComponent(categoryName)}" class="viewmore-card">
+        //             <i class="ri-arrow-left-circle-line"></i>
+        //             <span>عرض المزيد</span>
+        //             <small>+${products.length - MAX_DISPLAY} منتج</small>
+        //         </a>
+        //     `;
+        //     productsGrid.appendChild(viewMoreSlide);
+        // }
     });
 }
 

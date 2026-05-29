@@ -16,6 +16,23 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.css"
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kufam:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+  <!-- Oswald -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+<!-- <link rel="stylesheet" href="/css/product-page.css"> -->
+<link rel="stylesheet" href="/css/chatbot.css">
+<link rel="stylesheet" href="/css/feature-user-search.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@100;200;300;400;500;600;700&family=Kufam:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
     <style>
       :root {
         --primary-color: var(--main-color);
@@ -67,6 +84,7 @@
         color: var(--main-color);
         font-size: var(--h1-font-size);
         font-weight: var(--font-semi-bold);
+        font-family: "IBM Plex Sans Arabic", sans-serif;
       }
 
       .sidebar-toggle {
@@ -86,11 +104,13 @@
         display: flex;
         align-items: center;
         padding: var(--spacing-md) var(--spacing-lg);
-        color: var(--text-secondary);
+        color: black;
         text-decoration: none;
         transition: all 0.3s ease;
         border-right: 3px solid transparent;
         gap: var(--spacing-sm);
+        font-family: "IBM Plex Sans Arabic", sans-serif;
+        font-weight: 500;
       }
 
       .nav-item:hover {
@@ -139,6 +159,7 @@
         display: flex;
         align-items: center;
         gap: var(--spacing-md);
+        font-family: "IBM Plex Sans Arabic", sans-serif;
       }
 
       .stat-icon {
@@ -375,6 +396,18 @@
           display: table-cell !important;
         }
       }
+      
+      .btn-update-order{
+        padding: 10px 17px;
+        text-align: center;
+      }
+.action-btn.btn-delete-customer {
+  padding: 10px 17px;
+  text-align: center;
+}
+.actions{
+ align-items: center;
+}
     </style>
   </head>
   <body>
@@ -417,10 +450,6 @@
             <i class="ri-archive-line"></i>
             <span>المخزون</span>
           </a>
-          <a href="/auth/logout" class="nav-item">
-            <i class="ri-logout-box-line"></i>
-            <span>تسجيل الخروج</span>
-          </a>
         </nav>
       </aside>
 
@@ -430,9 +459,9 @@
             <button class="mobile-toggle" id="mobileToggle">☰</button>
             <h1 id="pageTitle">لوحة المعلومات</h1>
           </div>
-          <div class="topbar-right">
+          
             <div class="search-box">
-              <i class="ri-search-line" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: #666; font-size: 18px; pointer-events: none;"></i>
+             
               <input
                 type="text"
                 placeholder="بحث في المنتجات والعملاء والطلبات..."
@@ -459,7 +488,7 @@
               >
                 <%= user.name.charAt(0) %>
               </div>
-            </div>
+            
           </div>
         </header>
 
@@ -471,9 +500,6 @@
                 <div class="stat-details">
                   <p class="stat-label">إجمالي الإيرادات</p>
                   <h3 class="stat-value" id="totalRevenue">0.00</h3>
-                  <span class="stat-change" style="color: var(--success-color)"
-                    >جنيه</span
-                  >
                 </div>
               </div>
               <div class="stat-card">
@@ -481,9 +507,6 @@
                 <div class="stat-details">
                   <p class="stat-label">إجمالي الطلبات</p>
                   <h3 class="stat-value" id="totalOrders">0</h3>
-                  <span class="stat-change" style="color: var(--success-color)"
-                    >طلب</span
-                  >
                 </div>
               </div>
               <div class="stat-card">
@@ -491,9 +514,6 @@
                 <div class="stat-details">
                   <p class="stat-label">إجمالي المنتجات</p>
                   <h3 class="stat-value" id="totalProducts">0</h3>
-                  <span class="stat-change" style="color: var(--text-secondary)"
-                    >منتج</span
-                  >
                 </div>
               </div>
               <div class="stat-card">
@@ -501,9 +521,6 @@
                 <div class="stat-details">
                   <p class="stat-label">إجمالي العملاء</p>
                   <h3 class="stat-value" id="totalCustomers">0</h3>
-                  <span class="stat-change" style="color: var(--success-color)"
-                    >عميل</span
-                  >
                 </div>
               </div>
             </div>
