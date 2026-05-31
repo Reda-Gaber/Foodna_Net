@@ -53,16 +53,20 @@
 /* نهاية المتغيرات */
 
 /* ====== الوضع الليلي (Dark Theme) ====== */
-.dark-theme .sub-pages .heading-of-sub-pages{
-  background-color: hsl(240, 22%, 95%);
-  color: #1E1E1E;
+.dark-theme .sub-pages .heading-of-sub-pages {
+  background-color: hsl(0, 0%, 0%);
+    color: #ffffff;
 }
 .dark-theme .sub-pages .heading-of-sub-pages .content-of-sub-pages a,
 .dark-theme .sub-pages .heading-of-sub-pages .content-of-sub-pages a span{
-   color: #1E1E1E;
+   color: #ffffff;
 }
 .dark-theme .input{
-  background-color: hsl(231, 11%, 88%);
+  background-color: hsl(225, 3%, 31%);
+}
+.dark-theme .input:focus{
+  background-color: hsl(225, 3%, 31%);
+  border-color: #e62a32;
 }
 .dark-theme .field label{
   color: #FFF;

@@ -14,8 +14,8 @@
   backdrop-filter: blur(0px);
 }
 .fsd-overlay.active{
-  background:rgba(0,0,0,0.46);
-  visibility:visible;
+  /* background:rgba(0,0,0,0.46);
+  visibility:visible; */
   pointer-events:all;
   backdrop-filter: blur(3px);
   transition:background 0.36s cubic-bezier(0.22, 1, 0.36, 1), backdrop-filter 0.36s ease;
@@ -57,7 +57,7 @@
 .fsd-close{
   background:transparent;
   border:0;
-  font-size:24px;
+  font-size:39px;
   cursor:pointer;
   color:var(--title-color, #333);
   padding:4px;
