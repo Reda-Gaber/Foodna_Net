@@ -68,7 +68,7 @@
 
     const contentType = res.headers.get('content-type') || '';
     if (!res.ok || !contentType.includes('application/json')) {
-      userLink.href = '/auth/login';
+      userLink.href = '/user/register';
       return;
     }
 
@@ -79,13 +79,13 @@
       userLink.href = '/profile';
       if (userIcon) userIcon.classList.add('user-logged');
     } else {
-      userLink.href = '/auth/login';
+      userLink.href = '/user/register';
     }
 
     window.dispatchEvent(new CustomEvent('auth.changed', { detail: window.auth }));
   } catch (e) {
     window.auth = { authenticated: false, user: null };
-    userLink.href = '/auth/login';
+    userLink.href = '/user/register';
   }
 })();
    </script>

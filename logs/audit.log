@@ -884,3 +884,36 @@
   "orderId": "5",
   "status": "Cancelled"
 }
+[2026-05-28T13:45:05.541Z] AUDIT: Action: USER_LOGIN, User: undefined {
+  "email": "codemasterreda@gmail.com",
+  "role": "Client"
+}
+[2026-05-28T14:39:10.788Z] AUDIT: Action: USER_LOGIN, User: undefined {
+  "email": "ahmed@example.com",
+  "role": "Client"
+}
+[2026-05-28T14:41:14.077Z] AUDIT: Action: USER_LOGIN, User: undefined {
+  "email": "ahmed@example.com",
+  "role": "Client"
+}
+[2026-05-28T14:44:25.292Z] AUDIT: Action: USER_LOGIN, User: undefined {
+  "email": "codemasterreda@gmail.com",
+  "role": "Client"
+}
+[2026-05-29T12:56:58.387Z] AUDIT: Action: USER_LOGIN, User: 9 {
+  "email": "chef@foodna.com",
+  "role": "Chef"
+}
+[2026-05-29T12:57:06.920Z] AUDIT: Action: KITCHEN_ORDER_UPDATED, User: 9 {
+  "orderId": 2,
+  "status": "Completed"
+}
+[2026-05-29T12:59:15.738Z] AUDIT: Action: USER_LOGIN, User: undefined {
+  "email": "codemasterreda@gmail.com",
+  "role": "Client"
+}
+[2026-05-29T12:59:29.875Z] AUDIT: Action: ORDER_CREATED, User: 835150 {
+  "orderId": 540035,
+  "totalAmount": 155,
+  "paymentMethod": "cash"
+}
