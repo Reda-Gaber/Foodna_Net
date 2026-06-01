@@ -59,10 +59,9 @@ function renderMenuProducts(productData, count) {
             <img src="/images/products/${product.Image}" alt="${product.Product_Name}" onerror="this.style.background='#f5f5f5'">
             <div class="product-info">
                 <h3>${product.Product_Name}</h3>
-                <div class="points">${product.Quantity} كمية</div>
                 <div class="price">
-                    ${discount > 0 ? `<span class="price__old">${oldPrice.toFixed(2)} جنيه</span>` : ''}
-                    <span class="price__new" style="color:var(--main-color);font-weight:bold">${finalPrice.toFixed(2)} جنيه</span>
+                    ${discount > 0 ? ` <span class="price__old">${oldPrice.toFixed(2)} جنيه</span> ` : ''}
+                    <span class="price__new" style="color:var(--main-color);font-weight:bold;font-family:var(--font-2)">${finalPrice.toFixed(2)} جنيه</span>
                 </div>
             </div>
             <div class="button__actions">
@@ -319,7 +318,7 @@ async function buildCategoryNav() {
         const titleText = document.getElementById('category-title-text');
 
         if (activeCat && titleBar && titleText) {
-            titleText.textContent = `📂 ${activeCat}${showAll ? ' — جميع المنتجات' : ''}`;
+            titleText.textContent = `${activeCat}${showAll ? ' — جميع المنتجات' : ''}`;
             titleBar.style.display = 'block';
 
             // تمييز الرابط النشط

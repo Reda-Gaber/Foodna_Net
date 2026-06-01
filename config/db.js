@@ -38,5 +38,9 @@ db.getConnection((err, connection) => {
   connection.release();
 });
 
+db.on('error', (err) => {
+  console.error('MySQL pool error:', err);
+});
+
 // تصدير Promise-based interface للاستخدام مع async/await
 module.exports = db.promise();

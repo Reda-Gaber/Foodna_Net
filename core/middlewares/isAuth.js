@@ -1,4 +1,4 @@
-const PUBLIC_PATHS = ['/login', '/register', '/auth/login', '/auth/register'];
+const PUBLIC_PATHS = ['/login', '/register', '/auth/login', '/auth/register', '/user/register'];
 
 function isAuthenticated(req, res, next) {
   // لو المسار public، اسمح بالمرور دايماً

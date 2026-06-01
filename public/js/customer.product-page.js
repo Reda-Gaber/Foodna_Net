@@ -31,10 +31,10 @@
               <div class="text-product">
                 <h2 class="titel-product">${product.Product_Name}</h2>
                 <p class="description-product">${product.Description}</p>
-                <p class="points-one-product">إذا اشتريت هذا، ستحصل على ${Number(product.Quantity) || 0} نقاط!</p>
+                <p class="points-one-product">إذا اشتريت هذا، ستحصل على ${Number(product.Quantity) || 0} نقاط</p>
                 <div class="points-two-product">
                   <i class="ri-award-fill"></i>
-                  <p>إذا اشتريت هذا، ستحصل على ${Number(product.Quantity) || 0} نقاط!</p>
+                  <p>إذا اشتريت هذا، ستحصل على ${Number(product.Quantity) || 0} نقاط</p>
                 </div>
                 <div class="size-product">
                   <h3 class="size">الحجم:</h3>
@@ -51,7 +51,6 @@
               </div>
             </div>
               <div class="check_box">
-              ${ (product.Discount && Number(product.Discount) > 0) ? (`<h2 class="price_product"><span class="old-price" style="text-decoration:line-through;color:#999;margin-right:8px">${Number(product.Price).toFixed(2)} جنيه</span><span class="new-price" style="color:#e62a32;font-weight:700">${(Number(product.Price)*(1-Number(product.Discount)/100)).toFixed(2)} جنيه</span></h2>`) : (`<h2 class="price_product">${Number(product.Price).toFixed(2)} جنيه</h2>`) }
               <!-- قسم الكومبو محذوف -->
               <!-- قسم الصلصة محذوف -->
               <h2 class="totil_price_product">إجمالي الطلب: <span>${ (product.Discount && Number(product.Discount) > 0) ? (Number(product.Price)*(1-Number(product.Discount)/100)).toFixed(2) : Number(product.Price).toFixed(2) } جنيه</span></h2>
@@ -198,9 +197,9 @@
             <img src="/images/products/${product.Image}" alt="${product.Product_Name}">
             <div class="product-info">
               <h3>${product.Product_Name}</h3>
-              <div class="points">${product.Quantity} كمية</div>
+              <div class="points">${oldPrice.toFixed(2)}السعر الاصلي</div>
               <div class="price">
-                ${discount > 0 ? `<span class="old-price" style="text-decoration:line-through;color:#999;margin-right:8px">${oldPrice.toFixed(2)} جنيه</span>` : ''}
+                ${discount > 0 ? `<!-- <span class="old-price" style="text-decoration:line-through;color:#999;margin-right:8px">${oldPrice.toFixed(2)} جنيه</span> -->` : ''}
                 <span class="final-price" style="color:${discount>0? '#e62a32':'#000'};font-weight:700">${finalPrice.toFixed(2)} جنيه</span>
               </div>
             </div>

@@ -1,8 +1,9 @@
 /* ====== متغيرات التصميم (Variables) ====== */
+
 :root {
   /* الخطوط المستخدمة في الموقع */
   --section-background: #f6f6f6;
-  --font-1: "Kufam", sans-serif;
+  --font-1: "IBM Plex Sans Arabic", sans-serif;
   --font-2: "Kufam", sans-serif;
   --font-product:"Kufam", sans-serif;
   --header-height: 3.5rem;
@@ -66,7 +67,7 @@ html {
   scroll-behavior: smooth;
 }
 body {
-  font-family: var(--font-2);
+  
   position: relative;
   text-transform: capitalize;
   background-color: var(--body-color);
@@ -85,7 +86,7 @@ h2,
 h3,
 h4 {
   color: var(--title-color);
-  font-family: var(--font-1);
+  font-family:  "Montserrat", sans-serif;;
 }
 
 ul {
@@ -199,6 +200,38 @@ body.dark-theme {
   background-color: var(--color-prodect-box);
   color: var(--text-color);
 }
+.dark-theme .item_cart {
+  background: #3a3a3a;
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  align-items: flex-start;
+  animation: itemSlideIn 0.3s ease-out;
+}
+.dark-theme .quantity_control button {
+  background: #3a3a3a;
+}
+.dark-theme .Product__actions{
+  background: var(--main-color);
+}
+.dark-theme .Product__actions a{
+  color: var( --text-color);
+}
+.dark-theme .product {
+  border: 3px solid #2b2b2b;
+}
+.dark-theme .fsd-drawer {
+  background: #3a3a3a;
+}
+.dark-theme .fsd-item-sub{
+  color: var(--text-color);
+}
+.dark-theme .text-product .points-two-product{
+  background: #444;
+}
+.dark-theme .sub-pages .container p, .dark-theme .sub-pages .container li{
+  color: var(--text-color);
+}
 
 /* ====== الفئات القابلة لإعادة الاستخدام ====== */
 .container {
@@ -310,18 +343,18 @@ body.dark-theme {
   display: flex;
   justify-content: space-between;
   column-gap: 2rem;
-  font-family: "Kufam", sans-serif;;
+  font-family:  "IBM Plex Sans Arabic", sans-serif;
 }
 
 .nav__link {
   color: var(--text-color);
   transition: color 0.4s;
-   font-family: "Kufam", sans-serif;;
+   font-family: "IBM Plex Sans Arabic", sans-serif;
 }
 
 .nav__link span {
   font-size: var(--h1-font-size);
-  font-family: "Kufam", sans-serif;;
+  font-family:  "IBM Plex Sans Arabic", sans-serif;
   font-weight: var(--font-semi-bold);
    
 }
@@ -390,6 +423,7 @@ body.dark-theme {
   font-size: calc(var(--h1-font-size) + 20px);
   font-family: var(--font-2);
   font-weight: bold;
+  width: 100%;
 }
 
 .category-heading {
@@ -402,7 +436,7 @@ body.dark-theme {
 }
 
 .category-heading .special-heading {
-  text-align: left;
+ 
   margin-bottom: 0;
 }
 
@@ -464,6 +498,7 @@ body.dark-theme {
   padding: 0 15px;
   font-size: 50px;
   font-weight: bold;
+  font-family: var(--font-2);
 }
 
 .special-heading::before {
@@ -522,25 +557,7 @@ body.dark-theme {
   font-weight: var(--font-regular);
 }
 
-/* .product {
-  background: #fff;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  transition: transform 0.3s ease;
-  position: relative;
-  width: 270px;
-  height: 463px;
-  background-color: var(--color-prodect-box);
-}
 
-.product img {
-  width: 100%;
-  height: 315px;
-  object-fit: cover;
-} */
 
 .product-info {
   padding: 20px;
@@ -572,20 +589,41 @@ body.dark-theme {
   color: var(--first-color);
 }
 
-.product .price-row {
+.price-wrapper {
   display: flex;
-  justify-content: center;
+  gap: 12px;
   align-items: center;
-  gap: 10px;
   flex-wrap: wrap;
-  margin: 10px 0 16px;
 }
 
-.price__old {
+.old-price {
   font-size: 14px;
-  text-decoration: line-through;
   color: #999;
+  text-decoration: line-through;
+  font-weight: normal;
 }
+.new-price {
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--main-color);
+}
+
+.Product__actions {
+  width: 100%;
+  position: absolute;
+  bottom: -45px;
+  transition: bottom 0.3s ease;
+}
+.Product__actions a {
+  width: 100%;
+  color: var(--section-background);
+  font-size: 1rem;
+  padding: 10px;
+  font-weight: bold;
+  text-transform: capitalize;
+  font-family: var(--font-1);
+}
+
 
 .price__new {
   font-size: 17px;
@@ -605,7 +643,9 @@ body.dark-theme {
   border-radius: 50px;
   z-index: 2;
 }
+.product{
 
+}
 .product-img-link,
 .product-img-link img {
   display: block;
@@ -644,7 +684,7 @@ body.dark-theme {
   padding: 10px;
   font-weight: bold;
   text-transform: capitalize;
-  font-family: var(--font-1);
+  font-family: var(--font-2);
 }
 
 .product:hover .Product__actions {
@@ -2211,6 +2251,7 @@ footer p:last-child {
   gap: 10px;
   width: 100%;
   flex-wrap: wrap;
+  font-size: "IBM Plex Sans Arabic", sans-serif;
 }
 
 .sub-pages .content-of-sub-pages a {
@@ -2499,8 +2540,6 @@ footer p:last-child {
   flex-direction: column;
   transition: transform 0.3s ease;
   position: relative;
-  width: min(85vw, 250px);
-  max-width: 250px;
   height: auto;
   min-height: 420px;
   margin: 0 auto;
@@ -2535,7 +2574,7 @@ footer p:last-child {
 }
 
 @media (max-width: 768px) {
-  .product {
+  /* .product {
     width: min(80vw, 200px);
     max-width: 200px;
     min-height: 360px;
@@ -2558,7 +2597,7 @@ footer p:last-child {
 
   .product .price {
     font-size: 15px;
-  }
+  } */
 }
 
 @media (max-width: 640px) {
@@ -2646,7 +2685,7 @@ footer p:last-child {
     align-items: center;
 }
 *{
-   font-family: "Kufam", sans-serif;
+   font-family: var(--font-1);
 }
 /* ============================================================
    توحيد بوكسات المنتجات - product_only = نفس تصميم product
@@ -2835,7 +2874,7 @@ footer p:last-child {
 .price__new {
   color: var(--main-color);
   font-weight: bold;
-  font-size: 15px;
+  font-size: 18px;
 }
 
 /* placeholder للصور الفارغة */
@@ -2857,7 +2896,8 @@ footer p:last-child {
   justify-content: space-between;
   align-items: center;
   padding: 0 5px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
+  flex-direction: column;
 }
 .view-more-link {
   background: var(--main-color);
@@ -2940,4 +2980,25 @@ footer p:last-child {
     height: 150px !important;
     min-height: 150px !important;
   }
+}
+ #category-title-bar #category-title-text{
+  font-family: "Kufam", sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+}
+.sub-pages .content-of-sub-pages {
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  padding: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  flex-wrap: wrap;
+  font-size: "IBM Plex Sans Arabic", sans-serif;
 }

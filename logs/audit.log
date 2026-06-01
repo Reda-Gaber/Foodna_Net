@@ -884,36 +884,181 @@
   "orderId": "5",
   "status": "Cancelled"
 }
-[2026-05-28T13:45:05.541Z] AUDIT: Action: USER_LOGIN, User: undefined {
-  "email": "codemasterreda@gmail.com",
-  "role": "Client"
+[2026-05-28T11:16:26.108Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
 }
-[2026-05-28T14:39:10.788Z] AUDIT: Action: USER_LOGIN, User: undefined {
-  "email": "ahmed@example.com",
-  "role": "Client"
+[2026-05-28T11:17:34.440Z] AUDIT: Action: USER_LOGIN, User: 10 {
+  "email": "cashier@foodna.com",
+  "role": "Cashier"
 }
-[2026-05-28T14:41:14.077Z] AUDIT: Action: USER_LOGIN, User: undefined {
-  "email": "ahmed@example.com",
-  "role": "Client"
+[2026-05-28T11:18:15.607Z] AUDIT: Action: CASHIER_ORDER_STATUS_UPDATED, User: 10 {
+  "orderId": "43",
+  "status": "Cancelled"
 }
-[2026-05-28T14:44:25.292Z] AUDIT: Action: USER_LOGIN, User: undefined {
-  "email": "codemasterreda@gmail.com",
-  "role": "Client"
-}
-[2026-05-29T12:56:58.387Z] AUDIT: Action: USER_LOGIN, User: 9 {
+[2026-05-28T11:18:53.520Z] AUDIT: Action: USER_LOGIN, User: 9 {
   "email": "chef@foodna.com",
   "role": "Chef"
 }
-[2026-05-29T12:57:06.920Z] AUDIT: Action: KITCHEN_ORDER_UPDATED, User: 9 {
-  "orderId": 2,
+[2026-05-28T11:19:12.257Z] AUDIT: Action: KITCHEN_ORDER_UPDATED, User: 9 {
+  "orderId": 39,
   "status": "Completed"
 }
-[2026-05-29T12:59:15.738Z] AUDIT: Action: USER_LOGIN, User: undefined {
-  "email": "codemasterreda@gmail.com",
-  "role": "Client"
+[2026-05-28T13:21:42.721Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
 }
-[2026-05-29T12:59:29.875Z] AUDIT: Action: ORDER_CREATED, User: 835150 {
+[2026-05-28T13:30:46.076Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-05-28T13:31:19.613Z] AUDIT: Action: CATEGORY_CREATED, User: 8 {
+  "categoryId": 25,
+  "name": "رضا جابر"
+}
+[2026-05-28T13:31:59.324Z] AUDIT: Action: PRODUCT_CREATED, User: 8 {
+  "productId": 124
+}
+[2026-05-28T13:33:09.513Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-05-28T13:34:13.727Z] AUDIT: Action: PRODUCT_CREATED, User: 8 {
+  "productId": 125
+}
+[2026-05-28T13:35:04.252Z] AUDIT: Action: PRODUCT_CREATED, User: 8 {
+  "productId": 126
+}
+[2026-05-28T13:46:25.236Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-05-28T17:44:22.087Z] AUDIT: Action: USER_LOGIN, User: 10 {
+  "email": "cashier@foodna.com",
+  "role": "Cashier"
+}
+[2026-05-28T18:14:52.302Z] AUDIT: Action: USER_LOGIN, User: 10 {
+  "email": "cashier@foodna.com",
+  "role": "Cashier"
+}
+[2026-05-28T18:15:28.866Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-05-28T19:39:16.846Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-05-28T20:17:54.605Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-05-28T20:28:19.701Z] AUDIT: Action: USER_LOGIN, User: 10 {
+  "email": "cashier@foodna.com",
+  "role": "Cashier"
+}
+[2026-05-28T20:29:46.770Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-05-28T20:51:13.210Z] AUDIT: Action: USER_LOGIN, User: 10 {
+  "email": "cashier@foodna.com",
+  "role": "Cashier"
+}
+[2026-05-29T10:08:25.815Z] AUDIT: Action: USER_LOGIN, User: 10 {
+  "email": "cashier@foodna.com",
+  "role": "Cashier"
+}
+[2026-05-29T11:28:58.039Z] AUDIT: Action: USER_LOGIN, User: 10 {
+  "email": "cashier@foodna.com",
+  "role": "Cashier"
+}
+[2026-05-29T11:32:48.625Z] AUDIT: Action: USER_LOGIN, User: 10 {
+  "email": "cashier@foodna.com",
+  "role": "Cashier"
+}
+[2026-05-29T11:36:03.449Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-05-29T11:42:11.889Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-05-29T11:51:07.068Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-05-29T12:30:31.877Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-05-29T13:01:39.941Z] AUDIT: Action: USER_LOGIN, User: 9 {
+  "email": "chef@foodna.com",
+  "role": "Chef"
+}
+[2026-05-29T13:02:30.671Z] AUDIT: Action: KITCHEN_ORDER_UPDATED, User: 9 {
   "orderId": 540035,
-  "totalAmount": 155,
-  "paymentMethod": "cash"
+  "status": "Completed"
+}
+[2026-05-29T17:40:48.128Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-05-29T18:09:29.849Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-05-29T18:39:07.490Z] AUDIT: Action: PRODUCT_CREATED, User: 8 {
+  "productId": 90124
+}
+[2026-05-29T18:39:41.584Z] AUDIT: Action: PRODUCT_UPDATED, User: 8 {
+  "productId": 90124
+}
+[2026-05-29T18:40:48.468Z] AUDIT: Action: PRODUCT_CREATED, User: 8 {
+  "productId": 90125
+}
+[2026-05-31T07:02:57.759Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-05-31T07:14:35.348Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-05-31T07:15:47.250Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-05-31T07:16:40.377Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-05-31T07:18:58.665Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-05-31T07:22:51.763Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-05-31T07:23:28.408Z] AUDIT: Action: PRODUCT_UPDATED, User: 8 {
+  "productId": 90125
+}
+[2026-05-31T07:25:37.348Z] AUDIT: Action: CATEGORY_CREATED, User: 8 {
+  "categoryId": 120025,
+  "name": "برجر"
+}
+[2026-05-31T07:25:58.209Z] AUDIT: Action: PRODUCT_UPDATED, User: 8 {
+  "productId": 90125
+}
+[2026-05-31T07:26:18.152Z] AUDIT: Action: PRODUCT_UPDATED, User: 8 {
+  "productId": 30133
+}
+[2026-05-31T07:26:41.308Z] AUDIT: Action: PRODUCT_UPDATED, User: 8 {
+  "productId": 89
+}
+[2026-05-31T07:41:07.822Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
 }

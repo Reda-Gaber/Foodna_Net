@@ -11,34 +11,34 @@ buttonRegister.addEventListener('click', () => {
      cardLogin.classList.remove('ach');
     cartRegister.classList.add('ach');   
 });
-const buttonEyeOne = document.getElementById("eye-1");
-const buttonEyeTwo = document.getElementById("eye-2");
+// const buttonEyeOne = document.getElementById("eye-1");
+// const buttonEyeTwo = document.getElementById("eye-2");
 
-buttonEyeOne.addEventListener('click', () => {
-     const i = document.getElementById('login-password');
-     i.type = i.type==='password' ? 'text' : 'password';
-});
-buttonEyeTwo.addEventListener('click', () => {
-     const i = document.getElementById('reg-password');
-     i.type = i.type==='password' ? 'text' : 'password';
-});
+// buttonEyeOne.addEventListener('click', () => {
+//      const i = document.getElementById('login-password');
+//      i.type = i.type==='password' ? 'text' : 'password';
+// });
+// buttonEyeTwo.addEventListener('click', () => {
+//      const i = document.getElementById('reg-password');
+//      i.type = i.type==='password' ? 'text' : 'password';
+// });
 
 // =====================================  I'm not finished  =======================================
 
-const myForm = document.querySelector(".myform_one");
-myForm.addEventListener('submit', (events) => {
-  events.preventDefault();
-  const userName = document.querySelector(".login_username").value;
-  const passwords = document.querySelector(".login_pas");
-  const regLogin = /^[a-zA-Z0-9_]{3,15}$/;
-  const regLoginPas = /^(?=.[a-z])(?=.[A-Z])(?=.\d)(?=.[@$!%?&])[A-Za-z\d@$!%?&]{8,}$/;
-  let validat = regLogin.test(userName);
-  let validats = regLoginPas.test(passwords);
-if (validat === false || validats === false) {
-  return false;
-} else {
- return true
-}
-});
+// const myForm = document.querySelector(".myform_one");
+// myForm.addEventListener('submit', (events) => {
+//   events.preventDefault();
+//   const userName = document.querySelector(".login_username").value;
+//   const passwords = document.querySelector(".login_pas");
+//   const regLogin = /^[a-zA-Z0-9_]{3,15}$/;
+//   const regLoginPas = /^(?=.[a-z])(?=.[A-Z])(?=.\d)(?=.[@$!%?&])[A-Za-z\d@$!%?&]{8,}$/;
+//   let validat = regLogin.test(userName);
+//   let validats = regLoginPas.test(passwords);
+// if (validat === false || validats === false) {
+//   return false;
+// } else {
+//  return true
+// }
+// });
 
 // =====================================  I'm not finished  =======================================

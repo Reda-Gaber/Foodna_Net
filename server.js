@@ -61,6 +61,10 @@ const dbPool = mysql.createPool({
   queueLimit: 0
 });
 
+dbPool.on('error', (err) => {
+  Logger.error('Session DB pool error', err);
+});
+
 const sessionStore = new MySqlStore({
   expiration: 8 * 60 * 60 * 1000,
   createDatabaseTable: true,
@@ -200,6 +204,15 @@ app.use((req, res) => {
     return res.status(404).json({ success: false, message: 'المسار غير موجود' });
   }
   res.status(404).render('error', { message: 'الصفحة غير موجودة' });
+});
+
+// ==================== Global Error Handling ====================
+process.on('unhandledRejection', (reason, promise) => {
+  Logger.error('Unhandled Promise Rejection', { reason, promise });
+});
+
+process.on('uncaughtException', (error) => {
+  Logger.error('Uncaught Exception', error);
 });
 
 // ==================== Start Server ====================

@@ -111,7 +111,7 @@ function requireAuth(req, res, next) {
   if (req.session?.userId || req.session?.user?.id) {
     return next();
   }
-  return res.redirect('/auth/login');
+  return res.redirect('/user/register');// المشكلة هانا 
 }
 
 module.exports = {

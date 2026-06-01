@@ -104,6 +104,7 @@ body {
     margin-left: var(--sidebar-width);
     flex: 1;
     min-height: 100vh;
+    margin-left: 0px;
 }
 
 .topbar {
@@ -135,9 +136,11 @@ body {
 }
 
 .topbar h1 {
-    font-size: 1.75rem;
+    font-size: 1.45rem;
     font-weight: 700;
     color: var(--text-primary);
+    font-family: "Kufam", sans-serif;
+    margin: 0;
 }
 
 .topbar-right {
@@ -153,6 +156,7 @@ body {
     width: 300px;
     font-size: 0.875rem;
     transition: all 0.3s ease;
+    font-family: "IBM Plex Sans Arabic", sans-serif;
 }
 
 .search-box input:focus {
@@ -170,6 +174,7 @@ body {
 .user-name {
     font-weight: 500;
     color: var(--text-primary);
+    font-family: "Kufam", sans-serif;
 }
 
 .user-avatar {
@@ -330,12 +335,15 @@ body {
 
 .period-btn:hover {
     background-color: var(--bg-color);
+    color: black;
 }
 
 .period-btn.active {
     background-color: var(--primary-color);
     color: white;
     border-color: var(--primary-color);
+    font-family: "IBM Plex Sans Arabic", sans-serif;
+    font-weight: bold;
 }
 
 #revenueChart {
@@ -361,6 +369,7 @@ body {
 
 .order-item:hover {
     background-color: var(--bg-color);
+   
 }
 
 .order-info h4 {
@@ -388,6 +397,7 @@ body {
 .section-header h2 {
     font-size: 1.75rem;
     color: var(--text-primary);
+    font-family: "Kufam", sans-serif;
 }
 
 .btn {
@@ -401,6 +411,7 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
+    font-family: "IBM Plex Sans Arabic", sans-serif;
 }
 
 .btn-primary {
@@ -412,6 +423,7 @@ body {
     background-color: var(--primary-dark);
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
+   
 }
 
 .btn-secondary {
@@ -432,6 +444,8 @@ body {
 .btn-sm {
     padding: 0.5rem 1rem;
     font-size: 0.75rem;
+    background-color: var(--secondary-color);
+    color: white;
 }
 
 .table-container {
@@ -516,6 +530,8 @@ body {
 .action-buttons {
     display: flex;
     gap: 0.5rem;
+    justify-content: center;
+    align-items: center;
 }
 
 .action-btn {
@@ -715,6 +731,7 @@ body {
     font-size: 0.875rem;
     font-family: inherit;
     transition: all 0.3s ease;
+    border: 1.5px solid rgb(175, 170, 170);
 }
 
 .form-group input:focus,
