@@ -56,7 +56,7 @@ function renderMenuProducts(productData, count) {
 
         productCard.innerHTML = `
             ${discount > 0 ? `<div class="product-discount-badge">خصم ${discount.toFixed(0)}%</div>` : ''}
-            <img src="/images/products/${product.Image}" alt="${product.Product_Name}" onerror="this.style.background='#f5f5f5'">
+            <img src="/images/products/${product.Image}" alt="${product.Product_Name}">
             <div class="product-info">
                 <h3>${product.Product_Name}</h3>
                 <div class="price">

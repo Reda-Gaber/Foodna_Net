@@ -162,15 +162,16 @@ body{
   flex-direction: column;
   align-items: center;
    margin: 0px 10px;
+   box-shadow: 0px 2px 9px rgba(0, 0, 0, 0.1);
 }
 
 
 .card h2{
-  color: var(--footer-color);
+  color: var(--title-color);
   margin: 0px 0px 20px;
   width: 100%;
   font-weight: 800;
-  font-family: var(--font-1);
+  font-family: 'Kufam', sans-serif;
 }
 form{
   display: flex;
@@ -187,7 +188,7 @@ form{
 }
 
 .field label{
-  color: var(--footer-color);
+  color: black;
   font-size: 15px;
   font-family: var(--font-1);
   font-weight: 600;
@@ -256,27 +257,24 @@ label.remember input {
   align-items: center;
   gap: 10px;
   width: 90%;
-  border-left: 1px solid silver;
   padding-right: 30px;
-  position: relative;
-  margin-top: 30px;
+  
 }
 
 .text-conten .texts{
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 10px;
   width: 100%;
-  position: absolute;
-  top: 0px;
-  padding-left: 20px;
+  
 }
 
 .text-conten .texts h2{
   text-align: center;
   margin: 0px 0px 5px;
-  font-family: var(--font-1);
+  font-family: 'Kufam', sans-serif;
 }
 
 .text-conten .texts p{
@@ -339,7 +337,6 @@ label.remember input {
     .text-conten{
     margin: 30px 0px 160px 0px;
     border: none;
-    border-top: 2px solid silver;
     display: flex;
     justify-content: center;
     align-items: center; 
@@ -378,7 +375,6 @@ font-size: 30px;
   .card{
     min-width: 300px;
     margin: 0px;
-    padding: 0px;
   }
   .containers .myform{
     max-width: 300px;

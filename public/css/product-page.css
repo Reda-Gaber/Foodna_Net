@@ -149,9 +149,12 @@
   color: #ffffff;
 }
 
-.dark-theme .recommended-section .Product__actions:hover {
+/* .dark-theme .recommended-section .Product__actions:hover {
   background: var(--footer-color);
-}
+} */
+ .dark-theme .button__submit{
+  background-color: #e62a32;
+ }
 
 /* ====== القواعد العامة ====== */
 * {
@@ -458,7 +461,7 @@ img {
 
 .button-data-id:hover:not(.activess){
   background-color: #d91c2a;
-  transform: translateY(-2px);
+ 
   box-shadow: 0 6px 20px rgba(230, 42, 50, 0.3);
 }
 
@@ -655,7 +658,7 @@ img {
   }
 
   .img-product:hover img{
-    transform: scale(1.03);
+   
   }
 }
 
