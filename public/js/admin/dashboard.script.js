@@ -11,38 +11,6 @@ const state = {
 };
 
 // =====================================================
-// SAMPLE DATA - Replace with actual API calls
-// =====================================================
-const sampleProducts = [
-    { id: 1, name: 'سماعة بلوتوث', category: 'الإلكترونيات', price: 79.99, stock: 45, status: 'نشط' },
-    { id: 2, name: 'ساعة يد ذكية', category: 'الإلكترونيات', price: 199.99, stock: 23, status: 'نشط' },
-    { id: 3, name: 'ستاند للاب توب', category: 'الملحقات', price: 34.99, stock: 8, status: 'نشط' },
-    { id: 4, name: 'كيبورد ميكانيكي', category: 'الإلكترونيات', price: 129.99, stock: 67, status: 'نشط' },
-    { id: 5, name: 'سلك USB', category: 'الملحقات', price: 12.99, stock: 3, status: 'نشط' }
-];
-
-const sampleCustomers = [
-    { id: 1, name: 'أحمد علي', email: 'ahmad@example.com', phone: '555-0101', orders: 8, totalSpent: 1245.50 },
-    { id: 2, name: 'فاطمة محمد', email: 'fatima@example.com', phone: '555-0102', orders: 12, totalSpent: 2890.75 },
-    { id: 3, name: 'محمود سالم', email: 'mahmoud@example.com', phone: '555-0103', orders: 5, totalSpent: 678.90 },
-    { id: 4, name: 'أميرة حسن', email: 'amira@example.com', phone: '555-0104', orders: 15, totalSpent: 3456.20 }
-];
-
-const sampleOrders = [
-    { id: 1001, customer: 'John Doe', date: '2025-11-01', total: 159.99, status: 'delivered' },
-    { id: 1002, customer: 'Jane Smith', date: '2025-11-02', total: 299.50, status: 'shipped' },
-    { id: 1003, customer: 'Bob Johnson', date: '2025-11-03', total: 89.99, status: 'pending' },
-    { id: 1004, customer: 'Alice Brown', date: '2025-11-03', total: 445.75, status: 'shipped' },
-    { id: 1005, customer: 'John Doe', date: '2025-11-04', total: 129.99, status: 'pending' }
-];
-
-const sampleSuppliers = [
-    { id: 1, name: 'شركة تيك سابلاي', contact: 'ميشائيل تشن', email: 'michael@techsupply.com', phone: '555-2001', products: 45 },
-    { id: 2, name: 'الإلكترونيات العالمية', contact: 'ساره ويليامز', email: 'sarah@globalelec.com', phone: '555-2002', products: 78 },
-    { id: 3, name: 'مركز الملحقات', contact: 'دافيد مارتينيز', email: 'david@accessoryhub.com', phone: '555-2003', products: 32 }
-];
-
-// =====================================================
 // INITIALIZATION
 // =====================================================
 // Helper: load SweetAlert2 (Swal) once when needed
@@ -2206,68 +2174,90 @@ function filterOrders(searchTerm) {
     // إضافة event listeners للأزرار بعد تحديث DOM
     attachOrderFilterActionListeners();
 }
+// Navigation functionality
+      document.querySelectorAll(".nav-item[data-section]").forEach((item) => {
+        item.addEventListener("click", function (e) {
+          e.preventDefault();
+          const section = this.dataset.section;
 
-// =====================================================
-// API INTEGRATION EXAMPLES
-// Replace the sample data functions with actual API calls
-// =====================================================
+          // Clear search input when navigating
+          document.getElementById('searchInput').value = '';
 
-// Example: Fetch products from API
-/*
-async function fetchProducts() {
-    try {
-        const response = await fetch('/api/products');
-        const data = await response.json();
-        state.products = data;
-        renderProducts();
-    } catch (error) {
-    }
-}
+          // Update active nav
+          document
+            .querySelectorAll(".nav-item")
+            .forEach((nav) => nav.classList.remove("active"));
+          this.classList.add("active");
 
-// Example: Add product via API
-async function addProduct(productData) {
-    try {
-        const response = await fetch('/api/products', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(productData)
+          // Show section
+          document
+            .querySelectorAll(".section")
+            .forEach((sec) => sec.classList.remove("active"));
+          document.getElementById(section + "-section").classList.add("active");
+
+          // Update page title
+          const titles = {
+            dashboard: "لوحة المعلومات",
+            products: "المنتجات",
+            customers: "العملاء",
+            orders: "الطلبات",
+            categories: "التصنيفات",
+            offers: "العروض",
+            coupons: "الكوبونات",
+            inventory: "المخزون",
+          };
+          document.getElementById("pageTitle").textContent =
+            titles[section] || "لوحة التحكم";
         });
-        const data = await response.json();
-        state.products.push(data);
-        renderProducts();
-    } catch (error) {
-    }
-}
+      });
 
-// Example: Update product via API
-async function updateProduct(id, productData) {
-    try {
-        const response = await fetch(`/api/products/${id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(productData)
-        });
-        const data = await response.json();
-        const index = state.products.findIndex(p => p.id === id);
-        state.products[index] = data;
-        renderProducts();
-    } catch (error) {
-    }
-}
+      // Modal functionality
+      const modal = document.getElementById("modal");
+      const modalClose = document.getElementById("modalClose");
 
-// Example: Delete product via API
-async function deleteProductAPI(id) {
-    try {
-        await fetch(`/api/products/${id}`, {
-            method: 'DELETE'
-        });
-        state.products = state.products.filter(p => p.id !== id);
-        renderProducts();
-    } catch (error) {
-    }
-}
-*/
+      modalClose.addEventListener("click", () => {
+        modal.classList.remove("active");
+      });
+
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+          modal.classList.remove("active");
+        }
+      });
+
+      // Search functionality
+      const searchInput = document.getElementById("searchInput");
+      searchInput.addEventListener("input", handleSearch);
+      searchInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+          handleSearch();
+        }
+      });
+
+      // Mobile sidebar functionality
+      const mobileToggle = document.getElementById("mobileToggle");
+      const sidebarToggle = document.getElementById("sidebarToggle");
+      const sidebar = document.getElementById("sidebar");
+
+      function toggleSidebar() {
+        sidebar.classList.toggle("show");
+      }
+
+      mobileToggle.addEventListener("click", toggleSidebar);
+      sidebarToggle.addEventListener("click", toggleSidebar);
+
+      // Close sidebar when clicking outside on mobile
+      document.addEventListener("click", (e) => {
+        if (window.innerWidth <= 768) {
+          if (!sidebar.contains(e.target) && !mobileToggle.contains(e.target)) {
+            sidebar.classList.remove("show");
+          }
+        }
+      });
+
+      // Handle window resize
+      window.addEventListener("resize", () => {
+        if (window.innerWidth > 768) {
+          sidebar.classList.remove("show");
+        }
+      });

@@ -21,44 +21,5 @@
   </div>
 </div>
 
- <script src="/js/customer.offers.js?t=<%= Date.now() %>"></script>
- <script>
-    // Fallback: Display offers if customer.offers.js doesn't load
-    if (window.apiass === undefined) {
-        console.log('⚠️ customer.offers.js fallback بدأ');
-        const container = document.querySelector('.products-grid_1');
-        if (container) {
-            fetch('/api/products?discounted=1&limit=100')
-                .then(r => r.json())
-                .then(products => {
-                    console.log('✅ تم جلب', products.length, 'منتج');
-                    container.innerHTML = '';
-                    products.forEach(p => {
-                        const oldPrice = Number(p.Price);
-                        const discount = Number(p.Discount || 0);
-                        const newPrice = oldPrice * (1 - discount / 100);
-                        const el = document.createElement('div');
-                        el.className = 'product product_only';
-                        el.innerHTML = `
-                            <div class="product-discount-badge">خصم ${discount.toFixed(0)}%</div>
-                            <a href="/product-page?id=${p.Product_ID}" class="product-img-link">
-                                <img src="/images/products/${p.Image}" alt="${p.Product_Name}" class="product-img" style="border-radius:0;">
-                            </a>
-                            <div class="product-info">
-                                <a href="/product-page?id=${p.Product_ID}" class="product-title-link">
-                                    <h3>${p.Product_Name}</h3>
-                                </a>
-                                <div class="price-row">
-                                    <span class="price price__old">${oldPrice.toFixed(2)} جنيه</span>
-                                    <span class="price price__new">${newPrice.toFixed(2)} جنيه</span>
-                                </div>
-                            </div>
-                            <div class="button__actions"><button class="Product__actions"><a href="/product-page?id=${p.Product_ID}">اختر الوجبة</a></button></div>`;
-                        container.appendChild(el);
-                    });
-                })
-                .catch(e => console.error('❌ Fallback error:', e));
-        }
-    }
- </script>
+ <script src="/js/customer/customer.offers.js?t=<%= Date.now() %>"></script>
 <%- include("parts/footer.ejs") %>

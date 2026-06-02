@@ -328,3 +328,41 @@
     window.fsd.checkAuth = checkAuth;
   });
 })();
+
+
+(async function(){
+  const userLink = document.getElementById('user-icon-link');
+  const userIcon = document.getElementById('login-button');
+  if (!userLink) return;
+
+  // Set default immediately before fetch
+  userLink.href = '/profile';
+
+  try {
+    const res = await fetch('/auth/api/auth/check', {
+      credentials: 'include',
+      headers: { 'Accept': 'application/json' }
+    });
+
+    const contentType = res.headers.get('content-type') || '';
+    if (!res.ok || !contentType.includes('application/json')) {
+      userLink.href = '/auth/login';
+      return;
+    }
+
+    const data = await res.json();
+    window.auth = { authenticated: !!data.authenticated, user: data.user || null };
+
+    if (window.auth.authenticated) {
+      userLink.href = '/profile';
+      if (userIcon) userIcon.classList.add('user-logged');
+    } else {
+      userLink.href = '/auth/login';
+    }
+
+    window.dispatchEvent(new CustomEvent('auth.changed', { detail: window.auth }));
+  } catch (e) {
+    window.auth = { authenticated: false, user: null };
+    userLink.href = '/auth/login';
+  }
+})();
