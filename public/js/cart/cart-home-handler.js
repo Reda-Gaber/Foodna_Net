@@ -12,6 +12,12 @@
   let closeButton;
   let cartOverlay;
 
+  function buildProductImageSrc(image) {
+    if (!image) return '/images/placeholder.png';
+    if (/^(https?:)?\/\//.test(image)) return image;
+    return `/images/products/${image}`;
+  }
+
   function initDOMReferences() {
     cartElement = document.querySelector('.cart');
     cartButton = document.getElementById('cart-button');
@@ -56,7 +62,7 @@
               id: product.Product_ID,
               title: product.Product_Name,
               price: product.Price,
-              img: `images/products/${product.Image}`,
+              img: buildProductImageSrc(product.Image),
               quantity: 1
             };
 

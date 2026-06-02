@@ -135,15 +135,21 @@ const searchProducts = async (searchTerm, limit = 20, offset = 0) => {
 /**
  * الحصول على المنتجات حسب الفئة
  */
-const getProductsByCategory = async (category, limit = 20, offset = 0) => {
+const getProductsByCategory = async (categoryId, limit = 20, offset = 0) => {
     const limitNum = parseInt(limit) || 20;
     const offsetNum = parseInt(offset) || 0;
+    const categoryIdNum = parseInt(categoryId);
+    
+    if (isNaN(categoryIdNum)) {
+        console.error('معرف الفئة يجب أن يكون رقماً:', categoryId);
+        return [];
+    }
     
     try {
         const query = `SELECT * FROM Products 
-                       WHERE Category = ?
+                       WHERE Category_ID = ?
                        LIMIT ${limitNum} OFFSET ${offsetNum}`;
-        const [rows] = await db.query(query, [category]);
+        const [rows] = await db.query(query, [categoryIdNum]);
         return rows;
     } catch (error) {
         console.error('خطأ في جلب المنتجات حسب الفئة:', error);

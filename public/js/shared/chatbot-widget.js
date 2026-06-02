@@ -157,15 +157,26 @@
           body: JSON.stringify({ message })
         });
 
-        const data = await response.json();
+        let data;
+        const text = await response.text();
+        try {
+          data = JSON.parse(text);
+        } catch (err) {
+          throw new Error('Invalid JSON response from chatbot API');
+        }
 
         if (data.success) {
-          this.addMessage(data.message, 'bot');
+          const structured = data.data?.structuredResponse;
+          this.addMessage(data.message, 'bot', structured);
         } else {
           this.addMessage(data.message || 'حدث خطأ. يرجى المحاولة لاحقاً.', 'bot');
         }
       } catch (error) {
-        this.addMessage('عذراً، حدث خطأ في الاتصال. يرجى المحاولة لاحقاً.', 'bot');
+        let message = 'عذراً، حدث خطأ في الاتصال. يرجى المحاولة لاحقاً.';
+        if (error instanceof SyntaxError || error.message.includes('Invalid JSON')) {
+          message = 'عذراً، استجابة خدمة الدردشة غير صالحة. حاول مرة أخرى.';
+        }
+        this.addMessage(message, 'bot');
       }
 
       // Hide loading
@@ -179,28 +190,118 @@
      * إضافة رسالة إلى شاشة الدردشة
      * @param {string} text - نص الرسالة
      * @param {string} sender - 'user' أو 'bot'
+     * @param {object|null} structuredResponse - استجابة منظمة من الخادم
      */
-    addMessage(text, sender = 'bot') {
+    addMessage(text, sender = 'bot', structuredResponse = null) {
       const messagesContainer = document.getElementById('chatbot-messages');
 
       const messageDiv = document.createElement('div');
       messageDiv.className = `chatbot-message ${sender}-message`;
 
-      // Check if message contains a markdown table
-      if (sender === 'bot' && this.isMarkdownTable(text)) {
-        const htmlTable = this.parseMarkdownTable(text);
-        messageDiv.innerHTML = htmlTable;
+      let html = '';
+
+      if (sender === 'bot') {
+        const parsedResponse = structuredResponse || this.tryParseJson(text);
+
+        if (parsedResponse) {
+          html = this.renderStructuredBotMessage(parsedResponse);
+        } else if (this.isMarkdownTable(text)) {
+          html = this.parseMarkdownTable(text);
+        } else {
+          html = `<p>${this.escapeHtml(text)}</p>`;
+        }
       } else {
-        messageDiv.innerHTML = `<p>${this.escapeHtml(text)}</p>`;
+        html = `<p>${this.escapeHtml(text)}</p>`;
       }
 
+      messageDiv.innerHTML = html;
       messagesContainer.appendChild(messageDiv);
 
       // Store in memory
-      this.messages.push({ text, sender, timestamp: new Date() });
+      this.messages.push({ text, sender, timestamp: new Date(), structuredResponse });
 
       // Scroll to bottom
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    /**
+     * تحويل استجابة روبوت منظمة إلى HTML
+     * @param {object} response - استجابة JSON المنظمة
+     * @returns {string}
+     */
+    renderStructuredBotMessage(response) {
+      if (!response || typeof response !== 'object') {
+        return `<p>${this.escapeHtml(JSON.stringify(response))}</p>`;
+      }
+
+      if (response.type === 'text' && typeof response.message === 'string') {
+        return `<p>${this.escapeHtml(response.message)}</p>`;
+      }
+
+      if (response.type === 'products' && Array.isArray(response.items)) {
+        let html = '<table class="chatbot-products-table">';
+        html += '<thead><tr><th>المنتج</th><th>السعر</th><th>الوصف</th><th>الإجراءات</th></tr></thead>';
+        html += '<tbody>';
+
+        response.items.forEach((item, index) => {
+          const productName = item.name || `منتج ${index + 1}`;
+          const productCode = item.id || productName;
+          const productDesc = item.desc || '';
+          const productPrice = item.price != null ? item.price : '';
+
+          html += '<tr>';
+          html += `<td>${this.escapeHtml(productName)}</td>`;
+          html += `<td>${this.escapeHtml(String(productPrice))}</td>`;
+          html += `<td>${this.escapeHtml(productDesc)}</td>`;
+          html += '<td class="action-buttons">';
+          html += `<button class="btn-order" onclick="window.chatbotWidget.orderProduct('${this.escapeJs(productName)}', '${this.escapeJs(productCode)}')">اطلب الآن</button>`;
+          html += `<button class="btn-details" onclick="window.chatbotWidget.showProductDetails('${this.escapeJs(productName)}')">التفاصيل</button>`;
+          html += '</td>';
+          html += '</tr>';
+        });
+
+        html += '</tbody></table>';
+        return html;
+      }
+
+      return `<pre>${this.escapeHtml(JSON.stringify(response, null, 2))}</pre>`;
+    }
+
+    /**
+     * محاولة تحليل النص كـ JSON
+     * @param {string} text
+     * @returns {object|null}
+     */
+    tryParseJson(text) {
+      if (typeof text !== 'string') {
+        return null;
+      }
+
+      const trimmed = text.trim();
+
+      try {
+        return JSON.parse(trimmed);
+      } catch (error) {
+        // Ignore parse failures
+      }
+
+      const objectMatch = trimmed.match(/(\{[\s\S]*\})/m);
+      if (objectMatch) {
+        try {
+          return JSON.parse(objectMatch[1]);
+        } catch (error) {
+        }
+      }
+
+      const arrayMatch = trimmed.match(/(\[[\s\S]*\])/m);
+      if (arrayMatch) {
+        try {
+          return JSON.parse(arrayMatch[1]);
+        } catch (error) {
+        }
+      }
+
+      return null;
     }
 
     /**
@@ -393,7 +494,18 @@
           this.messages.forEach(msg => {
             const messageDiv = document.createElement('div');
             messageDiv.className = `chatbot-message ${msg.sender}-message`;
-            messageDiv.innerHTML = `<p>${this.escapeHtml(msg.text)}</p>`;
+            if (msg.sender === 'bot') {
+              const parsedResponse = msg.structuredResponse || this.tryParseJson(msg.text);
+              if (parsedResponse) {
+                messageDiv.innerHTML = this.renderStructuredBotMessage(parsedResponse);
+              } else if (this.isMarkdownTable(msg.text)) {
+                messageDiv.innerHTML = this.parseMarkdownTable(msg.text);
+              } else {
+                messageDiv.innerHTML = `<p>${this.escapeHtml(msg.text)}</p>`;
+              }
+            } else {
+              messageDiv.innerHTML = `<p>${this.escapeHtml(msg.text)}</p>`;
+            }
             messagesContainer.appendChild(messageDiv);
           });
         }

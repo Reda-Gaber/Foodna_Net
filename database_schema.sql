@@ -76,6 +76,9 @@ ALTER TABLE Products
 ADD COLUMN IF NOT EXISTS Category_ID INT,
 ADD FOREIGN KEY IF NOT EXISTS (Category_ID) REFERENCES Categories(Category_ID) ON DELETE SET NULL;
 
+-- Fix Cloudinary URLs truncation bug by expanding the Image column type
+ALTER TABLE Products MODIFY COLUMN Image TEXT;
+
 -- ============================================
 -- جدول الكوبونات (Coupons)
 -- ============================================

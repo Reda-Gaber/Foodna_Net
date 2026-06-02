@@ -121,13 +121,14 @@
                 closeSwal();
 
                 if (data.success) {
-                    showSuccess('تم تسجيل الدخول بنجاح', 'نجح', 1).then(() => {
-                        // لو في next في URL استخدمه، غير كده استخدم redirect من السيرفر
-                        const urlParams = new URLSearchParams(window.location.search);
-                        const nextParam = urlParams.get('next');
-                        const redirectTo = nextParam ? decodeURIComponent(nextParam) : (data.redirect || '/');
-                        window.location.href = redirectTo;
-                    });
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const nextParam = urlParams.get('next');
+                    const redirectTo = nextParam ? decodeURIComponent(nextParam) : (data.redirect || '/');
+
+                    showSuccess('تم تسجيل الدخول بنجاح', 'نجح', 1);
+                    setTimeout(() => {
+                        window.location.replace(redirectTo);
+                    }, 300);
                 } else {
                     showError(data.message || 'فشل تسجيل الدخول', 'خطأ في تسجيل الدخول');
                 }

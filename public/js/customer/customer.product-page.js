@@ -11,6 +11,12 @@
   const params = new URLSearchParams(window.location.search);
   const productId = Number(params.get('id'));
 
+  function buildProductImageSrc(image) {
+    if (!image) return '/images/placeholder.png';
+    if (/^(https?:)?\/\//.test(image)) return image;
+    return `/images/products/${image}`;
+  }
+
   /**
    * Render product details
    */
@@ -47,7 +53,7 @@
                 </div>
               </div>
               <div class="img-product">
-                <img src="/images/products/${product.Image}" alt="${product.Product_Name}">
+                <img src="${buildProductImageSrc(product.Image)}" alt="${product.Product_Name}">
               </div>
             </div>
               <div class="check_box">
@@ -122,7 +128,7 @@
         id: product.Product_ID,
         title: product.Product_Name,
         price: parseFloat(priceToUse.toFixed(2)),
-        img: `images/products/${product.Image}`,
+        img: buildProductImageSrc(product.Image),
         quantity: 1
       };
 
@@ -194,7 +200,7 @@
           const finalPrice = discount > 0 ? Math.max(0, oldPrice * (1 - discount / 100)) : oldPrice;
           
           productCard.innerHTML = `
-            <img src="/images/products/${product.Image}" alt="${product.Product_Name}">
+            <img src="${buildProductImageSrc(product.Image)}" alt="${product.Product_Name}">
             <div class="product-info">
               <h3>${product.Product_Name}</h3>
               <div class="price">

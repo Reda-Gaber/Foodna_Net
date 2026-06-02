@@ -7,6 +7,12 @@
 (function() {
   'use strict';
 
+  function buildProductImageSrc(image) {
+    if (!image) return '/images/placeholder.png';
+    if (/^(https?:)?\/\//.test(image)) return image;
+    return `/images/products/${image}`;
+  }
+
   // متغيرات تخزين السلة
   const CART_STORAGE_KEY = 'cart';
   const CART_UI_STATE_KEY = 'cartUIState';
@@ -68,7 +74,7 @@
           id: product.id,
           title: product.title || product.Product_Name,
           price: product.price || product.Price,
-          img: product.img || (product.Image ? `images/products/${product.Image}` : ''),
+          img: product.img || buildProductImageSrc(product.Image),
           quantity: product.quantity || 1
         });
       }
