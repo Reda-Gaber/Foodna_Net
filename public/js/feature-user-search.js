@@ -33,25 +33,36 @@
     let currentAddressModal = null;
 
     // ----- User icon logic -----
+    const CUSTOMER_REGISTER = '/user/register';
+    const CUSTOMER_PROFILE = '/profile';
+
     async function checkAuth(){
-      // Always verify with backend; do not rely only on window.auth
+      if (typeof window.fetchCustomerAuthCheck === 'function') {
+        return window.fetchCustomerAuthCheck();
+      }
       try{
-        const res = await fetch('/auth/api/auth/check', {
+        const res = await fetch('/auth/api/auth/check?audience=customer', {
           method: 'GET',
           credentials: 'include',
-          headers: { 'Content-Type': 'application/json' }
+          headers: { 'Accept': 'application/json' }
         });
-        let data = { authenticated: false };
+        let data = { authenticated: false, isClient: false };
         try{ data = await res.json(); }catch(e){ /* ignore parse error */ }
-        if (!res.ok) return { authenticated: false };
+        if (!res.ok) return data;
         return data;
       }catch(e){
-        return { authenticated: false };
+        return { authenticated: false, isClient: false };
       }
     }
 
-    function handleUserIconClick(e){
-      window.location.assign('/profile');
+    function customerAuthTarget(data) {
+      const ok = data && data.success !== false && (data.authenticated === true || data.isClient === true);
+      return ok ? CUSTOMER_PROFILE : CUSTOMER_REGISTER;
+    }
+
+    async function handleUserIconClick(e){
+      const data = await checkAuth();
+      window.location.assign(customerAuthTarget(data));
     }
 
     // Listen for navbar's auth.changed event to keep local window.auth up-to-date
@@ -67,22 +78,18 @@
       if (userLink.dataset.fsdBound) return;
       userLink.dataset.fsdBound = '1';
 
-      // neutralize legacy hrefs that point to orders register or similar to avoid full navigation
-      try{
-        const href = userLink.getAttribute('href');
-        if (href && (href.indexOf('/customer/orders') !== -1 || href.indexOf('/user/register') !== -1 || href.indexOf('/register') !== -1)){
-          userLink.setAttribute('href', '#');
-        }
-      }catch(_){ }
-
       userLink.addEventListener('click', function fsd_user_click_interceptor(ev){
+        const href = userLink.getAttribute('href') || '';
+        if (href === CUSTOMER_PROFILE || href === CUSTOMER_REGISTER) {
+          return;
+        }
         try{
           ev.preventDefault();
           if (typeof ev.stopImmediatePropagation === 'function') ev.stopImmediatePropagation();
           if (typeof ev.stopPropagation === 'function') ev.stopPropagation();
         }catch(_){ }
         handleUserIconClick(ev);
-      }, true); // capture-phase
+      }, true);
     }
 
     // ----- Search drawer and triggers -----

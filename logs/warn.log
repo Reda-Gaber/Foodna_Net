@@ -221,3 +221,11 @@
 [2026-05-28T11:13:17.711Z] WARN: GROQ_API_KEY not configured in environment
 [2026-05-28T13:19:34.883Z] WARN: GROQ_API_KEY not configured in environment
 [2026-05-28T14:09:27.014Z] WARN: GROQ_API_KEY not configured in environment
+[2026-06-01T17:25:38.616Z] WARN: [sessionHandler] Session reload failed {
+  "sid": "YAM7ebMJBx0sVLR-eGhwNykmyrYaCxda",
+  "message": "failed to load session"
+}
+[2026-06-01T17:26:14.923Z] WARN: [sessionHandler] Session reload failed {
+  "sid": "e0NNUaZuHcbbY44jSPMJuRjRxtMr1Crh",
+  "message": "failed to load session"
+}

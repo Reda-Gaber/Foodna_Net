@@ -15,12 +15,28 @@ function getSessionUserId(session) {
   return null;
 }
 
+function getSessionRole(session) {
+  if (!session) return null;
+  return session.user?.role || session.role || null;
+}
+
+/** جلسة عميل (Client) فقط — ليس موظفاً */
+function isClientSession(session) {
+  if (!session) return false;
+  const role = getSessionRole(session);
+  if (role !== 'Client') return false;
+  return !!(session.userId || session.user?.id);
+}
+
 /**
  * التحقق من أن المستخدم مسجل دخول
  * يدعم كلا من req.session.user (Employee) و req.session.userId (Customer)
  */
 function authenticateUser(req, res, next) {
-  if (getSessionUserId(req.session)) {
+  if (
+    getSessionUserId(req.session) ||
+    (req.session?.user && Object.keys(req.session.user).length > 0)
+  ) {
     return next();
   }
 
@@ -32,7 +48,7 @@ function authenticateUser(req, res, next) {
     });
   }
 
-  return res.redirect('/auth/register');
+  return res.redirect('/user/register');
 }
 
 /**
@@ -64,22 +80,33 @@ function authorizeRole(...roles) {
 /**
  * التحقق من أن المستخدم هو Customer
  */
-async function requireCustomer(req, res, next) {
-  // Use the robust isAuthenticated check from sessionHandler
-  const { isAuthenticated } = require('./sessionHandler');
+async function requireClient(req, res, next) {
+  const { isAuthenticated, ensureClientSessionIds } = require('./sessionHandler');
   const auth = await isAuthenticated(req);
+  if (auth) await ensureClientSessionIds(req);
+  const isApi = req.path.startsWith('/api') || req.originalUrl.startsWith('/api');
 
-  if (!auth) {
-    if (req.path.startsWith('/api') || req.originalUrl.startsWith('/api')) {
+  if (!auth || !isClientSession(req.session)) {
+    if (isApi) {
+      const nextUrl = encodeURIComponent(req.originalUrl || '/');
       return res.status(401).json({
         success: false,
         error: 'Unauthorized',
-        message: 'يجب تسجيل الدخول كعميل'
+        message: 'يجب تسجيل الدخول كعميل',
+        redirect: '/user/register?next=' + nextUrl
       });
     }
-    return res.redirect('/user/register');
+    const nextParam = req.originalUrl && req.originalUrl !== '/user/register'
+      ? '?next=' + encodeURIComponent(req.originalUrl)
+      : '';
+    return res.redirect('/user/register' + nextParam);
   }
   next();
+}
+
+/** @deprecated استخدم requireClient — للتوافق مع الاستدعاءات القديمة */
+async function requireCustomer(req, res, next) {
+  return requireClient(req, res, next);
 }
 
 /**
@@ -108,17 +135,59 @@ function requireEmployee(req, res, next) {
 }
 
 function requireAuth(req, res, next) {
-  if (req.session?.userId || req.session?.user?.id) {
+  return requireClient(req, res, next);
+}
+
+async function requireApiLogin(req, res, next) {
+  try {
+    const { isAuthenticated } = require('./sessionHandler');
+    const authOk = await isAuthenticated(req);
+    if (!authOk) {
+      const nextUrl = encodeURIComponent(req.originalUrl || '/');
+      const isAdminApi = (req.originalUrl || req.path || '').startsWith('/admin');
+      return res.status(401).json({
+        success: false,
+        message: 'يجب تسجيل الدخول أولاً',
+        redirect: isAdminApi
+          ? '/auth/login?next=' + nextUrl
+          : '/user/register?next=' + nextUrl
+      });
+    }
     return next();
+  } catch (err) {
+    return res.status(401).json({ success: false, message: 'يجب تسجيل الدخول أولاً' });
   }
-  return res.redirect('/user/register');// المشكلة هانا 
+}
+
+/** حماية API خاصة بالعميل (سلة، طلبات، إلخ) */
+async function requireClientApiLogin(req, res, next) {
+  try {
+    const { isAuthenticated } = require('./sessionHandler');
+    const authOk = await isAuthenticated(req);
+    if (!authOk || !isClientSession(req.session)) {
+      const nextUrl = encodeURIComponent(req.originalUrl || '/');
+      return res.status(401).json({
+        success: false,
+        message: 'يجب تسجيل الدخول أولاً',
+        redirect: '/user/register?next=' + nextUrl
+      });
+    }
+    return next();
+  } catch (err) {
+    return res.status(401).json({ success: false, message: 'يجب تسجيل الدخول أولاً' });
+  }
 }
 
 module.exports = {
   authenticateUser,
   authorizeRole,
   requireCustomer,
+  requireClient,
   requireEmployee,
   requireAuth,
-  getSessionUserId
+  getSessionUserId,
+  getSessionRole,
+  isClientSession,
+  requireApiLogin,
+  requireClientApiLogin
 };

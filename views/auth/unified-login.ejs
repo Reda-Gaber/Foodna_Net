@@ -138,7 +138,7 @@
                 <p>تسجيل الدخول</p>
             </div>
 
-            <form method="POST" action="/login" id="loginForm">
+            <form id="loginForm" novalidate>
                 <div class="form-group">
                     <label for="email" class="form-label">البريد الإلكتروني</label>
                     <input 
@@ -179,12 +179,52 @@
             </form>
 
             <div class="register-link">
-                <p>ليس لديك حساب؟ <a href="/auth/register">سجل الآن</a></p>
+                <p>عميل؟ <a href="/user/register">تسجيل / دخول العملاء</a></p>
             </div>
         </div>
     </div>
 
     <script>
+        // Simple fallback notification (in case SweetAlert fails to load)
+        function showNotification(message, type = 'error') {
+            let notif = document.getElementById('loginNotification');
+            if (!notif) {
+                notif = document.createElement('div');
+                notif.id = 'loginNotification';
+                notif.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 15px 20px;
+                    border-radius: 8px;
+                    color: white;
+                    font-size: 14px;
+                    z-index: 10000;
+                    max-width: 400px;
+                    word-wrap: break-word;
+                    animation: slideIn 0.3s ease-out;
+                `;
+                document.body.appendChild(notif);
+            }
+
+            if (type === 'error') {
+                notif.style.backgroundColor = '#ef4444';
+            } else if (type === 'success') {
+                notif.style.backgroundColor = '#10b981';
+            } else {
+                notif.style.backgroundColor = '#3b82f6';
+            }
+
+            notif.textContent = message;
+            notif.style.display = 'block';
+
+            if (type === 'success') {
+                setTimeout(() => {
+                    notif.style.display = 'none';
+                }, 2000);
+            }
+        }
+
         // Validation Rules
         const validationRules = {
             email: {
@@ -199,19 +239,10 @@
             }
         };
 
-        // Clear error on input
-        document.getElementById('email').addEventListener('input', function() {
-            clearError('email');
-        });
-
-        document.getElementById('password').addEventListener('input', function() {
-            clearError('password');
-        });
-
         function clearError(fieldName) {
             const field = document.getElementById(fieldName);
             const errorElement = document.getElementById(fieldName + 'Error');
-            
+            if (!field || !errorElement) return;
             field.classList.remove('error');
             errorElement.classList.remove('show');
             errorElement.textContent = '';
@@ -220,7 +251,7 @@
         function showFieldError(fieldName, message) {
             const field = document.getElementById(fieldName);
             const errorElement = document.getElementById(fieldName + 'Error');
-            
+            if (!field || !errorElement) return;
             field.classList.add('error');
             errorElement.textContent = message;
             errorElement.classList.add('show');
@@ -230,19 +261,16 @@
             const rules = validationRules[fieldName];
             if (!rules) return true;
 
-            // Check required
             if (rules.required && !value.trim()) {
                 showFieldError(fieldName, `${fieldName === 'email' ? 'البريد الإلكتروني' : 'كلمة المرور'} مطلوب`);
                 return false;
             }
 
-            // Check email pattern
             if (fieldName === 'email' && value && !rules.pattern.test(value)) {
                 showFieldError(fieldName, rules.message);
                 return false;
             }
 
-            // Check password min length
             if (fieldName === 'password' && value && value.length < rules.minLength) {
                 showFieldError(fieldName, rules.message);
                 return false;
@@ -253,79 +281,156 @@
         }
 
         function validateForm() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-
+            const email = document.getElementById('email')?.value || '';
+            const password = document.getElementById('password')?.value || '';
             let isValid = true;
-
-            if (!validateField('email', email)) {
-                isValid = false;
-            }
-
-            if (!validateField('password', password)) {
-                isValid = false;
-            }
-
+            if (!validateField('email', email)) isValid = false;
+            if (!validateField('password', password)) isValid = false;
             return isValid;
         }
 
-        // Form submission with validation
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
+        document.addEventListener('DOMContentLoaded', function() {
+            const emailInput = document.getElementById('email');
+            const passInput = document.getElementById('password');
+            if (emailInput) emailInput.addEventListener('input', () => clearError('email'));
+            if (passInput) passInput.addEventListener('input', () => clearError('password'));
 
-            // Clear previous errors
-            clearError('email');
-            clearError('password');
-
-            // Validate form
-            if (!validateForm()) {
-                showError('يرجى تصحيح الأخطاء في النموذج', 'خطأ في التحقق');
-                return false;
+            const form = document.getElementById('loginForm');
+            if (!form) {
+                console.warn('[Login Form] Form element not found');
+                return;
             }
 
-            const formData = new URLSearchParams();
-            formData.append('email', document.getElementById('email').value);
-            formData.append('password', document.getElementById('password').value);
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                console.log('[Login Form] Submit handler called');
 
-            // append optional next param so server can redirect back
-            const params = new URLSearchParams(window.location.search);
-            const next = params.get('next');
-            if (next) formData.append('next', next);
+                clearError('email');
+                clearError('password');
 
-            // Show loading
-            showLoading('جاري تسجيل الدخول...');
+                if (!validateForm()) {
+                    console.warn('[Login Form] Validation failed');
+                    showNotification('يرجى تصحيح الأخطاء في النموذج', 'error');
+                    if (typeof showError === 'function') {
+                        showError('يرجى تصحيح الأخطاء في النموذج', 'خطأ في التحقق').catch(err => console.error('showError failed:', err));
+                    }
+                    return;
+                }
 
-            try {
-                const response = await fetch('/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: formData
-                });
+                const formData = new URLSearchParams();
+                formData.append('email', document.getElementById('email').value);
+                formData.append('password', document.getElementById('password').value);
 
-                const data = await response.json();
+                const params = new URLSearchParams(window.location.search);
+                const next = params.get('next');
+                if (next) formData.append('next', next);
 
-                closeSwal();
+                console.log('[Login Form] Showing loading indicator...');
+                if (typeof showLoading === 'function') {
+                    showLoading('جاري تسجيل الدخول...').catch(err => {
+                        console.error('[Login Form] showLoading failed:', err);
+                        showNotification('جاري تسجيل الدخول...', 'info');
+                    });
+                } else {
+                    showNotification('جاري تسجيل الدخول...', 'info');
+                }
 
-                if (data.success) {
-                    showSuccess('تم تسجيل الدخول بنجاح', 'نجح', 1).then(() => {
-                        // لو في next في URL استخدمه، غير كده استخدم redirect من السيرفر
+                try {
+                    console.log('[Login Form] Sending fetch request to /login');
+                    const response = await fetch('/login', {
+                        method: 'POST',
+                        credentials: 'same-origin',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: formData
+                    });
+
+                    console.log('[Login Form] Response status:', response.status, 'Headers:', response.headers);
+
+                    // Try to parse JSON safely
+                    const contentType = response.headers.get('content-type') || '';
+                    let data = null;
+
+                    try {
+                        if (contentType.includes('application/json')) {
+                            data = await response.json();
+                        } else {
+                            const text = await response.text();
+                            console.warn('[Login Form] Response is not JSON, attempting to parse:', text.substring(0, 100));
+                            try {
+                                data = JSON.parse(text);
+                            } catch (e) {
+                                data = { success: response.ok, message: text };
+                            }
+                        }
+                    } catch (parseErr) {
+                        console.error('[Login Form] Error parsing response:', parseErr);
+                        data = { success: false, message: 'خطأ في معالجة الرد من الخادم' };
+                    }
+
+                    console.log('[Login Form] Parsed data:', data);
+
+                    if (typeof closeSwal === 'function') {
+                        closeSwal().catch(err => console.error('closeSwal failed:', err));
+                    }
+
+                    if (data && data.success) {
+                        console.log('[Login Form] Login successful');
+                        console.log('[Login Form] Response data:', data);
+                        
+                        // استخراج الـ redirect URL مباشرة من البيانات
                         const urlParams = new URLSearchParams(window.location.search);
                         const nextParam = urlParams.get('next');
                         const redirectTo = nextParam ? decodeURIComponent(nextParam) : (data.redirect || '/');
-                        window.location.href = redirectTo;
-                    });
-                } else {
-                    showError(data.message || 'فشل تسجيل الدخول', 'خطأ في تسجيل الدخول');
-                }
-            } catch (error) {
-                closeSwal();
-                showError('حدث خطأ في الاتصال بالخادم', 'خطأ في الاتصال');
-                console.error('Login error:', error);
-            }
+                        
+                        console.log('[Login Form] Redirect URL:', redirectTo);
+                        console.log('[Login Form] User role:', data.user?.role);
+                        
+                        // إذا كان هناك showSuccess، استخدمها مع Timeout آمن
+                        if (typeof showSuccess === 'function') {
+                            showSuccess(data.message || 'تم تسجيل الدخول بنجاح', 'نجح', 1)
+                                .catch(err => console.error('[Login Form] showSuccess error:', err));
+                        } else {
+                            showNotification(data.message || 'تم تسجيل الدخول بنجاح', 'success');
+                        }
+                        
+                        // توجيه مباشر بعد 800ms لضمان الانتظار قليلاً
+                        setTimeout(() => {
+                            console.log('[Login Form] Performing redirect to:', redirectTo);
+                            window.location.href = redirectTo;
+                        }, 800);
+                    } else {
+                        const msg = (data && data.message) ? data.message : 'فشل تسجيل الدخول';
+                        console.error('[Login Form] Login failed:', msg);
+                        showNotification(msg, 'error');
 
-            return false;
+                        if (typeof showError === 'function') {
+                            showError(msg, 'خطأ في تسجيل الدخول').catch(err => {
+                                console.error('[Login Form] showError failed:', err);
+                            });
+                        } else {
+                            alert(msg);
+                        }
+                    }
+                } catch (error) {
+                    console.error('[Login Form] Catch block - Network/Parse error:', error);
+                    if (typeof closeSwal === 'function') {
+                        closeSwal().catch(err => console.error('closeSwal failed:', err));
+                    }
+
+                    const errorMsg = 'حدث خطأ في الاتصال بالخادم';
+                    showNotification(errorMsg, 'error');
+
+                    if (typeof showError === 'function') {
+                        showError(errorMsg, 'خطأ في الاتصال').catch(err => {
+                            console.error('[Login Form] showError failed:', err);
+                        });
+                    } else {
+                        alert(errorMsg);
+                    }
+                }
+            });
         });
     </script>
 </body>

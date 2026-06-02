@@ -12,17 +12,11 @@ const Logger = require('../../core/utils/logger');
 /**
  * إنشاء طلب جديد
  */
-const { isAuthenticated } = require('../../core/middlewares/sessionHandler');
+const { getSessionUserId } = require('../../core/middlewares/sessionHandler');
 
 exports.createOrder = async (req, res) => {
-  // Ensure session is hydrated from DB if missing (cold‑start safety)
-  const authOk = await isAuthenticated(req);
-  if (!authOk) {
-    return ApiResponse.unauthorized(res, 'يجب تسجيل الدخول أولاً');
-  }
-
   try {
-    const customerId = req.session.userId;
+    const customerId = getSessionUserId(req.session);
     const { items, deliveryAddress, totalAmount, paymentMethod = 'cash', phone, notes } = req.body;
 
     console.log('[ORDER-CTRL] Creating order for customer:', customerId);
@@ -111,7 +105,7 @@ exports.createOrder = async (req, res) => {
  */
 exports.getOrders = async (req, res) => {
   try {
-    const customerId = req.session.userId;
+    const customerId = getSessionUserId(req.session);
     if (!customerId) {
       return ApiResponse.unauthorized(res);
     }
@@ -158,7 +152,7 @@ exports.getOrderDetails = async (req, res) => {
  */
 exports.cancelOrder = async (req, res) => {
   try {
-    const customerId = req.session.userId;
+    const customerId = getSessionUserId(req.session);
     const { orderId } = req.params;
 
     if (!customerId) {

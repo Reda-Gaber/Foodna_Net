@@ -2,8 +2,7 @@
  * Kitchen Controller
  * معالجة منطق قسم المطبخ
  */
-const db = require('../../config/db');
-const Order = require('../customer/order.model');
+const kitchenModel = require('./kitchen.model');
 const ApiResponse = require('../../core/utils/response');
 const Logger = require('../../core/utils/logger');
 
@@ -12,37 +11,15 @@ const Logger = require('../../core/utils/logger');
  */
 exports.getKitchenOrders = async (req, res) => {
   try {
-    // الحصول على الطلبات التي لم تكتمل بعد (Pending و Processing و Ready)
-    const [orders] = await db.query(
-      `SELECT DISTINCT
-          o.Order_ID,
-          o.Total_Amount,
-          o.Order_Status,
-          o.Created_At,
-          COALESCE(c.Customer_Name, 'عميل الكاشير') as Customer_Name
-       FROM Orders o
-       LEFT JOIN Customers c ON o.Customer_ID = c.Customer_Id
-       LEFT JOIN Order_Items oi ON o.Order_ID = oi.Order_ID
-       WHERE o.Order_Status IN ('Pending', 'Processing', 'Ready')
-       ORDER BY o.Created_At ASC
-       LIMIT 50`
-    );
+    const orders = await kitchenModel.fetchPendingOrders();
 
-    // إذا لم يكن هناك طلبات
-    if (orders.length === 0) {
+    if (!orders || orders.length === 0) {
       return ApiResponse.success(res, { orders: [] }, 'لا توجد طلبات حالياً');
     }
 
-    // الحصول على تفاصيل كل طلب
     const ordersWithDetails = await Promise.all(
       orders.map(async (order) => {
-        const [items] = await db.query(
-          `SELECT oi.*, p.Product_Name, p.Image
-           FROM Order_Items oi
-           JOIN Products p ON oi.Product_ID = p.Product_ID
-           WHERE oi.Order_ID = ?`,
-          [order.Order_ID]
-        );
+        const items = await kitchenModel.fetchOrderItems(order.Order_ID);
 
         return {
           id: order.Order_ID,
@@ -74,11 +51,9 @@ exports.getKitchenOrders = async (req, res) => {
 exports.updateKitchenStatus = async (req, res) => {
   try {
     const { orderId, status } = req.body;
-    
-    // Log incoming request
+
     console.log('🔵 Kitchen update request received:', { orderId, status, bodyKeys: Object.keys(req.body) });
 
-    // Validate inputs (coerce orderId to number)
     const parsedOrderId = Number(orderId);
     if (!parsedOrderId || !Number.isFinite(parsedOrderId) || parsedOrderId <= 0) {
       console.warn('❌ Invalid orderId:', orderId);
@@ -90,13 +65,11 @@ exports.updateKitchenStatus = async (req, res) => {
       return ApiResponse.validationError(res, null, 'الحالة مطلوبة وصحيحة');
     }
 
-    // التحقق من الحالات المسموحة
-    // Database ENUM values: 'Pending', 'Processing', 'Ready', 'Delivered', 'Cancelled'
     const statusMap = {
       'Pending': 'Pending',
-      'Processing': 'Processing',    // جاري المعالجة
-      'Ready': 'Ready',         // جاهز
-      'Completed': 'Delivered',     // مكتمل -> تم التسليم
+      'Processing': 'Processing',
+      'Ready': 'Ready',
+      'Completed': 'Delivered',
       'Delivered': 'Delivered',
       'Cancelled': 'Cancelled'
     };
@@ -108,14 +81,9 @@ exports.updateKitchenStatus = async (req, res) => {
 
     const dbStatus = statusMap[status];
     console.log(`✅ Mapped status '${status}' to database value '${dbStatus}'`);
-
     console.log('✅ Validation passed, updating order:', parsedOrderId, 'to status:', dbStatus);
 
-    // تحديث حالة الطلب
-    const updateQuery = `UPDATE Orders SET Order_Status = ? WHERE Order_ID = ?`;
-    
-    const result = await db.query(updateQuery, [dbStatus, parsedOrderId]);
-    console.log('✅ Database update result:', result);
+    await kitchenModel.updateOrderStatus(parsedOrderId, dbStatus);
 
     Logger.audit('KITCHEN_ORDER_UPDATED', req.session.user?.id, { orderId: parsedOrderId, status });
 

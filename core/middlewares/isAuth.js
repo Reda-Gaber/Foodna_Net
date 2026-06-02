@@ -12,9 +12,9 @@ function isAuthenticated(req, res, next) {
     return next();
   }
 
-  // لو مش logged in، ارجعه لصفحة اللوجين
-  if (!req.session?.user) {
-    return res.redirect('/login');
+  // لو مش logged in، ارجعه لصفحة التسجيل/الدخول الموحدة
+  if (!req.session?.user && !req.session?.userId) {
+    return res.redirect('/user/register');
   }
 
   next();

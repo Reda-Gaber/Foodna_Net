@@ -8,6 +8,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600&family=Montserrat:wght@400;500;600&family=Oswald:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         @media print {
             body { margin: 0; padding: 20px; }
@@ -15,17 +17,22 @@
         }
         
         body {
-            background: var(--white-color);
+            background: var(--section-background);
             padding: var(--spacing-xl);
-            max-width: 400px;
-            margin: 0 auto;
+            min-height: 100vh;
         }
         
+        .page-wrapper {
+            max-width: 420px;
+            margin: 0 auto;
+        }
+
         .receipt {
             background: var(--white-color);
             border: 2px solid var(--border-color);
             border-radius: var(--radius-md);
             padding: var(--spacing-lg);
+            box-shadow: var(--shadow-md);
         }
         
         .receipt-header {
@@ -38,20 +45,38 @@
         .receipt-header h1 {
             color: var(--main-color);
             margin-bottom: var(--spacing-xs);
+            font-size: 1.8rem;
+        }
+
+        .receipt-header p {
+            margin: 0;
+            color: var(--text-color);
+            font-size: 0.95rem;
         }
         
         .receipt-info {
             margin: var(--spacing-md) 0;
+            font-size: 0.9rem;
         }
         
         .receipt-info-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: var(--spacing-xs);
+            margin-bottom: var(--spacing-sm);
+            align-items: center;
+        }
+
+        .receipt-info-row span:first-child {
+            color: var(--text-color);
+        }
+
+        .receipt-info-row strong {
+            color: var(--title-color);
+            font-weight: var(--font-semi-bold);
         }
         
         .receipt-items {
-            margin: var(--spacing-md) 0;
+            margin: var(--spacing-lg) 0;
             border-top: 1px dashed var(--border-color);
             border-bottom: 1px dashed var(--border-color);
             padding: var(--spacing-md) 0;
@@ -60,7 +85,39 @@
         .receipt-item {
             display: flex;
             justify-content: space-between;
-            margin-bottom: var(--spacing-sm);
+            align-items: flex-start;
+            margin-bottom: var(--spacing-md);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .receipt-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .receipt-item-left {
+            flex: 1;
+        }
+
+        .receipt-item-name {
+            font-weight: var(--font-semi-bold);
+            color: var(--title-color);
+            margin-bottom: 4px;
+            font-size: 0.95rem;
+        }
+        
+        .receipt-item-detail {
+            font-size: 0.82rem;
+            color: var(--text-color);
+        }
+
+        .receipt-item-total {
+            font-weight: var(--font-semi-bold);
+            color: var(--main-color);
+            min-width: 80px;
+            text-align: left;
         }
         
         .receipt-total {
@@ -74,12 +131,15 @@
             justify-content: space-between;
             margin-bottom: var(--spacing-sm);
             font-weight: var(--font-medium);
+            font-size: 0.95rem;
         }
         
         .receipt-total-row.final {
-            font-size: var(--h2-font-size);
+            font-size: 1.2rem;
             font-weight: var(--font-semi-bold);
             color: var(--main-color);
+            padding-top: var(--spacing-sm);
+            border-top: 1px solid var(--border-color);
         }
         
         .receipt-footer {
@@ -88,42 +148,117 @@
             padding-top: var(--spacing-md);
             border-top: 1px dashed var(--border-color);
             color: var(--text-color);
-            font-size: 0.875rem;
+            font-size: 0.85rem;
+        }
+
+        .receipt-footer p {
+            margin: 4px 0;
+        }
+
+        /* Controls */
+        .no-print {
+            margin-top: var(--spacing-lg);
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .print-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-md);
+        }
+
+        .btn {
+            padding: var(--spacing-md) var(--spacing-lg);
+            border: none;
+            border-radius: var(--radius-md);
+            font-family: var(--font-1);
+            font-size: 0.95rem;
+            font-weight: var(--font-semi-bold);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--main-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #3fa367;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: #e8e8e8;
+            border-color: #999;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-loading i {
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .close-button {
+            text-align: center;
+        }
+
+        .close-button button {
+            width: 100%;
+        }
+
+        /* Status Badge */
+        .order-status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: var(--font-semi-bold);
+            background: #f0fdf4;
+            color: #16a34a;
+            margin-top: 8px;
         }
     </style>
 </head>
 <body>
-    <div class="receipt">
-        <div class="receipt-header">
-            <h1>Foodna Shop</h1>
-            <p>نقاط البيع</p>
-        </div>
-
-        <div class="receipt-info">
-            <div class="receipt-info-row">
-                <span>رقم الطلب:</span>
-                <strong>#<%= order.Order_ID %></strong>
+    <div class="page-wrapper">
+        <div class="receipt">
+            <div class="receipt-header">
+                <h1>Foodna Shop</h1>
+                <p>نقاط البيع</p>
             </div>
-            <div class="receipt-info-row">
-                <span>التاريخ:</span>
-                <span><%= new Date(order.Created_At).toLocaleString('ar-EG') %></span>
-            </div>
-            <div class="receipt-info-row">
-                <span>طريقة الدفع:</span>
-                <span><%= order.Payment_Method === 'cash' ? 'نقدي' : 'بطاقة' %></span>
-            </div>
-        </div>
 
         <div class="receipt-items">
             <% items.forEach(item => { %>
                 <div class="receipt-item">
-                    <div>
-                        <div><%= item.Product_Name %></div>
-                        <div style="font-size: 0.875rem; color: var(--text-color);">
+                    <div class="receipt-item-left">
+                        <div class="receipt-item-name"><%= item.Product_Name %></div>
+                        <div class="receipt-item-detail">
                             <%= item.Quantity %> × <%= parseFloat(item.Price).toFixed(2) %> جنيه
                         </div>
                     </div>
-                    <div>
+                    <div class="receipt-item-total">
                         <%= (item.Quantity * parseFloat(item.Price)).toFixed(2) %> جنيه
                     </div>
                 </div>
@@ -150,17 +285,114 @@
         <div class="receipt-footer">
             <p>شكراً لزيارتك!</p>
             <p>Foodna Shop © <%= new Date().getFullYear() %></p>
+            <div class="order-status-badge" id="orderStatus">
+                جاهز للطباعة
+            </div>
         </div>
     </div>
 
-    <div class="no-print" style="text-align: center; margin-top: var(--spacing-lg);">
-        <button class="btn btn-primary" onclick="window.print()">
-            <i class="ri-printer-line"></i> طباعة
-        </button>
-        <button class="btn btn-secondary" onclick="window.close()" style="margin-right: var(--spacing-sm);">
-            إغلاق
-        </button>
+    <div class="no-print">
+        <div class="print-buttons">
+            <button class="btn btn-primary" id="printThermalBtn" onclick="handlePrintThermal()">
+                <i class="ri-printer-line"></i>
+                <span>طباعة حرارية</span>
+            </button>
+            <button class="btn btn-primary" onclick="handlePrintBrowser()">
+                <i class="ri-print-line"></i>
+                <span>طباعة عادية</span>
+            </button>
+        </div>
+        <div class="close-button">
+            <button class="btn btn-secondary" onclick="window.close()">
+                <i class="ri-close-line"></i>
+                إغلاق
+            </button>
+        </div>
     </div>
+    </div>
+
+    <!-- Load Thermal Printer Library -->
+    <script src="/js/thermal-printer.js"></script>
+    <script>
+        // البيانات من السيرفر
+        const orderData = <%- JSON.stringify(order) %>;
+        const itemsData = <%- JSON.stringify(items) %>;
+        const discountData = <%- JSON.stringify(discount || 0) %>;
+
+        /**
+         * طباعة الإيصال الحراري
+         */
+        async function handlePrintThermal() {
+            const btn = document.getElementById('printThermalBtn');
+            const originalHTML = btn.innerHTML;
+            
+            try {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="ri-loader-4-line" style="animation: spin 0.8s linear infinite;"></i><span>جاري الطباعة...</span>';
+                
+                const result = await quickPrint(orderData, itemsData, discountData, 'thermal');
+                
+                if (result.success) {
+                    showNotification('تمت الطباعة بنجاح', 'success');
+                    document.getElementById('orderStatus').textContent = '✓ تمت الطباعة';
+                    document.getElementById('orderStatus').style.color = '#16a34a';
+                } else {
+                    showNotification(result.message || 'فشلت الطباعة الحرارية', 'warning');
+                    // الرجوع للطباعة العادية كبديل
+                    setTimeout(() => {
+                        const fallback = confirm('هل تريد الطباعة العادية بدلاً منها؟');
+                        if (fallback) handlePrintBrowser();
+                    }, 500);
+                }
+            } catch (error) {
+                console.error('خطأ:', error);
+                showNotification('حدث خطأ في الطباعة', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalHTML;
+            }
+        }
+
+        /**
+         * طباعة الإيصال الطباعة العادية
+         */
+        function handlePrintBrowser() {
+            try {
+                const printer = createReceiptPrinter(orderData, itemsData, discountData);
+                printer.printBrowser();
+                showNotification('فتحت نافذة الطباعة', 'success');
+                document.getElementById('orderStatus').textContent = '✓ تمت الطباعة';
+                document.getElementById('orderStatus').style.color = '#16a34a';
+            } catch (error) {
+                console.error('خطأ:', error);
+                showNotification('حدث خطأ في الطباعة', 'error');
+            }
+        }
+
+        /**
+         * عرض إشعار
+         */
+        function showNotification(message, type = 'info') {
+            if (window.Swal) {
+                Swal.fire({
+                    title: type === 'success' ? '✓ نجح' : type === 'error' ? '✗ خطأ' : 'تنبيه',
+                    text: message,
+                    icon: type,
+                    timer: 3000,
+                    position: 'top-end',
+                    toast: true,
+                    showConfirmButton: false
+                });
+            } else {
+                alert(message);
+            }
+        }
+
+        // تحديث حالة الطلب
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('orderStatus').textContent = `رقم الطلب: #${orderData.Order_ID} - جاهز للطباعة`;
+        });
+    </script>
 </body>
 </html>
 

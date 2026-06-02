@@ -1,6 +1,7 @@
 const authModel = require('./auth.model');
 const bcrypt = require('bcrypt');
 const db = require('../../config/db');
+const { resolveCustomerId } = require('../../core/middlewares/sessionHandler');
 
 const checkEmailExists = async (email) => {
   const user = await authModel.findUserByEmail(email);
@@ -43,7 +44,10 @@ const createAccount = async (req, res) => {
     });
 
     // الـ ID بييجي من الـ database (auto increment) مش random
-    const customerId = newUser.insertId || newUser.Customer_Id;
+    const customerId = resolveCustomerId(newUser) || newUser.insertId;
+    if (!customerId) {
+      return res.status(500).json({ error: 'تم إنشاء الحساب لكن تعذر تحديد المعرّف، سجّل الدخول يدوياً' });
+    }
 
     req.session.userId        = customerId;
     req.session.email         = email;
@@ -97,14 +101,19 @@ const login = async (req, res) => {
       return res.status(401).json({ success: false, message: 'البريد الإلكتروني أو كلمة المرور غير صحيحة' });
     }
 
-    // حفظ كامل بيانات الـ session
-    req.session.userId        = user.Customer_Id;
+    const customerId = resolveCustomerId(user);
+    if (!customerId) {
+      console.error('[customer login] Cannot resolve Customer ID. Row keys:', Object.keys(user));
+      return res.status(500).json({ success: false, message: 'خطأ في بيانات الحساب، تواصل مع الدعم' });
+    }
+
+    req.session.userId        = customerId;
     req.session.email         = user.Email;
     req.session.role          = 'Client';
     req.session.authenticated = true;
     req.session.user = {
-      id:    user.Customer_Id,
-      name:  user.Customer_Name,
+      id:    customerId,
+      name:  user.Customer_Name || user.customer_name || '',
       email: user.Email,
       role:  'Client'
     };

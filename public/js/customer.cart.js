@@ -34,7 +34,7 @@
     // ✅ التحقق من تسجيل الدخول مباشرة من السيرفر
     let authOk = false;
     try {
-      const authRes = await fetch('/auth/api/auth/check', {
+      const authRes = await fetch('/auth/api/auth/check?audience=customer', {
         credentials: 'include',
         headers: { 'Accept': 'application/json' }
       });

@@ -5,7 +5,53 @@
 const db = require('../../config/db');
 const bcrypt = require('bcrypt');
 const Logger = require('../../core/utils/logger');
-const { getSessionUserId } = require('../../core/middlewares/sessionHandler');
+const {
+  getSessionUserId,
+  hasSessionAuth,
+  ensureClientSessionIds,
+  resolveCustomerId,
+  resolveEmployeeId
+} = require('../../core/middlewares/sessionHandler');
+
+async function restoreSessionUserId(req) {
+  if (!req.session?.email) return null;
+  if (req.session.userId && req.session.user?.id) {
+    return req.session.userId;
+  }
+
+  const role = req.session.role || req.session.user?.role;
+  if (!role) return null;
+
+  if (role === 'Client') {
+    return ensureClientSessionIds(req);
+  }
+
+  try {
+    const [rows] = await db.query(
+      'SELECT * FROM Employees WHERE Email = ? LIMIT 1',
+      [req.session.email]
+    );
+    const resolvedId = resolveEmployeeId(rows[0]);
+    if (!resolvedId) return null;
+
+    req.session.userId = resolvedId;
+    req.session.user = {
+      ...(req.session.user || {}),
+      id: resolvedId,
+      email: req.session.user?.email || rows[0].Email,
+      name: req.session.user?.name || rows[0].Employee_Name || '',
+      role
+    };
+
+    await new Promise((resolve, reject) => {
+      req.session.save((err) => (err ? reject(err) : resolve()));
+    });
+    return resolvedId;
+  } catch (error) {
+    console.error('[restoreSessionUserId] Failed to resolve session ID:', error);
+    return null;
+  }
+}
 
 /**
  * تسجيل الدخول الموحد
@@ -72,9 +118,9 @@ exports.unifiedLogin = async (req, res) => {
     // تحديد الـ ID بناءً على الدور (نستخدم عدة احتمالات لاسم العمود)
     let resolvedId;
     if (userRole === 'Client') {
-      resolvedId = user.Customer_ID || user.Customer_Id || user.customer_id;
+      resolvedId = resolveCustomerId(user);
     } else {
-      resolvedId = user.Employee_ID || user.Employee_Id || user.employee_id;
+      resolvedId = resolveEmployeeId(user);
     }
     if (!resolvedId) {
       console.error('[unifiedLogin] Cannot resolve user ID! idField=', idField, 'user keys:', Object.keys(user));
@@ -187,59 +233,57 @@ exports.unifiedLogout = (req, res) => {
  * التحقق من حالة تسجيل الدخول
  */
 exports.checkAuth = async (req, res) => {
-  // Debug: log session info (kept for dev)
-  console.log('[checkAuth] Session ID:', req.sessionID);
-  console.log('[checkAuth] Session userId:', req.session.userId);
-  console.log('[checkAuth] Session user:', req.session.user);
-  console.log('[checkAuth] Session authenticated:', req.session.authenticated);
+  try {
+    // express-session يحمّل الجلسة تلقائياً مع كل طلب — لا حاجة لـ reload هنا
+    const authOk = hasSessionAuth(req);
 
-  // If session appears empty, attempt to re‑hydrate from MySQL directly
-  if (!req.session.user && !req.session.userId && !req.session.authenticated) {
-    if (req.cookies) {
-      const sessionCookie = req.cookies[process.env.SESSION_KEY || 'session_cookie'];
-      if (sessionCookie) {
-        try {
-          const [rows] = await db.query(
-            'SELECT data FROM sessions WHERE session_id = ? AND expires > NOW()',
-            [sessionCookie]
-          );
-          if (rows && rows.length > 0 && rows[0].data) {
-            const parsed = JSON.parse(rows[0].data);
-            // Merge DB session data into req.session (fresh object)
-            Object.assign(req.session, parsed);
-            console.log('[checkAuth] Session re‑hydrated from DB');
-          }
-        } catch (e) {
-          console.error('Error re‑hydrating session from DB:', e);
-        }
-      }
+    if (!authOk) {
+      return res.json({
+        success: true,
+        authenticated: false,
+        isClient: false
+      });
     }
-  }
 
-  // التحقق من أي من الطرق الممكنة لتخزين الـ session
-  const isAuthenticated = !!(
-    req.session.user ||
-    req.session.userId ||
-    req.session.authenticated
-  );
+    const role = req.session.user?.role || req.session.role || 'Client';
+    if (role === 'Client') {
+      await ensureClientSessionIds(req);
+    } else if (!req.session.userId && !req.session.user?.id) {
+      await restoreSessionUserId(req);
+    }
 
-  if (isAuthenticated) {
-    const user = req.session.user || {
-      id:    req.session.userId,
-      name:  req.session.name || '',
-      email: req.session.email || '',
-      role:  req.session.role || 'Client'
+    const user = {
+      ...req.session.user,
+      id: req.session.user?.id || req.session.userId,
+      name: req.session.user?.name || req.session.name || '',
+      email: req.session.user?.email || req.session.email || '',
+      role
     };
+
+    const isClient = user.role === 'Client';
+    const forCustomerUI = req.query.audience === 'customer';
+
+    if (forCustomerUI) {
+      return res.json({
+        success: true,
+        authenticated: isClient,
+        isClient,
+        user: isClient ? user : null
+      });
+    }
 
     return res.json({
       success: true,
       authenticated: true,
+      isClient,
       user
     });
+  } catch (err) {
+    console.error('[checkAuth] Error:', err);
+    return res.json({
+      success: false,
+      authenticated: false,
+      message: 'خطأ في التحقق من حالة المستخدم'
+    });
   }
-
-  return res.json({
-    success: true,
-    authenticated: false
-  });
 };

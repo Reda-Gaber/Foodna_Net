@@ -18,7 +18,7 @@
    */
   async function checkAuthStatus() {
     try {
-      const response = await fetch('/auth/api/auth/check', {
+      const response = await fetch('/auth/api/auth/check?audience=customer', {
         credentials: 'include',
         method: 'GET',
         headers: { 'Accept': 'application/json' }
@@ -119,7 +119,7 @@
     } catch (e) {
     }
     // send user to register page with next query param so server can honor it too
-    window.location.href = '/register?next=' + next;
+    window.location.href = '/user/register?next=' + next;
   };
 
   /**

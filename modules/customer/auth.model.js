@@ -16,13 +16,14 @@ exports.findUserByEmail = async (email) => {
   }
 };
 
-exports.createUser = async ({Customer_Id, Customer_Name, Email, Phone, Password}) => {
+exports.createUser = async ({ Customer_Name, Email, Phone, Password }) => {
   try {
-    await db.query(
-      "INSERT INTO Customers (Customer_Id, Customer_Name, Email, Phone, Password) VALUES (?, ?, ?, ?, ?)",
-      [Customer_Id, Customer_Name, Email, Phone, Password]
+    const [result] = await db.query(
+      'INSERT INTO Customers (Customer_Name, Email, Phone, Password) VALUES (?, ?, ?, ?)',
+      [Customer_Name, Email, Phone, Password]
     );
-    return { Customer_Id, Customer_Name, Email, Phone, Password };
+    const insertId = result.insertId;
+    return { insertId, Customer_Id: insertId, Customer_Name, Email, Phone };
   } catch (error) {
     throw error;
   }

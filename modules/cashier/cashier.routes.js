@@ -11,24 +11,50 @@ const { requireEmployee, authorizeRole } = require('../../core/middlewares/authM
 // PROTECTED ROUTES (Page & Dashboard)
 // =====================================================
 
+// Middleware: إعادة تحميل الجلسة من قاعدة البيانات
+router.use((req, res, next) => {
+  if (req.session && req.session.reload) {
+    req.session.reload((err) => {
+      if (err) {
+        console.error('❌ Session reload error:', err);
+      } else {
+        console.log('✅ Session reloaded from database');
+      }
+      next();
+    });
+  } else {
+    next();
+  }
+});
+
 /**
  * صفحة لوحة تحكم الكاشير
  * يتطلب تسجيل دخول موظف كاشير
  */
 router.get('/', (req, res) => {
+  console.log('🔵 Cashier dashboard access attempt');
+  console.log('Session data:', {
+    user: req.session?.user,
+    authenticated: req.session?.authenticated,
+    role: req.session?.user?.role
+  });
+  
   // التحقق من تسجيل الدخول
   if (!req.session.user) {
+    console.warn('⚠️ No session user found, redirecting to login');
     return res.redirect('/login');
   }
   
   // التحقق من الدور
   const role = req.session.user.role;
   if (role !== 'Cashier') {
+    console.warn('⚠️ User role not authorized:', role);
     return res.status(403).render('error', { 
       message: 'ليس لديك صلاحية للوصول إلى قسم الكاشير' 
     });
   }
   
+  console.log('✅ Cashier dashboard access granted for role:', role);
   res.render('cashier/dashboard', { user: req.session.user });
 });
 
@@ -36,42 +62,7 @@ router.get('/', (req, res) => {
  * صفحة الإيصال
  * متاحة بدون تسجيل دخول (للطلبات الجديدة)
  */
-router.get('/receipt/:orderId', async (req, res) => {
-  try {
-    const { orderId } = req.params;
-    const db = require('../../config/db');
-    
-    const [orders] = await db.query(
-      'SELECT * FROM Orders WHERE Order_ID = ?',
-      [orderId]
-    );
-    
-    if (orders.length === 0) {
-      return res.status(404).render('error', { message: 'الطلب غير موجود' });
-    }
-    
-    const order = orders[0];
-    
-    const [items] = await db.query(
-      `SELECT oi.*, p.Product_Name
-       FROM Order_Items oi
-       JOIN Products p ON oi.Product_ID = p.Product_ID
-       WHERE oi.Order_ID = ?`,
-      [orderId]
-    );
-    
-    // الحصول على الخصم من الكوبون
-    const [discounts] = await db.query(
-      'SELECT Discount_Amount FROM Order_Discounts WHERE Order_ID = ?',
-      [orderId]
-    );
-    const discount = discounts.length > 0 ? parseFloat(discounts[0].Discount_Amount) : 0;
-    
-    res.render('cashier/receipt', { order, items, discount });
-  } catch (error) {
-    res.status(500).render('error', { message: 'حدث خطأ في جلب الإيصال' });
-  }
-});
+router.get('/receipt/:orderId', cashierController.getReceiptPage);
 
 // =====================================================
 // PUBLIC API ROUTES (No Authentication Required)
