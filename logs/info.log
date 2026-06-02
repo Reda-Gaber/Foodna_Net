@@ -5142,3 +5142,199 @@
 [2026-05-31T08:14:56.662Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
 [2026-05-31T08:14:56.675Z] INFO: Server running on http://localhost:3001
 [2026-05-31T08:14:56.676Z] INFO: Environment: development
+[2026-06-01T14:39:10.868Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T14:39:10.871Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T14:39:10.883Z] INFO: Server running on http://localhost:3001
+[2026-06-01T14:39:10.884Z] INFO: Environment: development
+[2026-06-01T15:11:04.612Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T15:11:04.614Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T15:11:04.629Z] INFO: Server running on http://localhost:3001
+[2026-06-01T15:11:04.630Z] INFO: Environment: development
+[2026-06-01T15:15:17.432Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T15:15:17.441Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T15:15:17.467Z] INFO: Server running on http://localhost:3001
+[2026-06-01T15:15:17.468Z] INFO: Environment: development
+[2026-06-01T15:15:40.871Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T15:15:40.874Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T15:15:40.889Z] INFO: Server running on http://localhost:3001
+[2026-06-01T15:15:40.938Z] INFO: Environment: development
+[2026-06-01T15:16:07.068Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T15:16:07.076Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T15:16:07.105Z] INFO: Server running on http://localhost:3001
+[2026-06-01T15:16:07.107Z] INFO: Environment: development
+[2026-06-01T15:20:35.873Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T15:20:35.875Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T15:20:35.884Z] INFO: Server running on http://localhost:3001
+[2026-06-01T15:20:35.885Z] INFO: Environment: development
+[2026-06-01T15:24:52.155Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T15:24:52.158Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T15:24:52.176Z] INFO: Server running on http://localhost:3001
+[2026-06-01T15:24:52.178Z] INFO: Environment: development
+[2026-06-01T15:29:04.507Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T15:29:04.510Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T15:29:04.526Z] INFO: Server running on http://localhost:3001
+[2026-06-01T15:29:04.527Z] INFO: Environment: development
+[2026-06-01T15:29:15.254Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T15:29:15.257Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T15:29:15.274Z] INFO: Server running on http://localhost:3001
+[2026-06-01T15:29:15.294Z] INFO: Environment: development
+[2026-06-01T15:32:06.329Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T15:32:06.332Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T15:32:06.345Z] INFO: Server running on http://localhost:3001
+[2026-06-01T15:32:06.346Z] INFO: Environment: development
+[2026-06-01T15:34:32.950Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T15:34:32.953Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T15:34:32.973Z] INFO: Server running on http://localhost:3001
+[2026-06-01T15:34:32.976Z] INFO: Environment: development
+[2026-06-01T15:38:06.732Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T15:38:06.735Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T15:38:06.744Z] INFO: Server running on http://localhost:3001
+[2026-06-01T15:38:06.745Z] INFO: Environment: development
+[2026-06-01T17:05:19.494Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T17:05:19.505Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T17:05:19.518Z] INFO: Server running on http://localhost:3001
+[2026-06-01T17:05:19.519Z] INFO: Environment: development
+[2026-06-01T17:16:19.395Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T17:16:19.398Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T17:16:19.409Z] INFO: Server running on http://localhost:3001
+[2026-06-01T17:16:19.409Z] INFO: Environment: development
+[2026-06-01T17:17:37.229Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T17:17:37.232Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T17:17:37.250Z] INFO: Server running on http://localhost:3001
+[2026-06-01T17:17:37.255Z] INFO: Environment: development
+[2026-06-01T17:18:15.398Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T17:18:15.401Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T17:18:15.415Z] INFO: Server running on http://localhost:3002
+[2026-06-01T17:18:15.416Z] INFO: Environment: development
+[2026-06-01T17:21:00.339Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T17:21:00.344Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T17:21:00.362Z] INFO: Server running on http://localhost:3002
+[2026-06-01T17:21:00.378Z] INFO: Environment: development
+[2026-06-01T17:21:42.349Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T17:21:42.357Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T17:21:42.482Z] INFO: Server running on http://localhost:3002
+[2026-06-01T17:21:42.517Z] INFO: Environment: development
+[2026-06-01T17:21:46.682Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T17:21:46.686Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T17:21:46.699Z] INFO: Server running on http://localhost:3002
+[2026-06-01T17:21:46.701Z] INFO: Environment: development
+[2026-06-01T17:21:51.117Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T17:21:51.122Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T17:21:51.159Z] INFO: Server running on http://localhost:3002
+[2026-06-01T17:21:51.185Z] INFO: Environment: development
+[2026-06-01T17:21:54.283Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T17:21:54.287Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T17:21:54.305Z] INFO: Server running on http://localhost:3002
+[2026-06-01T17:21:54.311Z] INFO: Environment: development
+[2026-06-01T17:22:03.076Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T17:22:03.080Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T17:22:03.088Z] INFO: Server running on http://localhost:3002
+[2026-06-01T17:22:03.092Z] INFO: Environment: development
+[2026-06-01T17:23:29.411Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T17:23:29.415Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T17:23:29.429Z] INFO: Server running on http://localhost:3002
+[2026-06-01T17:23:29.437Z] INFO: Environment: development
+[2026-06-01T17:24:56.658Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T17:24:56.661Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T17:24:56.673Z] INFO: Server running on http://localhost:3002
+[2026-06-01T17:24:56.675Z] INFO: Environment: development
+[2026-06-01T17:25:00.699Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T17:25:00.705Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T17:25:00.718Z] INFO: Server running on http://localhost:3002
+[2026-06-01T17:25:00.721Z] INFO: Environment: development
+[2026-06-01T17:25:05.012Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T17:25:05.037Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T17:25:05.062Z] INFO: Server running on http://localhost:3002
+[2026-06-01T17:25:05.064Z] INFO: Environment: development
+[2026-06-01T17:25:07.391Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T17:25:07.394Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T17:25:07.410Z] INFO: Server running on http://localhost:3002
+[2026-06-01T17:25:07.412Z] INFO: Environment: development
+[2026-06-01T17:25:12.209Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T17:25:12.213Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T17:25:12.231Z] INFO: Server running on http://localhost:3002
+[2026-06-01T17:25:12.237Z] INFO: Environment: development
+[2026-06-01T17:25:21.812Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T17:25:21.822Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T17:25:21.838Z] INFO: Server running on http://localhost:3002
+[2026-06-01T17:25:21.839Z] INFO: Environment: development
+[2026-06-01T17:26:06.147Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T17:26:06.149Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T17:26:06.161Z] INFO: Server running on http://localhost:3002
+[2026-06-01T17:26:06.162Z] INFO: Environment: development
+[2026-06-01T17:27:27.644Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T17:27:27.647Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T17:27:27.659Z] INFO: Server running on http://localhost:3002
+[2026-06-01T17:27:27.660Z] INFO: Environment: development
+[2026-06-01T17:27:32.483Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T17:27:32.486Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T17:27:32.495Z] INFO: Server running on http://localhost:3002
+[2026-06-01T17:27:32.497Z] INFO: Environment: development
+[2026-06-01T17:32:04.576Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T17:32:04.582Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T17:32:04.592Z] INFO: Server running on http://localhost:3002
+[2026-06-01T17:32:04.593Z] INFO: Environment: development
+[2026-06-01T17:32:09.751Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T17:32:09.754Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T17:32:09.765Z] INFO: Server running on http://localhost:3002
+[2026-06-01T17:32:09.767Z] INFO: Environment: development
+[2026-06-01T17:38:32.956Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T17:38:32.959Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T17:38:32.971Z] INFO: Server running on http://localhost:3002
+[2026-06-01T17:38:32.972Z] INFO: Environment: development
+[2026-06-01T17:38:49.755Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T17:38:49.759Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T17:38:49.772Z] INFO: Server running on http://localhost:3002
+[2026-06-01T17:38:49.773Z] INFO: Environment: development
+[2026-06-01T17:48:05.450Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T17:48:05.453Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T17:48:05.467Z] INFO: Server running on http://localhost:3002
+[2026-06-01T17:48:05.468Z] INFO: Environment: development
+[2026-06-01T17:52:11.774Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T17:52:11.776Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T17:52:11.787Z] INFO: Server running on http://localhost:3002
+[2026-06-01T17:52:11.788Z] INFO: Environment: development
+[2026-06-01T18:12:29.193Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T18:12:29.196Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T18:12:29.209Z] INFO: Server running on http://localhost:3002
+[2026-06-01T18:12:29.210Z] INFO: Environment: development
+[2026-06-01T18:12:55.140Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T18:12:55.143Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T18:12:55.153Z] INFO: Server running on http://localhost:3002
+[2026-06-01T18:12:55.154Z] INFO: Environment: development
+[2026-06-01T18:13:02.435Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T18:13:02.438Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T18:13:02.453Z] INFO: Server running on http://localhost:3002
+[2026-06-01T18:13:02.455Z] INFO: Environment: development
+[2026-06-01T18:13:07.527Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T18:13:07.533Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T18:13:07.543Z] INFO: Server running on http://localhost:3002
+[2026-06-01T18:13:07.544Z] INFO: Environment: development
+[2026-06-01T18:16:57.197Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T18:16:57.205Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T18:16:57.225Z] INFO: Server running on http://localhost:3002
+[2026-06-01T18:16:57.227Z] INFO: Environment: development
+[2026-06-01T18:18:15.577Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T18:18:15.580Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T18:18:15.595Z] INFO: Server running on http://localhost:3002
+[2026-06-01T18:18:15.597Z] INFO: Environment: development
+[2026-06-01T18:23:51.127Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-01T18:23:51.133Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-01T18:23:51.142Z] INFO: Server running on http://localhost:3002
+[2026-06-01T18:23:51.143Z] INFO: Environment: development
+[2026-06-02T12:33:08.631Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T12:33:08.634Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-02T12:33:08.646Z] INFO: Server running on http://localhost:3002
+[2026-06-02T12:33:08.647Z] INFO: Environment: development
+[2026-06-02T12:59:25.783Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T12:59:25.785Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-02T12:59:25.794Z] INFO: Server running on http://localhost:3002
+[2026-06-02T12:59:25.795Z] INFO: Environment: development
+[2026-06-02T13:06:46.732Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T13:06:46.745Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-02T13:06:46.799Z] INFO: Server running on http://localhost:3002
+[2026-06-02T13:06:46.801Z] INFO: Environment: development
+[2026-06-02T13:08:51.518Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T13:08:51.538Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-02T13:08:51.557Z] INFO: Server running on http://localhost:3002
+[2026-06-02T13:08:51.567Z] INFO: Environment: development

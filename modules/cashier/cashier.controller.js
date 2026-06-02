@@ -2,6 +2,7 @@
  * Cashier Controller
  * معالجة منطق قسم الكاشير (POS System)
  */
+const CashierModel = require('./cashier.model');
 const db = require('../../config/db');
 const Order = require('../customer/order.model');
 const Coupon = require('../admin/coupon.model');
@@ -13,14 +14,7 @@ const Logger = require('../../core/utils/logger');
  */
 exports.getProducts = async (req, res) => {
   try {
-    // Simple query - get all products with their quantity
-    const [products] = await db.query(
-      `SELECT p.Product_ID, p.Product_Name, p.Price, p.Discount, p.Image, 
-              p.Quantity, p.Category, p.Description
-       FROM Products p
-       ORDER BY p.Product_Name`
-    );
-
+    const products = await CashierModel.fetchProducts();
     return ApiResponse.success(res, products, 'تم جلب المنتجات بنجاح');
   } catch (error) {
     Logger.error('Get cashier products error', error);
@@ -33,11 +27,7 @@ exports.getProducts = async (req, res) => {
  */
 exports.getOffers = async (req, res) => {
   try {
-    // TODO: عندما يتم إنشاء جدول Offers
-    const [offers] = await db.query(
-      `SELECT * FROM Offers WHERE Is_Active = 1`
-    ).catch(() => [[]]);
-
+    const offers = await CashierModel.fetchOffers();
     return ApiResponse.success(res, offers, 'تم جلب العروض بنجاح');
   } catch (error) {
     Logger.error('Get offers error', error);
@@ -165,100 +155,8 @@ function validatePaymentMethod(paymentMethod) {
  * Helper function - إنشاء طلب (مشترك بين الـ endpoints)
  * @private
  */
-async function _createOrderTransaction(connection, {
-  items,
-  totalAmount,
-  paymentMethod,
-  customerId,
-  couponCode,
-  discount,
-  notes
-}) {
-  try {
-    // التحقق من الكوبون إذا كان موجوداً
-    let finalDiscount = discount || 0;
-    let couponId = null;
-
-    if (couponCode) {
-      try {
-        const coupon = await Coupon.validateCoupon(couponCode);
-        if (coupon) {
-          finalDiscount = Coupon.calculateDiscount(coupon, totalAmount);
-          couponId = coupon.Coupon_ID;
-        }
-      } catch (err) {
-        Logger.warn(`Coupon validation failed: ${couponCode}`, err);
-        // لا نرفع خطأ - الكوبون ليس حرجاً
-      }
-    }
-
-    const finalAmount = Math.max(0, totalAmount - finalDiscount);
-
-    if (process.env.NODE_ENV !== 'production') {
-      console.log('📝 Creating order with data:', {
-        customerId: customerId || null,
-        finalAmount,
-        paymentMethod,
-        notes
-      });
-    }
-
-    // إنشاء الطلب
-    const [orderResult] = await connection.query(
-      `INSERT INTO Orders (Customer_ID, Total_Amount, Order_Status, Delivery_Address, Payment_Method, Created_At)
-       VALUES (?, ?, ?, ?, ?, NOW())`,
-      [customerId || null, finalAmount, 'Pending', 'في المتجر', paymentMethod]
-    );
-
-    const orderId = orderResult.insertId;
-    if (process.env.NODE_ENV !== 'production') {
-      console.log('✅ Order created with ID:', orderId);
-    }
-
-    // إضافة تفاصيل الطلب
-    for (const item of items) {
-      if (process.env.NODE_ENV !== 'production') {
-        console.log(`📦 Adding item: productId=${item.productId}, qty=${item.quantity}, price=${item.price}`);
-      }
-      await connection.query(
-        `INSERT INTO Order_Items (Order_ID, Product_ID, Quantity, Price)
-         VALUES (?, ?, ?, ?)`,
-        [orderId, item.productId, item.quantity, parseFloat(item.price)]
-      );
-    }
-
-    if (process.env.NODE_ENV !== 'production') {
-      console.log('✅ All items added to order');
-    }
-
-    // تطبيق الكوبون إذا كان موجوداً
-    if (couponId && finalDiscount > 0) {
-      try {
-        await Coupon.applyCoupon(orderId, couponId, finalDiscount);
-      } catch (err) {
-        Logger.warn(`Failed to apply coupon ${couponId}: ${err.message}`);
-        // لا نرفع خطأ - الطلب تم إنشاؤه بنجاح
-      }
-    }
-
-    return {
-      orderId,
-      orderNumber: `#${orderId}`,
-      totalAmount,
-      discount: finalDiscount,
-      finalAmount,
-      paymentMethod
-    };
-  } catch (error) {
-    if (process.env.NODE_ENV !== 'production') {
-      console.error('❌ Transaction error:', {
-        message: error.message,
-        code: error.code,
-        sql: error.sql
-      });
-    }
-    throw error;
-  }
+async function _createOrderTransaction(connection, orderParams) {
+  return CashierModel.createOrder(connection, orderParams);
 }
 
 /**
@@ -403,38 +301,40 @@ exports.createPublicOrder = async (req, res) => {
 };
 
 /**
+ * صفحة الإيصال (HTML)
+ */
+exports.getReceiptPage = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const data = await CashierModel.fetchReceiptPageData(orderId);
+    
+    if (!data) {
+      return res.status(404).render('error', { message: 'الطلب غير موجود' });
+    }
+
+    res.render('cashier/receipt', { 
+      order: data.order, 
+      items: data.items, 
+      discount: data.discount 
+    });
+  } catch (error) {
+    res.status(500).render('error', { message: 'حدث خطأ في جلب الإيصال' });
+  }
+};
+
+/**
  * الحصول على تفاصيل الطلب للإيصال
  */
 exports.getOrderReceipt = async (req, res) => {
   try {
     const { orderId } = req.params;
+    const data = await CashierModel.fetchOrderReceipt(orderId);
 
-    const [orders] = await db.query(
-      `SELECT Order_ID, Customer_ID, Total_Amount, Order_Status,
-              Delivery_Address, Payment_Method, Created_At, Updated_At
-       FROM Orders WHERE Order_ID = ?`,
-      [orderId]
-    );
-
-    if (orders.length === 0) {
+    if (!data) {
       return ApiResponse.notFound(res, 'الطلب غير موجود');
     }
 
-    const order = orders[0];
-    const items = await Order.getOrderDetails(orderId);
-
-    // الحصول على الخصم من الكوبون
-    const [discounts] = await db.query(
-      'SELECT Discount_Amount FROM Order_Discounts WHERE Order_ID = ?',
-      [orderId]
-    );
-    const discount = discounts.length > 0 ? parseFloat(discounts[0].Discount_Amount) : 0;
-
-    return ApiResponse.success(res, {
-      order,
-      items,
-      discount
-    }, 'تم جلب تفاصيل الطلب بنجاح');
+    return ApiResponse.success(res, data, 'تم جلب تفاصيل الطلب بنجاح');
   } catch (error) {
     Logger.error('Get order receipt error', error);
     return ApiResponse.error(res, 'فشل في جلب تفاصيل الطلب', 500);
@@ -447,26 +347,7 @@ exports.getOrderReceipt = async (req, res) => {
 exports.getOrders = async (req, res) => {
   try {
     const { status } = req.query;
-
-    let whereClause = '';
-
-    if (status === 'active') {
-      whereClause = `WHERE o.Order_Status IN ('Pending', 'Processing', 'Ready')`;
-    } else if (status === 'completed') {
-      whereClause = `WHERE o.Order_Status IN ('Delivered', 'Cancelled')`;
-    }
-
-    const [orders] = await db.query(
-      `SELECT o.Order_ID, o.Customer_ID, c.Customer_Name,
-              o.Order_Status, o.Total_Amount,
-              o.Payment_Method, o.Created_At
-       FROM Orders o
-       LEFT JOIN Customers c ON o.Customer_ID = c.Customer_Id
-       ${whereClause}
-       ORDER BY o.Created_At DESC
-       LIMIT 100`
-    );
-
+    const orders = await CashierModel.fetchOrders(status);
     return ApiResponse.success(res, orders, 'تم جلب الطلبات بنجاح');
   } catch (error) {
     Logger.error('Get orders error', error);
@@ -501,11 +382,7 @@ exports.updateOrderStatus = async (req, res) => {
     }
 
     const dbStatus = statusMap[status];
-
-    const [result] = await db.query(
-      'UPDATE Orders SET Order_Status = ? WHERE Order_ID = ?',
-      [dbStatus, orderId]
-    );
+    const result = await CashierModel.updateOrderStatus(orderId, dbStatus);
 
     if (result.affectedRows === 0) {
       return ApiResponse.notFound(res, 'الطلب غير موجود');

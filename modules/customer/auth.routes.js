@@ -3,7 +3,7 @@ const router = express.Router();
 const db = require("../../config/db");
 
 const authController = require("./auth.controller");
-const isAuth = require("./auth.middleware");
+const { requireClient } = require('../../core/middlewares/authMiddleware');
 
 router.get("/register", (req, res) => {
   res.render("auth/customer-register", { error: null, success: req.query.success, next: req.query.next || '' });
@@ -13,11 +13,11 @@ router.get("/emailisexist", authController.emailIsExists);
 router.post("/register", authController.createAccount);
 router.post("/login",    authController.login);
 
-router.get("/",       isAuth, authController.get);
-router.get("/logout", isAuth, authController.logout);
+router.get("/",       requireClient, authController.get);
+router.get("/logout", requireClient, authController.logout);
 
 // ── GET /user/api/me — بيانات العميل الكاملة ──
-router.get("/api/me", isAuth, async (req, res) => {
+router.get("/api/me", requireClient, async (req, res) => {
   try {
     const userId = req.session?.userId;
     if (!userId) return res.status(401).json({ success: false });
@@ -47,8 +47,8 @@ const avatarStorage = multer.diskStorage({
 });
 const uploadAvatar = multer({ storage: avatarStorage });
 
-router.put("/api/update",          isAuth, uploadAvatar.single('avatar'), authController.updateProfile);
-router.post("/api/update",         isAuth, uploadAvatar.single('avatar'), authController.updateProfile);
-router.put("/api/update-password", isAuth, authController.updatePassword);
+router.put("/api/update",          requireClient, uploadAvatar.single('avatar'), authController.updateProfile);
+router.post("/api/update",         requireClient, uploadAvatar.single('avatar'), authController.updateProfile);
+router.put("/api/update-password", requireClient, authController.updatePassword);
 
 module.exports = router;

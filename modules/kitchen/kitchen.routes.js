@@ -7,21 +7,47 @@ const router = express.Router();
 const kitchenController = require('./kitchen.controller');
 const { requireEmployee, authorizeRole } = require('../../core/middlewares/authMiddleware');
 
-// صفحة لوحة تحكم المطبخ (قبل middleware للسماح بالوصول)
+// Middleware: إعادة تحميل الجلسة من قاعدة البيانات
+router.use((req, res, next) => {
+  if (req.session && req.session.reload) {
+    req.session.reload((err) => {
+      if (err) {
+        console.error('❌ Session reload error:', err);
+      } else {
+        console.log('✅ Session reloaded from database');
+      }
+      next();
+    });
+  } else {
+    next();
+  }
+});
+
+// صفحة لوحة تحكم المطبخ
 router.get('/', (req, res) => {
+  console.log('🔵 Kitchen dashboard access attempt');
+  console.log('Session data:', {
+    user: req.session?.user,
+    authenticated: req.session?.authenticated,
+    role: req.session?.user?.role
+  });
+
   // التحقق من تسجيل الدخول
   if (!req.session.user) {
+    console.warn('⚠️ No session user found, redirecting to login');
     return res.redirect('/login');
   }
   
   // التحقق من الدور
   const role = req.session.user.role;
   if (role !== 'Chef' && role !== 'Kitchen') {
+    console.warn('⚠️ User role not authorized:', role);
     return res.status(403).render('error', { 
       message: 'ليس لديك صلاحية للوصول إلى قسم المطبخ' 
     });
   }
   
+  console.log('✅ Kitchen dashboard access granted for role:', role);
   res.render('kitchen/dashboard', { user: req.session.user });
 });
 

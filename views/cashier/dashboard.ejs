@@ -743,7 +743,48 @@ document.addEventListener('DOMContentLoaded', function () {
             });
             const data = await res.json();
             if (data.success) {
-                await showSuccess(`تم إنشاء الطلب! رقم الطلب: ${data.data.orderNumber}`, 'نجح الدفع', 3);
+                const orderId = data.data.orderId;
+                const orderNumber = data.data.orderNumber;
+                
+                // عرض رسالة النجاح مع أزرار الطباعة
+                await Swal.fire({
+                    title: '✓ نجح الدفع',
+                    html: `
+                        <div style="text-align: center; direction: rtl;">
+                            <p style="font-size: 1.2rem; margin-bottom: 16px;">تم إنشاء الطلب!</p>
+                            <p style="font-size: 1.5rem; color: #50c878; font-weight: bold; margin-bottom: 20px;">${orderNumber}</p>
+                            <p style="color: #666; margin-bottom: 24px;">هل تريد طباعة الإيصال؟</p>
+                        </div>
+                    `,
+                    icon: 'success',
+                    showCancelButton: true,
+                    confirmButtonText: '🖨️ طباعة حرارية',
+                    cancelButtonText: '🖨️ طباعة عادية',
+                    confirmButtonColor: '#50c878',
+                    cancelButtonColor: '#2563eb',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        // إضافة زر ثالث للإغلاق
+                        const footer = Swal.getFooter();
+                        if (footer) {
+                            const closeBtn = document.createElement('button');
+                            closeBtn.textContent = 'لاحقاً';
+                            closeBtn.className = 'swal2-confirm';
+                            closeBtn.style.cssText = 'background-color: #999; margin-right: 8px;';
+                            closeBtn.onclick = () => Swal.close();
+                            footer.appendChild(closeBtn);
+                        }
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // الطباعة الحرارية
+                        window.open(`/cashier/receipt/${orderId}?print=thermal`, '_blank', 'width=600,height=800');
+                    } else if (result.dismiss === Swal.DismissReason.cancel) {
+                        // الطباعة العادية
+                        window.open(`/cashier/receipt/${orderId}?print=browser`, '_blank', 'width=600,height=800');
+                    }
+                });
+                
                 cart = []; renderCart();
             } else showError(data.message || 'فشل في إتمام الطلب', 'خطأ');
         } catch { showError('حدث خطأ في الاتصال', 'خطأ'); }

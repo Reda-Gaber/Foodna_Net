@@ -19,8 +19,9 @@
   // نتحقق من الـ session قبل أي حاجة تانية
   async function checkAuthBeforeCheckout() {
     try {
-      const res = await fetch('/auth/api/auth/check', {
-        credentials: 'include'
+      const res = await fetch('/auth/api/auth/check?audience=customer', {
+        credentials: 'include',
+        headers: { 'Accept': 'application/json' }
       });
       const data = await res.json();
 
@@ -34,8 +35,7 @@
           }
         } catch(e) {}
 
-        // روّح لصفحة الـ login مع الـ next parameter
-        window.location.href = '/login?next=' + encodeURIComponent('/checkout');
+        window.location.href = '/user/register?next=' + encodeURIComponent('/checkout');
         return false;
       }
       return true;

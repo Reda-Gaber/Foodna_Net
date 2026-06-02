@@ -1,12 +1,12 @@
 const router = require("express").Router();
 const db = require("../config/db");
 
-const home = require("../modules/customer/home.route");
 const products = require("../modules/customer/products.routes");
 const customerAuth = require("../modules/customer/auth.routes");
-const { requireCustomer, requireAuth } = require('../core/middlewares/authMiddleware');
+const { requireClient, requireClientApiLogin } = require('../core/middlewares/authMiddleware');
+const orderController = require('../modules/customer/order.controller');
 
-router.use("/", home);
+router.get('/', (req, res) => res.render('customer/index'));
 router.use("/home", (req, res) => res.redirect("/"));
 router.use("/api/products", products);
 router.use("/user", customerAuth);
@@ -30,11 +30,11 @@ router.get("/product-page", (req, res) =>
 // ============================================================
 // صفحات محمية — تتطلب تسجيل دخول
 // ============================================================
-router.get("/profile", requireAuth, async (req, res) => {
+router.get("/profile", requireClient, async (req, res) => {
   try {
     const userId = req.session.userId || (req.session.user && req.session.user.id);
     if (!userId) {
-      return res.redirect('/login');
+      return res.redirect('/user/register?next=' + encodeURIComponent('/profile'));
     }
     const [rows] = await db.query(
       'SELECT Customer_Id, Customer_Name, Email, Phone, Address FROM Customers WHERE Customer_Id = ?',
@@ -53,7 +53,7 @@ router.get("/profile", requireAuth, async (req, res) => {
   }
 });
 
-router.get("/checkout", requireCustomer, async (req, res) => {
+router.get("/checkout", requireClient, async (req, res) => {
   // دعم كلا من Customer session و Employee session
   let user = req.session.user || null;
 
@@ -75,11 +75,14 @@ router.get("/checkout", requireCustomer, async (req, res) => {
   res.render("customer/checkout", { user });
 });
 
-router.get("/orders",          requireCustomer, (req, res) =>
+router.get("/orders",          requireClient, (req, res) =>
   res.redirect("/profile?tab=orders")
 );
-router.get("/customer/orders", requireCustomer, (req, res) =>
+router.get("/customer/orders", requireClient, (req, res) =>
   res.redirect("/profile?tab=orders")
 );
+
+router.post('/api/orders', requireClientApiLogin, orderController.createOrder);
+
 
 module.exports = router;

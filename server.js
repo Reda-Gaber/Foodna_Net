@@ -11,25 +11,27 @@ const compression = require('compression');
 const cors = require('cors');
 
 // Import Security Middleware
-const { helmetConfig, apiLimiter } = require('./core/middlewares/security');
+const { helmetConfig, apiLimiter } = require('./core/middlewares/sessionHandler');
 const Logger = require('./core/utils/logger');
+const { requireApiLogin, requireClientApiLogin } = require('./core/middlewares/authMiddleware');
 
 // Import Routes
 const unifiedAuth = require("./modules/auth/unified-auth.routes");
-const employeeAuth = require("./modules/auth/employee-login");
 const customerRoutes = require("./routes/customer.routes");
 const adminRoutes = require("./routes/admin.routes");
-const cashierRoutes = require("./routes/cashier.routes");
-const chefRoutes = require("./routes/chef.routes");
+const cashierRoutes = require("./modules/cashier/cashier.routes");
+const chefRoutes = require("./modules/kitchen/kitchen.routes");
 const cartRoutes = require("./modules/customer/cart.routes");
 const orderRoutes = require("./modules/customer/order.routes");
-const reviewRoutes = require("./modules/customer/review.routes");
 const categoryRoutes = require("./modules/admin/category.routes");
 const couponRoutes = require("./modules/admin/coupon.routes");
 const chatbotRoutes = require("./modules/chatbot/chatbot.routes");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// If the app is behind a proxy (Vercel, Heroku, nginx), trust the first proxy.
+app.set('trust proxy', 1);
 
 // ==================== Security Middleware ====================
 app.use(helmetConfig);
@@ -68,6 +70,8 @@ dbPool.on('error', (err) => {
 const sessionStore = new MySqlStore({
   expiration: 8 * 60 * 60 * 1000,
   createDatabaseTable: true,
+  checkExpirationInterval: 15 * 60 * 1000,
+  clearExpired: true,
   schema: {
     tableName: 'sessions',
     columnNames: {
@@ -78,17 +82,21 @@ const sessionStore = new MySqlStore({
   }
 }, dbPool);
 
+const sessionCookieSecure = process.env.SESSION_SECURE
+  ? ['1', 'true', 'yes'].includes(String(process.env.SESSION_SECURE).toLowerCase())
+  : process.env.NODE_ENV === 'production';
+
 app.use(session({
   key: process.env.SESSION_KEY || "session_cookie",
   secret: process.env.SESSION_SECRET || "change-this-secret-in-production",
   store: sessionStore,
-  resave: false,
+  resave: true,
   saveUninitialized: false,
   rolling: true,
   proxy: true,
   cookie: {
     maxAge: parseInt(process.env.SESSION_MAX_AGE) || 8 * 60 * 60 * 1000,
-    secure: process.env.NODE_ENV === 'production',
+    secure: sessionCookieSecure,
     httpOnly: true,
     sameSite: 'lax',
     path: '/'
@@ -124,31 +132,23 @@ function isLoggedIn(req) {
   );
 }
 
-// ============================================================
-// Middleware: حماية API Routes
-// بيرجع 401 JSON بدل redirect عشان الـ frontend يتعامل معاه
-// ============================================================
-function requireApiLogin(req, res, next) {
-  if (!isLoggedIn(req)) {
-    return res.status(401).json({
-      success: false,
-      message: 'يجب تسجيل الدخول أولاً',
-      redirect: '/login?next=' + encodeURIComponent(req.originalUrl)
-    });
-  }
-  next();
-}
-
 // ==================== Routes ====================
 
 // Unified Authentication
 app.use("/auth", unifiedAuth);
 
-// مسار /login المباشر
+// مسار /login المباشر — توجيه العميل لـ /user/register والموظف لـ /auth/login
+const CUSTOMER_LOGIN_PATHS = ['/checkout', '/profile', '/orders', '/customer/orders'];
 app.get("/login", (req, res) => {
   if (isLoggedIn(req)) {
     const next = req.query.next ? decodeURIComponent(req.query.next) : '/';
     return res.redirect(next);
+  }
+  const nextRaw = req.query.next ? decodeURIComponent(req.query.next) : '';
+  const isCustomerFlow = CUSTOMER_LOGIN_PATHS.some((p) => nextRaw === p || nextRaw.startsWith(p + '?'));
+  if (isCustomerFlow) {
+    const q = req.query.next ? '?next=' + encodeURIComponent(req.query.next) : '';
+    return res.redirect('/user/register' + q);
   }
   res.redirect("/auth/login");
 });
@@ -162,22 +162,17 @@ app.post("/login", (req, res, next) => {
 app.use("/api", chatbotRoutes);
 app.use("/api/products", require("./modules/customer/products.routes"));
 
-// تقييمات المنتجات — GET عام بدون مصادقة
-// /api/products/:productId/reviews
-app.use("/api", reviewRoutes);
-
 // ==================== Protected API Routes ====================
 // كل الـ routes دي بتبدأ بـ /cart أو /orders أو /reviews
 // يعني الـ URL الكامل: /api/cart, /api/orders, /api/reviews
-app.use("/api", requireApiLogin, cartRoutes);
-app.use("/api", requireApiLogin, orderRoutes);
+app.use("/api", requireClientApiLogin, cartRoutes);
+app.use("/api", requireClientApiLogin, orderRoutes);
 
 // Admin API
 app.use("/admin/api", requireApiLogin, categoryRoutes);
 app.use("/admin/api", requireApiLogin, couponRoutes);
 
 // ==================== Page Routes ====================
-app.use("/", employeeAuth);
 app.use("/", customerRoutes);
 app.use("/admin", adminRoutes);
 app.use("/cashier", cashierRoutes);
