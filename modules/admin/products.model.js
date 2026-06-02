@@ -13,6 +13,10 @@ class Product {
         try {
             await connection.beginTransaction();
 
+            // التأكد من أن Category و Category_ID صحيح
+            const category = data.category && data.category !== 'null' && data.category.trim() ? data.category.trim() : null;
+            const categoryId = data.category_id ? parseInt(data.category_id) : null;
+
             // 1️⃣ إضافة المنتج في جدول Products
             const [resultProduct] = await connection.query(
                 `INSERT INTO Products 
@@ -20,9 +24,9 @@ class Product {
                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
                 [
                     data.name,
-                    data.category,
-                    data.category_id || null,
-                    data.description || '',  // استخدام string فارغة بدلاً من null
+                    category,
+                    categoryId,
+                    data.description || '',
                     imageFilename,
                     data.quantity,
                     data.price,
@@ -65,6 +69,10 @@ class Product {
         try {
             await connection.beginTransaction();
 
+            // التأكد من أن Category و Category_ID صحيح
+            const category = data.category && data.category !== 'null' && data.category.trim() ? data.category.trim() : null;
+            const categoryId = data.category_id ? parseInt(data.category_id) : null;
+
             // 1️⃣ تحديث بيانات المنتج
             await connection.query(
                 `UPDATE Products SET
@@ -73,9 +81,9 @@ class Product {
                  WHERE Product_ID = ?`,
                 [
                     data.name,
-                    data.category,
-                    data.category_id || null,
-                    data.description || '',  // استخدام string فارغة بدلاً من null
+                    category,
+                    categoryId,
+                    data.description || '',
                     imageFilename,
                     data.quantity,
                     data.price,

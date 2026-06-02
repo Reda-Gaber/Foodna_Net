@@ -5,37 +5,26 @@
 const Product = require('./products.model');
 const ApiResponse = require('../../core/utils/response');
 const Logger = require('../../core/utils/logger');
+const cloudinaryService = require('../../config/cloudinary');
 const path = require('path');
-
-// =====================================================
-// Helper: حفظ الصورة من الـ buffer إلى الديسك
-// على Vercel لا يمكن الكتابة إلا في /tmp
-// =====================================================
 const fs = require('fs');
 const { promisify } = require('util');
-const writeFileAsync = promisify(fs.writeFile);
 const unlinkAsync = promisify(fs.unlink);
 
-async function saveImageFromBuffer(file) {
-    if (!file || !file.buffer) return null;
-
-    const ext = path.extname(file.originalname).toLowerCase();
-    const filename = Date.now() + '-' + Math.round(Math.random() * 1E9) + ext;
-
-    // في Vercel نكتب في /tmp (المسار الوحيد القابل للكتابة)
-    // في البيئة المحلية نكتب في public/images/products/
-    const isVercel = !!process.env.VERCEL;
-    const savePath = isVercel
-        ? path.join('/tmp', filename)
-        : path.join(__dirname, '../../public/images/products/', filename);
-
-    await writeFileAsync(savePath, file.buffer);
-    return filename;
+function isCloudinaryUrl(value) {
+    return typeof value === 'string' && value.includes('res.cloudinary.com');
 }
 
-async function deleteImageFile(filename) {
-    if (!filename) return;
+async function deleteImageFile(reference) {
+    if (!reference) return;
+
+    if (isCloudinaryUrl(reference)) {
+        await cloudinaryService.deleteResource(reference);
+        return;
+    }
+
     try {
+        const filename = path.basename(reference);
         const isVercel = !!process.env.VERCEL;
         const filePath = isVercel
             ? path.join('/tmp', filename)
@@ -51,11 +40,19 @@ class ProductController {
      * إنشاء منتج جديد
      */
     static async create(req, res) {
-        let imageFilename = null;
+        let imageUrl = null;
         try {
-            // حفظ الصورة إن وُجدت
-            if (req.file) {
-                imageFilename = await saveImageFromBuffer(req.file);
+            Logger.info('📨 Received create product request', {
+                body: req.body,
+                hasFile: !!req.file
+            });
+
+            // رفع الصورة إلى Cloudinary إن كانت موجودة
+            if (req.file && req.file.buffer) {
+                const uploadResult = await cloudinaryService.uploadBuffer(req.file.buffer, {
+                    folder: 'foodna/products'
+                });
+                imageUrl = uploadResult.secure_url;
             }
 
             const parsedQuantity = (req.body.quantity !== undefined && req.body.quantity !== '') ? parseInt(req.body.quantity) : null;
@@ -64,16 +61,18 @@ class ProductController {
 
             const data = {
                 name:        req.body.name,
-                category:    req.body.category || req.body.category_id,
+                category:    req.body.category,
                 category_id: req.body.category_id,
-                description: req.body.description || '',  // استخدام string فارغة بدلاً من null
+                description: req.body.description || '',
                 quantity:    Number.isNaN(parsedQuantity) ? null : parsedQuantity,
                 price:       Number.isNaN(parsedPrice)    ? null : parsedPrice,
                 discount:    Number.isNaN(parsedDiscount) ? 0    : parsedDiscount,
                 supplier_id: req.body.supplier_id || null
             };
 
-            const result = await Product.create(data, imageFilename);
+            Logger.info('💾 Data to save:', data);
+
+            const result = await Product.create(data, imageUrl);
             Logger.audit('PRODUCT_CREATED', req.session.user?.id, { productId: result.productId });
 
             return ApiResponse.success(res, {
@@ -84,7 +83,7 @@ class ProductController {
         } catch (error) {
             Logger.error('Create product error', error);
             // حذف الصورة المرفوعة في حالة الخطأ
-            if (imageFilename) await deleteImageFile(imageFilename);
+            if (imageUrl) await deleteImageFile(imageUrl);
             return ApiResponse.error(res, error.message || 'فشل في إضافة المنتج', 500);
         }
     }
@@ -94,23 +93,33 @@ class ProductController {
      */
     static async update(req, res) {
         try {
-            const id = parseInt(req.body.id);
+            const id = parseInt(req.params.id);
             if (!id) {
                 return ApiResponse.validationError(res, null, 'معرف المنتج مطلوب');
             }
+
+            Logger.info('📨 Received update product request', {
+                id,
+                body: req.body,
+                hasFile: !!req.file
+            });
 
             const product = await Product.findById(id);
             if (!product) {
                 return ApiResponse.notFound(res, 'المنتج غير موجود');
             }
 
-            let imageFilename = product.Image;
+            let imageUrl = product.Image;
 
-            if (req.file) {
-                // حفظ الصورة الجديدة
-                imageFilename = await saveImageFromBuffer(req.file);
-                // حذف الصورة القديمة
-                if (product.Image) await deleteImageFile(product.Image);
+            if (req.file && req.file.buffer) {
+                const uploadResult = await cloudinaryService.uploadBuffer(req.file.buffer, {
+                    folder: 'foodna/products'
+                });
+                const newImageUrl = uploadResult.secure_url;
+                if (product.Image && product.Image !== newImageUrl) {
+                    await deleteImageFile(product.Image);
+                }
+                imageUrl = newImageUrl;
             }
 
             const parsedQuantity = (req.body.quantity !== undefined && req.body.quantity !== '') ? parseInt(req.body.quantity)     : undefined;
@@ -119,8 +128,8 @@ class ProductController {
 
             const data = {
                 name:        (req.body.name        !== undefined && req.body.name        !== '') ? req.body.name        : product.Product_Name,
-                category:    (req.body.category    !== undefined && req.body.category    !== '') ? req.body.category    : product.Category,
-                category_id: (req.body.category_id !== undefined && req.body.category_id !== '') ? parseInt(req.body.category_id) : product.Category_ID,
+                category:    req.body.category,
+                category_id: req.body.category_id,
                 description: (req.body.description !== undefined)                               ? req.body.description : product.Description,
                 quantity:    parsedQuantity === undefined ? (product.Quantity_Available ?? null) : (Number.isNaN(parsedQuantity) ? null : parsedQuantity),
                 price:       parsedPrice    === undefined ? (product.Price              ?? null) : (Number.isNaN(parsedPrice)    ? null : parsedPrice),
@@ -128,7 +137,7 @@ class ProductController {
                 supplier_id: (req.body.supplier_id !== undefined) ? (req.body.supplier_id || null) : (product.Supplier_ID || null)
             };
 
-            const result = await Product.update(id, data, imageFilename);
+            const result = await Product.update(id, data, imageUrl);
             Logger.audit('PRODUCT_UPDATED', req.session.user?.id, { productId: id });
 
             return ApiResponse.success(res, { productId: result.productId }, 'تم تحديث المنتج بنجاح');

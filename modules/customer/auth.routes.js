@@ -34,18 +34,18 @@ router.get("/api/me", requireClient, async (req, res) => {
 
 const path = require('path');
 const multer = require('multer');
-const avatarStorage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    const dest = path.join(__dirname, '../../public/uploads/avatars');
-    cb(null, dest);
-  },
-  filename: function (req, file, cb) {
-    const ext = path.extname(file.originalname);
-    const name = Date.now() + '_' + Math.random().toString(36).substring(2, 8) + ext;
-    cb(null, name);
+const avatarStorage = multer.memoryStorage();
+const uploadAvatar = multer({
+  storage: avatarStorage,
+  limits: { fileSize: 5 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    const filetypes = /jpeg|jpg|png|gif/;
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = filetypes.test(file.mimetype);
+    if (extname && mimetype) return cb(null, true);
+    cb(new Error('صور فقط!'));
   }
 });
-const uploadAvatar = multer({ storage: avatarStorage });
 
 router.put("/api/update",          requireClient, uploadAvatar.single('avatar'), authController.updateProfile);
 router.post("/api/update",         requireClient, uploadAvatar.single('avatar'), authController.updateProfile);

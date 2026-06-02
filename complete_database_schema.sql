@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS Products (
   Description TEXT,
   Price DECIMAL(10, 2) NOT NULL,
   Category VARCHAR(100),
-  Image VARCHAR(255),
+  Image TEXT,
   Quantity INT DEFAULT 0,
   Category_ID INT,
   Created_At TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

@@ -5338,3 +5338,591 @@
 [2026-06-02T13:08:51.538Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
 [2026-06-02T13:08:51.557Z] INFO: Server running on http://localhost:3002
 [2026-06-02T13:08:51.567Z] INFO: Environment: development
+[2026-06-02T13:39:23.389Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T13:39:23.392Z] INFO: ✓ Groq client initialized successfully with model: llama-3.1-8b-instant
+[2026-06-02T13:39:23.402Z] INFO: Server running on http://localhost:3002
+[2026-06-02T13:39:23.402Z] INFO: Environment: development
+[2026-06-02T14:27:00.029Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T14:27:00.034Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T14:27:00.070Z] INFO: Server running on http://localhost:3002
+[2026-06-02T14:27:00.081Z] INFO: Environment: development
+[2026-06-02T14:27:17.789Z] INFO: [Chatbot] Received message: "بقولك اي"
+[2026-06-02T14:27:17.790Z] INFO: [Chatbot] Sanitized message: "بقولك اي"
+[2026-06-02T14:27:17.791Z] INFO: [Intent Detection] Analyzing message: "بقولك اي"
+[2026-06-02T14:27:17.792Z] INFO: [Intent] No specific intent detected, returning all products
+[2026-06-02T14:27:17.793Z] INFO: [Database] Fetching all available products
+[2026-06-02T14:27:17.858Z] INFO: [Database] Retrieved 10 available products
+[2026-06-02T14:27:17.859Z] INFO: [Chatbot] Retrieved 10 relevant products
+[2026-06-02T14:27:17.860Z] INFO: [Chatbot] Processing message: "بقولك اي" | Products: 10
+[2026-06-02T14:27:17.861Z] INFO: [Groq API] Sending request {
+  "model": "llama-3.3-70b-versatile",
+  "systemPromptLength": 1640,
+  "userMessageLength": 8,
+  "productsCount": 10
+}
+[2026-06-02T14:27:18.339Z] INFO: [Groq API] Received response successfully
+[2026-06-02T14:27:18.348Z] INFO: [Groq API] Response length: 55 characters
+[2026-06-02T14:27:18.348Z] INFO: [Chatbot] Generated response (length: 55)
+[2026-06-02T14:27:28.036Z] INFO: [Chatbot] Received message: "اي ارخص اكل هنا"
+[2026-06-02T14:27:28.036Z] INFO: [Chatbot] Sanitized message: "اي ارخص اكل هنا"
+[2026-06-02T14:27:28.037Z] INFO: [Intent Detection] Analyzing message: "اي ارخص اكل هنا"
+[2026-06-02T14:27:28.038Z] INFO: [Intent] No specific intent detected, returning all products
+[2026-06-02T14:27:28.038Z] INFO: [Database] Fetching all available products
+[2026-06-02T14:27:28.104Z] INFO: [Database] Retrieved 10 available products
+[2026-06-02T14:27:28.104Z] INFO: [Chatbot] Retrieved 10 relevant products
+[2026-06-02T14:27:28.105Z] INFO: [Chatbot] Processing message: "اي ارخص اكل هنا" | Products: 10
+[2026-06-02T14:27:28.106Z] INFO: [Groq API] Sending request {
+  "model": "llama-3.3-70b-versatile",
+  "systemPromptLength": 1640,
+  "userMessageLength": 15,
+  "productsCount": 10
+}
+[2026-06-02T14:27:28.475Z] INFO: [Groq API] Received response successfully
+[2026-06-02T14:27:28.476Z] INFO: [Groq API] Response length: 76 characters
+[2026-06-02T14:27:28.476Z] INFO: [Chatbot] Generated response (length: 76)
+[2026-06-02T14:29:32.449Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T14:29:32.454Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T14:29:32.465Z] INFO: Server running on http://localhost:3002
+[2026-06-02T14:29:32.465Z] INFO: Environment: development
+[2026-06-02T14:29:50.927Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T14:29:50.930Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T14:29:50.945Z] INFO: Server running on http://localhost:3002
+[2026-06-02T14:29:50.946Z] INFO: Environment: development
+[2026-06-02T14:30:45.166Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T14:30:45.169Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T14:30:45.180Z] INFO: Server running on http://localhost:3002
+[2026-06-02T14:30:45.181Z] INFO: Environment: development
+[2026-06-02T14:32:01.396Z] INFO: [Chatbot] Received message: "بقولك"
+[2026-06-02T14:32:01.397Z] INFO: [Chatbot] Sanitized message: "بقولك"
+[2026-06-02T14:32:01.398Z] INFO: [Intent Detection] Analyzing message: "بقولك"
+[2026-06-02T14:32:01.400Z] INFO: [Intent] No specific intent detected, returning all products
+[2026-06-02T14:32:01.401Z] INFO: [Database] Fetching all available products
+[2026-06-02T14:32:01.467Z] INFO: [Database] Retrieved 10 available products
+[2026-06-02T14:32:01.469Z] INFO: [Chatbot] Retrieved 10 relevant products
+[2026-06-02T14:32:01.469Z] INFO: [Chatbot] Processing message: "بقولك" | Products: 10
+[2026-06-02T14:32:01.471Z] INFO: [Groq API] Sending request {
+  "model": "llama-3.3-70b-versatile",
+  "systemPromptLength": 1640,
+  "userMessageLength": 5,
+  "productsCount": 10
+}
+[2026-06-02T14:32:01.887Z] INFO: [Groq API] Received response successfully
+[2026-06-02T14:32:01.887Z] INFO: [Groq API] Response length: 71 characters
+[2026-06-02T14:32:01.888Z] INFO: [Chatbot] Generated response (length: 71)
+[2026-06-02T14:32:13.258Z] INFO: [Chatbot] Received message: "عاوز اعرف اسعار كل المنتجات"
+[2026-06-02T14:32:13.259Z] INFO: [Chatbot] Sanitized message: "عاوز اعرف اسعار كل المنتجات"
+[2026-06-02T14:32:13.260Z] INFO: [Intent Detection] Analyzing message: "عاوز اعرف اسعار كل المنتجات"
+[2026-06-02T14:32:13.260Z] INFO: [Intent] No specific intent detected, returning all products
+[2026-06-02T14:32:13.261Z] INFO: [Database] Fetching all available products
+[2026-06-02T14:32:13.326Z] INFO: [Database] Retrieved 10 available products
+[2026-06-02T14:32:13.326Z] INFO: [Chatbot] Retrieved 10 relevant products
+[2026-06-02T14:32:13.327Z] INFO: [Chatbot] Processing message: "عاوز اعرف اسعار كل المنتجات" | Products: 10
+[2026-06-02T14:32:13.327Z] INFO: [Groq API] Sending request {
+  "model": "llama-3.3-70b-versatile",
+  "systemPromptLength": 1640,
+  "userMessageLength": 27,
+  "productsCount": 10
+}
+[2026-06-02T14:32:14.285Z] INFO: [Groq API] Received response successfully
+[2026-06-02T14:32:14.285Z] INFO: [Groq API] Response length: 922 characters
+[2026-06-02T14:32:14.286Z] INFO: [Chatbot] Generated response (length: 922)
+[2026-06-02T14:32:22.117Z] INFO: [Chatbot] Received message: "حدث خطا؟"
+[2026-06-02T14:32:22.117Z] INFO: [Chatbot] Sanitized message: "حدث خطا؟"
+[2026-06-02T14:32:22.118Z] INFO: [Intent Detection] Analyzing message: "حدث خطا؟"
+[2026-06-02T14:32:22.118Z] INFO: [Intent] No specific intent detected, returning all products
+[2026-06-02T14:32:22.119Z] INFO: [Database] Fetching all available products
+[2026-06-02T14:32:22.184Z] INFO: [Database] Retrieved 10 available products
+[2026-06-02T14:32:22.184Z] INFO: [Chatbot] Retrieved 10 relevant products
+[2026-06-02T14:32:22.185Z] INFO: [Chatbot] Processing message: "حدث خطا؟" | Products: 10
+[2026-06-02T14:32:22.185Z] INFO: [Groq API] Sending request {
+  "model": "llama-3.3-70b-versatile",
+  "systemPromptLength": 1640,
+  "userMessageLength": 8,
+  "productsCount": 10
+}
+[2026-06-02T14:32:22.558Z] INFO: [Groq API] Received response successfully
+[2026-06-02T14:32:22.559Z] INFO: [Groq API] Response length: 66 characters
+[2026-06-02T14:32:22.559Z] INFO: [Chatbot] Generated response (length: 66)
+[2026-06-02T14:32:29.905Z] INFO: [Chatbot] Received message: "طيب هات قائمة المنتجات"
+[2026-06-02T14:32:29.906Z] INFO: [Chatbot] Sanitized message: "طيب هات قائمة المنتجات"
+[2026-06-02T14:32:29.907Z] INFO: [Intent Detection] Analyzing message: "طيب هات قائمة المنتجات"
+[2026-06-02T14:32:29.907Z] INFO: [Intent] No specific intent detected, returning all products
+[2026-06-02T14:32:29.908Z] INFO: [Database] Fetching all available products
+[2026-06-02T14:32:29.973Z] INFO: [Database] Retrieved 10 available products
+[2026-06-02T14:32:29.973Z] INFO: [Chatbot] Retrieved 10 relevant products
+[2026-06-02T14:32:29.974Z] INFO: [Chatbot] Processing message: "طيب هات قائمة المنتجات" | Products: 10
+[2026-06-02T14:32:29.974Z] INFO: [Groq API] Sending request {
+  "model": "llama-3.3-70b-versatile",
+  "systemPromptLength": 1640,
+  "userMessageLength": 22,
+  "productsCount": 10
+}
+[2026-06-02T14:32:30.573Z] INFO: [Groq API] Received response successfully
+[2026-06-02T14:32:30.574Z] INFO: [Groq API] Response length: 478 characters
+[2026-06-02T14:32:30.574Z] INFO: [Chatbot] Generated response (length: 478)
+[2026-06-02T14:33:56.950Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T14:33:56.956Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T14:33:56.969Z] INFO: Server running on http://localhost:3002
+[2026-06-02T14:33:56.973Z] INFO: Environment: development
+[2026-06-02T14:35:33.883Z] INFO: [Chatbot] Received message: "هات قائمة المنتجات"
+[2026-06-02T14:35:33.884Z] INFO: [Chatbot] Sanitized message: "هات قائمة المنتجات"
+[2026-06-02T14:35:33.885Z] INFO: [Intent Detection] Analyzing message: "هات قائمة المنتجات"
+[2026-06-02T14:35:33.885Z] INFO: [Intent] No specific intent detected, returning all products
+[2026-06-02T14:35:33.886Z] INFO: [Database] Fetching all available products
+[2026-06-02T14:35:33.952Z] INFO: [Database] Retrieved 10 available products
+[2026-06-02T14:35:33.952Z] INFO: [Chatbot] Retrieved 10 relevant products
+[2026-06-02T14:35:33.953Z] INFO: [Chatbot] Processing message: "هات قائمة المنتجات" | Products: 10
+[2026-06-02T14:35:33.953Z] INFO: [Groq API] Sending request {
+  "model": "llama-3.3-70b-versatile",
+  "systemPromptLength": 1640,
+  "userMessageLength": 18,
+  "productsCount": 10
+}
+[2026-06-02T14:35:34.595Z] INFO: [Groq API] Received response successfully
+[2026-06-02T14:35:34.597Z] INFO: [Groq API] Response length: 478 characters
+[2026-06-02T14:35:34.597Z] INFO: [Chatbot] Generated response (length: 478)
+[2026-06-02T14:36:02.294Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T14:36:02.297Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T14:36:02.311Z] INFO: Server running on http://localhost:3002
+[2026-06-02T14:36:02.311Z] INFO: Environment: development
+[2026-06-02T14:36:32.012Z] INFO: [Chatbot] Received message: "هات قائمة الطعام المتاحة"
+[2026-06-02T14:36:32.013Z] INFO: [Chatbot] Sanitized message: "هات قائمة الطعام المتاحة"
+[2026-06-02T14:36:32.015Z] INFO: [Intent Detection] Analyzing message: "هات قائمة الطعام المتاحة"
+[2026-06-02T14:36:32.017Z] INFO: [Intent] No specific intent detected, returning all products
+[2026-06-02T14:36:32.018Z] INFO: [Database] Fetching all available products
+[2026-06-02T14:36:32.085Z] INFO: [Database] Retrieved 10 available products
+[2026-06-02T14:36:32.085Z] INFO: [Chatbot] Retrieved 10 relevant products
+[2026-06-02T14:36:32.086Z] INFO: [Chatbot] Processing message: "هات قائمة الطعام المتاحة" | Products: 10
+[2026-06-02T14:36:32.088Z] INFO: [Groq API] Sending request {
+  "model": "llama-3.3-70b-versatile",
+  "systemPromptLength": 1640,
+  "userMessageLength": 24,
+  "productsCount": 10
+}
+[2026-06-02T14:36:32.871Z] INFO: [Groq API] Received response successfully
+[2026-06-02T14:36:32.872Z] INFO: [Groq API] Response length: 478 characters
+[2026-06-02T14:36:32.873Z] INFO: [Chatbot] Generated response (length: 478)
+[2026-06-02T14:36:42.852Z] INFO: [Chatbot] Received message: "اي اغلي اكل هنا"
+[2026-06-02T14:36:42.852Z] INFO: [Chatbot] Sanitized message: "اي اغلي اكل هنا"
+[2026-06-02T14:36:42.853Z] INFO: [Intent Detection] Analyzing message: "اي اغلي اكل هنا"
+[2026-06-02T14:36:42.854Z] INFO: [Intent] No specific intent detected, returning all products
+[2026-06-02T14:36:42.854Z] INFO: [Database] Fetching all available products
+[2026-06-02T14:36:42.919Z] INFO: [Database] Retrieved 10 available products
+[2026-06-02T14:36:42.919Z] INFO: [Chatbot] Retrieved 10 relevant products
+[2026-06-02T14:36:42.920Z] INFO: [Chatbot] Processing message: "اي اغلي اكل هنا" | Products: 10
+[2026-06-02T14:36:42.921Z] INFO: [Groq API] Sending request {
+  "model": "llama-3.3-70b-versatile",
+  "systemPromptLength": 1640,
+  "userMessageLength": 15,
+  "productsCount": 10
+}
+[2026-06-02T14:36:43.242Z] INFO: [Groq API] Received response successfully
+[2026-06-02T14:36:43.242Z] INFO: [Groq API] Response length: 45 characters
+[2026-06-02T14:36:43.243Z] INFO: [Chatbot] Generated response (length: 45)
+[2026-06-02T14:36:48.008Z] INFO: [Chatbot] Received message: "سعره كام ؟"
+[2026-06-02T14:36:48.009Z] INFO: [Chatbot] Sanitized message: "سعره كام ؟"
+[2026-06-02T14:36:48.009Z] INFO: [Intent Detection] Analyzing message: "سعره كام ؟"
+[2026-06-02T14:36:48.010Z] INFO: [Intent] No specific intent detected, returning all products
+[2026-06-02T14:36:48.010Z] INFO: [Database] Fetching all available products
+[2026-06-02T14:36:48.074Z] INFO: [Database] Retrieved 10 available products
+[2026-06-02T14:36:48.075Z] INFO: [Chatbot] Retrieved 10 relevant products
+[2026-06-02T14:36:48.076Z] INFO: [Chatbot] Processing message: "سعره كام ؟" | Products: 10
+[2026-06-02T14:36:48.076Z] INFO: [Groq API] Sending request {
+  "model": "llama-3.3-70b-versatile",
+  "systemPromptLength": 1640,
+  "userMessageLength": 10,
+  "productsCount": 10
+}
+[2026-06-02T14:36:48.505Z] INFO: [Groq API] Received response successfully
+[2026-06-02T14:36:48.506Z] INFO: [Groq API] Response length: 97 characters
+[2026-06-02T14:36:48.507Z] INFO: [Chatbot] Generated response (length: 97)
+[2026-06-02T14:36:58.524Z] INFO: [Chatbot] Received message: "بقولك اغلي حاجة"
+[2026-06-02T14:36:58.525Z] INFO: [Chatbot] Sanitized message: "بقولك اغلي حاجة"
+[2026-06-02T14:36:58.525Z] INFO: [Intent Detection] Analyzing message: "بقولك اغلي حاجة"
+[2026-06-02T14:36:58.526Z] INFO: [Intent] No specific intent detected, returning all products
+[2026-06-02T14:36:58.526Z] INFO: [Database] Fetching all available products
+[2026-06-02T14:36:58.595Z] INFO: [Database] Retrieved 10 available products
+[2026-06-02T14:36:58.597Z] INFO: [Chatbot] Retrieved 10 relevant products
+[2026-06-02T14:36:58.597Z] INFO: [Chatbot] Processing message: "بقولك اغلي حاجة" | Products: 10
+[2026-06-02T14:36:58.598Z] INFO: [Groq API] Sending request {
+  "model": "llama-3.3-70b-versatile",
+  "systemPromptLength": 1640,
+  "userMessageLength": 15,
+  "productsCount": 10
+}
+[2026-06-02T14:36:59.083Z] INFO: [Groq API] Received response successfully
+[2026-06-02T14:36:59.083Z] INFO: [Groq API] Response length: 118 characters
+[2026-06-02T14:36:59.084Z] INFO: [Chatbot] Generated response (length: 118)
+[2026-06-02T15:07:14.039Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T15:07:14.042Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T15:07:14.052Z] INFO: Server running on http://localhost:3002
+[2026-06-02T15:07:14.053Z] INFO: Environment: development
+[2026-06-02T15:23:13.620Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T15:23:13.622Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T15:23:13.630Z] INFO: Server running on http://localhost:3002
+[2026-06-02T15:23:13.632Z] INFO: Environment: development
+[2026-06-02T15:23:26.892Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T15:23:26.895Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T15:23:26.928Z] INFO: Server running on http://localhost:3002
+[2026-06-02T15:23:26.937Z] INFO: Environment: development
+[2026-06-02T15:23:50.191Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T15:23:50.196Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T15:23:50.206Z] INFO: Server running on http://localhost:3002
+[2026-06-02T15:23:50.207Z] INFO: Environment: development
+[2026-06-02T15:24:50.094Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T15:24:50.097Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T15:24:50.108Z] INFO: Server running on http://localhost:3002
+[2026-06-02T15:24:50.109Z] INFO: Environment: development
+[2026-06-02T15:25:10.705Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T15:25:10.707Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T15:25:10.717Z] INFO: Server running on http://localhost:3002
+[2026-06-02T15:25:10.719Z] INFO: Environment: development
+[2026-06-02T15:25:16.423Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T15:25:16.426Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T15:25:16.440Z] INFO: Server running on http://localhost:3002
+[2026-06-02T15:25:16.441Z] INFO: Environment: development
+[2026-06-02T15:25:56.187Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T15:25:56.190Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T15:25:56.201Z] INFO: Server running on http://localhost:3002
+[2026-06-02T15:25:56.202Z] INFO: Environment: development
+[2026-06-02T15:34:17.169Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T15:34:17.172Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T15:34:17.185Z] INFO: Server running on http://localhost:3002
+[2026-06-02T15:34:17.186Z] INFO: Environment: development
+[2026-06-02T15:34:24.767Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T15:34:24.771Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T15:34:24.789Z] INFO: Server running on http://localhost:3002
+[2026-06-02T15:34:24.790Z] INFO: Environment: development
+[2026-06-02T15:34:29.609Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T15:34:29.614Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T15:34:29.625Z] INFO: Server running on http://localhost:3002
+[2026-06-02T15:34:29.625Z] INFO: Environment: development
+[2026-06-02T15:34:46.951Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T15:34:46.954Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T15:34:46.970Z] INFO: Server running on http://localhost:3002
+[2026-06-02T15:34:46.972Z] INFO: Environment: development
+[2026-06-02T15:34:58.746Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T15:34:58.750Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T15:34:58.766Z] INFO: Server running on http://localhost:3002
+[2026-06-02T15:34:58.767Z] INFO: Environment: development
+[2026-06-02T15:35:07.819Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T15:35:07.821Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T15:35:07.838Z] INFO: Server running on http://localhost:3002
+[2026-06-02T15:35:07.838Z] INFO: Environment: development
+[2026-06-02T15:41:07.752Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T15:41:07.755Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T15:41:07.772Z] INFO: Server running on http://localhost:3002
+[2026-06-02T15:41:07.773Z] INFO: Environment: development
+[2026-06-02T15:41:56.868Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T15:41:56.875Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T15:41:56.885Z] INFO: Server running on http://localhost:3002
+[2026-06-02T15:41:56.885Z] INFO: Environment: development
+[2026-06-02T15:42:06.614Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T15:42:06.616Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T15:42:06.628Z] INFO: Server running on http://localhost:3002
+[2026-06-02T15:42:06.630Z] INFO: Environment: development
+[2026-06-02T15:42:08.869Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T15:42:08.872Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T15:42:08.880Z] INFO: Server running on http://localhost:3002
+[2026-06-02T15:42:08.881Z] INFO: Environment: development
+[2026-06-02T15:44:29.671Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T15:44:29.674Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T15:44:29.682Z] INFO: Server running on http://localhost:3002
+[2026-06-02T15:44:29.685Z] INFO: Environment: development
+[2026-06-02T15:45:01.768Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T15:45:01.770Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T15:45:01.782Z] INFO: Server running on http://localhost:3002
+[2026-06-02T15:45:01.784Z] INFO: Environment: development
+[2026-06-02T15:45:11.321Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T15:45:11.324Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T15:45:11.337Z] INFO: Server running on http://localhost:3002
+[2026-06-02T15:45:11.342Z] INFO: Environment: development
+[2026-06-02T15:45:24.672Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T15:45:24.675Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T15:45:24.690Z] INFO: Server running on http://localhost:3002
+[2026-06-02T15:45:24.691Z] INFO: Environment: development
+[2026-06-02T15:45:29.947Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T15:45:29.951Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T15:45:29.970Z] INFO: Server running on http://localhost:3002
+[2026-06-02T15:45:29.970Z] INFO: Environment: development
+[2026-06-02T15:46:09.480Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T15:46:09.483Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T15:46:09.496Z] INFO: Server running on http://localhost:3002
+[2026-06-02T15:46:09.496Z] INFO: Environment: development
+[2026-06-02T15:49:05.627Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T15:49:05.630Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T15:49:05.641Z] INFO: Server running on http://localhost:3002
+[2026-06-02T15:49:05.642Z] INFO: Environment: development
+[2026-06-02T15:49:15.751Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T15:49:15.754Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T15:49:15.764Z] INFO: Server running on http://localhost:3002
+[2026-06-02T15:49:15.767Z] INFO: Environment: development
+[2026-06-02T15:49:28.291Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T15:49:28.299Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T15:49:28.318Z] INFO: Server running on http://localhost:3002
+[2026-06-02T15:49:28.319Z] INFO: Environment: development
+[2026-06-02T15:52:03.557Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T15:52:03.570Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T15:52:03.590Z] INFO: Server running on http://localhost:3002
+[2026-06-02T15:52:03.601Z] INFO: Environment: development
+[2026-06-02T15:52:10.837Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T15:52:10.839Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T15:52:10.855Z] INFO: Server running on http://localhost:3002
+[2026-06-02T15:52:10.863Z] INFO: Environment: development
+[2026-06-02T15:52:20.717Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T15:52:20.720Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T15:52:20.732Z] INFO: Server running on http://localhost:3002
+[2026-06-02T15:52:20.733Z] INFO: Environment: development
+[2026-06-02T15:52:31.003Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T15:52:31.009Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T15:52:31.019Z] INFO: Server running on http://localhost:3002
+[2026-06-02T15:52:31.020Z] INFO: Environment: development
+[2026-06-02T15:52:42.768Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T15:52:42.793Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T15:52:42.845Z] INFO: Server running on http://localhost:3002
+[2026-06-02T15:52:42.861Z] INFO: Environment: development
+[2026-06-02T15:53:48.889Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T15:53:48.893Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T15:53:48.906Z] INFO: Server running on http://localhost:3002
+[2026-06-02T15:53:48.907Z] INFO: Environment: development
+[2026-06-02T15:54:17.621Z] INFO: 📨 Received create product request {
+  "body": {
+    "id": "",
+    "name": "حنفيتين",
+    "description": "",
+    "category": "6",
+    "price": "10",
+    "discount": "",
+    "quantity": "10"
+  },
+  "hasFile": false
+}
+[2026-06-02T15:54:17.621Z] INFO: 💾 Data to save: {
+  "name": "حنفيتين",
+  "category": "6",
+  "description": "",
+  "quantity": 10,
+  "price": 10,
+  "discount": null,
+  "supplier_id": null
+}
+[2026-06-02T15:55:51.020Z] INFO: 📨 Received create product request {
+  "body": {
+    "id": "",
+    "name": "حنفية",
+    "description": "",
+    "category": "120025",
+    "price": "100",
+    "discount": "",
+    "quantity": "10"
+  },
+  "hasFile": true
+}
+[2026-06-02T15:55:55.970Z] INFO: 💾 Data to save: {
+  "name": "حنفية",
+  "category": "120025",
+  "description": "",
+  "quantity": 10,
+  "price": 100,
+  "discount": null,
+  "supplier_id": null
+}
+[2026-06-02T15:57:59.536Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T15:57:59.542Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T15:57:59.555Z] INFO: Server running on http://localhost:3002
+[2026-06-02T15:57:59.556Z] INFO: Environment: development
+[2026-06-02T15:58:05.823Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T15:58:05.825Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T15:58:05.838Z] INFO: Server running on http://localhost:3002
+[2026-06-02T15:58:05.839Z] INFO: Environment: development
+[2026-06-02T15:58:14.832Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T15:58:14.835Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T15:58:14.848Z] INFO: Server running on http://localhost:3002
+[2026-06-02T15:58:14.849Z] INFO: Environment: development
+[2026-06-02T15:58:22.685Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T15:58:22.688Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T15:58:22.700Z] INFO: Server running on http://localhost:3002
+[2026-06-02T15:58:22.701Z] INFO: Environment: development
+[2026-06-02T15:58:28.187Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T15:58:28.190Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T15:58:28.202Z] INFO: Server running on http://localhost:3002
+[2026-06-02T15:58:28.203Z] INFO: Environment: development
+[2026-06-02T16:01:50.113Z] INFO: 📨 Received create product request {
+  "body": {
+    "id": "",
+    "name": "حنفية",
+    "description": "",
+    "category": "120025",
+    "price": "100",
+    "discount": "",
+    "quantity": "10"
+  },
+  "hasFile": true
+}
+[2026-06-02T16:01:56.143Z] INFO: 💾 Data to save: {
+  "name": "حنفية",
+  "category": "120025",
+  "category_id": null,
+  "description": "",
+  "quantity": 10,
+  "price": 100,
+  "discount": null,
+  "supplier_id": null
+}
+[2026-06-02T16:07:37.000Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T16:07:37.014Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T16:07:37.065Z] INFO: Server running on http://localhost:3002
+[2026-06-02T16:07:37.069Z] INFO: Environment: development
+[2026-06-02T16:07:46.815Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T16:07:46.827Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T16:07:46.863Z] INFO: Server running on http://localhost:3002
+[2026-06-02T16:07:46.865Z] INFO: Environment: development
+[2026-06-02T16:07:52.583Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T16:07:52.588Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T16:07:52.599Z] INFO: Server running on http://localhost:3002
+[2026-06-02T16:07:52.600Z] INFO: Environment: development
+[2026-06-02T16:08:00.380Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T16:08:00.383Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T16:08:00.395Z] INFO: Server running on http://localhost:3002
+[2026-06-02T16:08:00.396Z] INFO: Environment: development
+[2026-06-02T16:08:13.943Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T16:08:13.946Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T16:08:13.958Z] INFO: Server running on http://localhost:3002
+[2026-06-02T16:08:13.959Z] INFO: Environment: development
+[2026-06-02T16:08:38.800Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T16:08:38.820Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T16:08:38.895Z] INFO: Server running on http://localhost:3002
+[2026-06-02T16:08:38.906Z] INFO: Environment: development
+[2026-06-02T16:08:48.487Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T16:08:48.490Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T16:08:48.528Z] INFO: Server running on http://localhost:3002
+[2026-06-02T16:08:48.537Z] INFO: Environment: development
+[2026-06-02T16:10:41.346Z] INFO: 📨 Received create product request {
+  "body": {
+    "id": "",
+    "name": "حنفية",
+    "description": "",
+    "category_id": "120025",
+    "category": "برجر",
+    "price": "100",
+    "discount": "",
+    "quantity": "10"
+  },
+  "hasFile": true
+}
+[2026-06-02T16:10:45.667Z] INFO: 💾 Data to save: {
+  "name": "حنفية",
+  "category": "برجر",
+  "category_id": "120025",
+  "description": "",
+  "quantity": 10,
+  "price": 100,
+  "discount": null,
+  "supplier_id": null
+}
+[2026-06-02T16:18:54.964Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T16:18:54.966Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T16:18:54.979Z] INFO: Server running on http://localhost:3002
+[2026-06-02T16:18:54.980Z] INFO: Environment: development
+[2026-06-02T16:20:22.641Z] INFO: 📨 Received create product request {
+  "body": {
+    "id": "",
+    "name": "حنفية",
+    "description": "",
+    "category_id": "3",
+    "category": "بيتزا",
+    "price": "100",
+    "discount": "",
+    "quantity": "10"
+  },
+  "hasFile": true
+}
+[2026-06-02T16:20:29.253Z] INFO: 💾 Data to save: {
+  "name": "حنفية",
+  "category": "بيتزا",
+  "category_id": "3",
+  "description": "",
+  "quantity": 10,
+  "price": 100,
+  "discount": null,
+  "supplier_id": null
+}
+[2026-06-02T16:23:13.362Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T16:23:13.365Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T16:23:13.380Z] INFO: Server running on http://localhost:3002
+[2026-06-02T16:23:13.381Z] INFO: Environment: development
+[2026-06-02T16:23:20.544Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T16:23:20.549Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T16:23:20.563Z] INFO: Server running on http://localhost:3002
+[2026-06-02T16:23:20.565Z] INFO: Environment: development
+[2026-06-02T16:23:23.731Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T16:23:23.764Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T16:23:23.798Z] INFO: Server running on http://localhost:3002
+[2026-06-02T16:23:23.808Z] INFO: Environment: development
+[2026-06-02T16:23:27.610Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T16:23:27.613Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T16:23:27.643Z] INFO: Server running on http://localhost:3002
+[2026-06-02T16:23:27.644Z] INFO: Environment: development
+[2026-06-02T16:23:42.736Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T16:23:42.741Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T16:23:42.787Z] INFO: Server running on http://localhost:3002
+[2026-06-02T16:23:42.792Z] INFO: Environment: development
+[2026-06-02T16:24:03.488Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T16:24:03.491Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T16:24:03.505Z] INFO: Server running on http://localhost:3002
+[2026-06-02T16:24:03.506Z] INFO: Environment: development
+[2026-06-02T16:24:08.556Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T16:24:08.559Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T16:24:08.570Z] INFO: Server running on http://localhost:3002
+[2026-06-02T16:24:08.572Z] INFO: Environment: development
+[2026-06-02T16:24:20.115Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T16:24:20.118Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T16:24:20.133Z] INFO: Server running on http://localhost:3002
+[2026-06-02T16:24:20.134Z] INFO: Environment: development
+[2026-06-02T16:24:28.614Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T16:24:28.617Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T16:24:28.629Z] INFO: Server running on http://localhost:3002
+[2026-06-02T16:24:28.630Z] INFO: Environment: development
+[2026-06-02T16:25:14.434Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T16:25:14.446Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T16:25:14.495Z] INFO: Server running on http://localhost:3002
+[2026-06-02T16:25:14.531Z] INFO: Environment: development
+[2026-06-02T16:25:41.792Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T16:25:41.795Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T16:25:41.806Z] INFO: Server running on http://localhost:3002
+[2026-06-02T16:25:41.807Z] INFO: Environment: development
+[2026-06-02T16:28:13.742Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T16:28:13.747Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T16:28:13.763Z] INFO: Server running on http://localhost:3002
+[2026-06-02T16:28:13.764Z] INFO: Environment: development
+[2026-06-02T16:28:20.398Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T16:28:20.404Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T16:28:20.435Z] INFO: Server running on http://localhost:3002
+[2026-06-02T16:28:20.436Z] INFO: Environment: development
+[2026-06-02T16:30:19.966Z] INFO: 📨 Received create product request {
+  "body": {
+    "id": "",
+    "name": "فرخه",
+    "description": "",
+    "category_id": "2",
+    "category": "فراخ",
+    "price": "100",
+    "discount": "",
+    "quantity": "10"
+  },
+  "hasFile": true
+}
+[2026-06-02T16:30:28.920Z] INFO: 💾 Data to save: {
+  "name": "فرخه",
+  "category": "فراخ",
+  "category_id": "2",
+  "description": "",
+  "quantity": 10,
+  "price": 100,
+  "discount": null,
+  "supplier_id": null
+}
+[2026-06-02T16:36:31.552Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-02T16:36:31.555Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-02T16:36:31.563Z] INFO: Server running on http://localhost:3002
+[2026-06-02T16:36:31.564Z] INFO: Environment: development

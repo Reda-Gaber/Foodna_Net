@@ -178,12 +178,13 @@ window.apiass = true;
                         const oldPrice = Number(p.Price);
                         const discount = Number(p.Discount || 0);
                         const newPrice = oldPrice * (1 - discount / 100);
+                        const imageSrc = /^(https?:)?\/\//.test(p.Image) ? p.Image : `/images/products/${p.Image}`;
                         const el = document.createElement('div');
                         el.className = 'product product_only';
                         el.innerHTML = `
                             <div class="product-discount-badge">خصم ${discount.toFixed(0)}%</div>
                             <a href="/product-page?id=${p.Product_ID}" class="product-img-link">
-                                <img src="/images/products/${p.Image}" alt="${p.Product_Name}" class="product-img" style="border-radius:0;">
+                                <img src="${imageSrc}" alt="${p.Product_Name}" class="product-img" style="border-radius:0;">
                             </a>
                             <div class="product-info">
                                 <a href="/product-page?id=${p.Product_ID}" class="product-title-link">

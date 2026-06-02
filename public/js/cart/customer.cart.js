@@ -3,8 +3,14 @@
   const $ = (s, c=document) => c.querySelector(s);
   const $$ = (s, c=document) => Array.from(c.querySelectorAll(s));
 
+  function buildProductImageSrc(image) {
+    if (!image) return '/images/placeholder.png';
+    if (/^(https?:)?\/\//.test(image)) return image;
+    return `/images/products/${image}`;
+  }
+
   function addToCart(product){
-    const item = { id: product.id||product.Product_ID, title: product.title||product.Product_Name, price: Number(product.price||product.Price)||0, img: product.img||`images/products/${product.Image}`, quantity:1 };
+    const item = { id: product.id||product.Product_ID, title: product.title||product.Product_Name, price: Number(product.price||product.Price)||0, img: product.img||buildProductImageSrc(product.Image), quantity:1 };
     if (window.cartState && typeof window.cartState.addItem==='function') { try{ window.cartState.addItem(item); }catch(e){} }
     else { const s=JSON.parse(localStorage.getItem('cart'))||[]; s.push(item); localStorage.setItem('cart',JSON.stringify(s)); if (typeof updetecart==='function') updetecart(); }
     const cartEl = $('.cart'); if (cartEl) cartEl.classList.add('active');
@@ -14,7 +20,7 @@
     const container = document.getElementById('cart_items'); if (!container) return;
     const items = (window.cartState && typeof window.cartState.getItems==='function') ? window.cartState.getItems() : (JSON.parse(localStorage.getItem('cart'))||[]);
     container.innerHTML=''; let total=0, qtyTotal=0;
-    items.forEach(it=>{ const q=Number(it.quantity)||0, p=Number(it.price)||0; total+=q*p; qtyTotal+=q; const el=document.createElement('div'); el.className='item_cart'; el.innerHTML = `\n      <img src="/${it.img}" alt="${it.title}">\n      <div class="content">\n        <h4>${it.title}</h4>\n        <p class="price_cart">${(p*q).toFixed(2)} جنيه</p>\n        <div class="quantity_control">\n          <button class="decrese_quantity" data-id="${it.id}">-</button>\n          <span class="quantity">${q}</span>\n          <button class="increse_quantity" data-id="${it.id}">+</button>\n        </div>\n      </div>\n      <button class="delete_item" data-id="${it.id}"><i class="ri-delete-bin-5-line"></i></button>`; container.appendChild(el); });
+    items.forEach(it=>{ const q=Number(it.quantity)||0, p=Number(it.price)||0; total+=q*p; qtyTotal+=q; const el=document.createElement('div'); el.className='item_cart'; el.innerHTML = `\n      <img src="${it.img}" alt="${it.title}">\n      <div class="content">\n        <h4>${it.title}</h4>\n        <p class="price_cart">${(p*q).toFixed(2)} جنيه</p>\n        <div class="quantity_control">\n          <button class="decrese_quantity" data-id="${it.id}">-</button>\n          <span class="quantity">${q}</span>\n          <button class="increse_quantity" data-id="${it.id}">+</button>\n        </div>\n      </div>\n      <button class="delete_item" data-id="${it.id}"><i class="ri-delete-bin-5-line"></i></button>`; container.appendChild(el); });
     const priceEl = $('.price_cart_total'); if (priceEl) priceEl.textContent=`${total.toFixed(2)} جنيه`;
     const countEl = $('.count_item_cart'); if (countEl) countEl.textContent=`${qtyTotal}`;
 

@@ -52849,3 +52849,71 @@
   "syscall": "read",
   "fatal": true
 }
+[2026-06-02T15:06:41.077Z] ERROR: Unhandled Promise Rejection {
+  "reason": {
+    "errno": -3008,
+    "code": "ENOTFOUND",
+    "syscall": "getaddrinfo",
+    "hostname": "gateway01.eu-central-1.prod.aws.tidbcloud.com",
+    "fatal": true
+  },
+  "promise": {}
+}
+[2026-06-02T15:06:41.079Z] ERROR: Unhandled Promise Rejection {
+  "reason": {
+    "errno": -3008,
+    "code": "ENOTFOUND",
+    "syscall": "getaddrinfo",
+    "hostname": "gateway01.eu-central-1.prod.aws.tidbcloud.com",
+    "fatal": true
+  },
+  "promise": {}
+}
+[2026-06-02T15:38:38.420Z] ERROR: Cloudinary upload failed {
+  "message": "Invalid cloud_name foodna",
+  "name": "Error",
+  "http_code": 401
+}
+[2026-06-02T15:38:38.422Z] ERROR: Unhandled Promise Rejection {
+  "reason": {
+    "message": "Invalid cloud_name foodna",
+    "name": "Error",
+    "http_code": 401
+  },
+  "promise": {
+    "exception": {
+      "message": "Invalid cloud_name foodna",
+      "name": "Error",
+      "http_code": 401
+    }
+  }
+}
+[2026-06-02T15:38:38.423Z] ERROR: Create product error {
+  "message": "Invalid cloud_name foodna",
+  "name": "Error",
+  "http_code": 401
+}
+[2026-06-02T15:40:28.136Z] ERROR: Cloudinary upload failed {
+  "message": "Invalid cloud_name foodna",
+  "name": "Error",
+  "http_code": 401
+}
+[2026-06-02T15:40:28.141Z] ERROR: Unhandled Promise Rejection {
+  "reason": {
+    "message": "Invalid cloud_name foodna",
+    "name": "Error",
+    "http_code": 401
+  },
+  "promise": {
+    "exception": {
+      "message": "Invalid cloud_name foodna",
+      "name": "Error",
+      "http_code": 401
+    }
+  }
+}
+[2026-06-02T15:40:28.152Z] ERROR: Create product error {
+  "message": "Invalid cloud_name foodna",
+  "name": "Error",
+  "http_code": 401
+}

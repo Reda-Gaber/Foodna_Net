@@ -67,11 +67,23 @@ class ChatbotController {
 
       Logger.info(`[Chatbot] Generated response (length: ${response.length})`);
 
+      const structuredResponse = ChatbotController.parseStructuredChatbotResponse(response);
+      let displayMessage = response;
+
+      if (structuredResponse) {
+        if (structuredResponse.type === 'text' && typeof structuredResponse.message === 'string') {
+          displayMessage = structuredResponse.message;
+        } else if (structuredResponse.type === 'products' && Array.isArray(structuredResponse.items)) {
+          displayMessage = 'إليك قائمة المنتجات المتاحة.';
+        }
+      }
+
       return res.json({
         success: true,
-        message: response,
+        message: displayMessage,
         data: {
-          productsUsed: products.length
+          productsUsed: products.length,
+          structuredResponse
         }
       });
     } catch (error) {
@@ -261,6 +273,49 @@ class ChatbotController {
       Logger.error('[Database] Error getting all products:', error);
       return [];
     }
+  }
+
+  /**
+   * Parse a JSON-like chatbot response and return structured data
+   * @param {string} rawText
+   * @returns {object|null}
+   */
+  static parseStructuredChatbotResponse(rawText) {
+    if (!rawText || typeof rawText !== 'string') {
+      return null;
+    }
+
+    const tryParse = (value) => {
+      try {
+        return JSON.parse(value);
+      } catch (err) {
+        return null;
+      }
+    };
+
+    const trimmed = rawText.trim();
+    const direct = tryParse(trimmed);
+    if (direct) {
+      return direct;
+    }
+
+    const jsonObjectMatch = trimmed.match(/(\{[\s\S]*\})/m);
+    if (jsonObjectMatch) {
+      const parsed = tryParse(jsonObjectMatch[1]);
+      if (parsed) {
+        return parsed;
+      }
+    }
+
+    const jsonArrayMatch = trimmed.match(/(\[[\s\S]*\])/m);
+    if (jsonArrayMatch) {
+      const parsed = tryParse(jsonArrayMatch[1]);
+      if (parsed) {
+        return parsed;
+      }
+    }
+
+    return null;
   }
 
   /**
