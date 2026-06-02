@@ -1215,3 +1215,19 @@
   "totalAmount": 55,
   "finalAmount": 55
 }
+[2026-06-02T13:17:42.201Z] AUDIT: Action: USER_LOGIN, User: 9 {
+  "email": "chef@foodna.com",
+  "role": "Chef"
+}
+[2026-06-02T13:17:53.167Z] AUDIT: Action: KITCHEN_ORDER_UPDATED, User: 9 {
+  "orderId": 750035,
+  "status": "Completed"
+}
+[2026-06-02T13:18:55.214Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-06-02T13:19:08.811Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}

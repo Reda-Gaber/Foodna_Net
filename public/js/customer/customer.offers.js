@@ -1,4 +1,7 @@
 // منع تشغيل الـ fallback في offers.ejs (يجب أن يُعرَّف قبل أي شيء آخر)
+
+
+
 window.apiass = true;
 
 (async function () {
@@ -67,11 +70,11 @@ window.apiass = true;
     }
 
     const card = document.createElement('div');
-    card.className = 'product product_only';
+    card.className = 'product';
 
     card.innerHTML = `
       <div class="product-discount-badge">خصم ${discount.toFixed(0)}%</div>
-      <a href="/product-page?id=${pid}" class="product-img-link">
+      <a href="/product-page?id=${pid}" class="product-image-link">
         ${imgSrc
           ? `<img src="${imgSrc}" alt="${escOffer(name)}" class="product-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">`
           : ''
@@ -81,26 +84,18 @@ window.apiass = true;
         </div>
       </a>
       <div class="product-info">
-        <a href="/product-page?id=${pid}" class="product-title-link">
           <h3>${escOffer(name)}</h3>
-        </a>
-        <div class="price-row">
-          <span class="price price__old">${oldPrice.toFixed(2)} جنيه</span>
-          <span class="price price__new">${newPrice.toFixed(2)} جنيه</span>
+        <div class="price">
+          <span class="price__old">${oldPrice.toFixed(2)} جنيه</span>
+          <span class="price__new" style="color:var(--main-color);font-weight:bold;font-family:var(--font-2);font-size: 18px;">${newPrice.toFixed(2)} جنيه</span>
         </div>
       </div>
-      <div class="button__actions"><button class="Product__actions"><a href="/product-page?id=${pid}">اختر الوجبة</a></button></div>
+         <div class="button__actions">
+            <button class="Product__actions">
+      <a href="/product-page?id=${pid}">اختر الوجبة</a>
+      </button>
+      </div>
     `;
-
-    // hover effect
-    card.addEventListener('mouseenter', () => {
-      card.style.transform  = 'translateY(-4px)';
-      card.style.boxShadow  = '0 8px 24px rgba(0,0,0,0.13)';
-    });
-    card.addEventListener('mouseleave', () => {
-      card.style.transform  = '';
-      card.style.boxShadow  = '0 2px 12px rgba(0,0,0,0.08)';
-    });
 
     container.appendChild(card);
   });
@@ -124,7 +119,7 @@ window.apiass = true;
       btn.textContent    = '✓ أُضيف للسلة';
       btn.style.opacity  = '0.75';
       setTimeout(() => {
-        btn.textContent   = '🛒 أضف للسلة';
+        btn.textContent   = 'أضف للسلة';
         btn.style.opacity = '1';
       }, 1800);
     } else {
@@ -167,3 +162,42 @@ window.apiass = true;
   }
 
 })();
+
+
+  // Fallback: Display offers if customer.offers.js doesn't load
+    if (window.apiass === undefined) {
+        console.log('⚠️ customer.offers.js fallback بدأ');
+        const container = document.querySelector('.products-grid_1');
+        if (container) {
+            fetch('/api/products?discounted=1&limit=100')
+                .then(r => r.json())
+                .then(products => {
+                    console.log('✅ تم جلب', products.length, 'منتج');
+                    container.innerHTML = '';
+                    products.forEach(p => {
+                        const oldPrice = Number(p.Price);
+                        const discount = Number(p.Discount || 0);
+                        const newPrice = oldPrice * (1 - discount / 100);
+                        const el = document.createElement('div');
+                        el.className = 'product product_only';
+                        el.innerHTML = `
+                            <div class="product-discount-badge">خصم ${discount.toFixed(0)}%</div>
+                            <a href="/product-page?id=${p.Product_ID}" class="product-img-link">
+                                <img src="/images/products/${p.Image}" alt="${p.Product_Name}" class="product-img" style="border-radius:0;">
+                            </a>
+                            <div class="product-info">
+                                <a href="/product-page?id=${p.Product_ID}" class="product-title-link">
+                                    <h3>${p.Product_Name}</h3>
+                                </a>
+                                <div class="price-row">
+                                    <span class="price price__old">${oldPrice.toFixed(2)} جنيه</span>
+                                    <span class="price price__new">${newPrice.toFixed(2)} جنيه</span>
+                                </div>
+                            </div>
+                            <div class="button__actions"><button class="Product__actions"><a href="/product-page?id=${p.Product_ID}">اختر الوجبة</a></button></div>`;
+                        container.appendChild(el);
+                    });
+                })
+                .catch(e => console.error('❌ Fallback error:', e));
+        }
+    }

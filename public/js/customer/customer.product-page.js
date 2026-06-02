@@ -197,10 +197,9 @@
             <img src="/images/products/${product.Image}" alt="${product.Product_Name}">
             <div class="product-info">
               <h3>${product.Product_Name}</h3>
-              <div class="points">${oldPrice.toFixed(2)}السعر الاصلي</div>
               <div class="price">
                 ${discount > 0 ? `<!-- <span class="old-price" style="text-decoration:line-through;color:#999;margin-right:8px">${oldPrice.toFixed(2)} جنيه</span> -->` : ''}
-                <span class="final-price" style="color:${discount>0? '#e62a32':'#000'};font-weight:700">${finalPrice.toFixed(2)} جنيه</span>
+                <span class="final-price" style="color: #e62a32;font-weight:700;font-family: var(--font-2);font-size: 18px;">${finalPrice.toFixed(2)} جنيه</span>
               </div>
             </div>
             <div class="button__actions">

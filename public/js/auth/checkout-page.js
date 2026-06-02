@@ -193,7 +193,7 @@
       if (!data.success) {
         discountAmount = 0;
         updateTotals();
-        showCouponMsg('❌ كود الخصم غير صحيح أو منتهي الصلاحية', 'error');
+        showCouponMsg('كود الخصم غير صحيح أو منتهي الصلاحية', 'error');
         return;
       }
 

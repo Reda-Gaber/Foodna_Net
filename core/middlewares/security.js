@@ -22,7 +22,7 @@ const loginLimiter = rateLimit({
 // Rate Limiting عام للـ API
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 دقيقة
-  max: 110, // 100 طلب
+  max: 110, // 110 طلب
   message: {
     success: false,
     error: 'Too many requests',
@@ -33,7 +33,7 @@ const apiLimiter = rateLimit({
 // Rate Limiting للـ Registration
 const registerLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // ساعة واحدة
-  max: 10, // 3 محاولات
+  max: 10, // 10 محاولات
   message: {
     success: false,
     error: 'Too many registration attempts',

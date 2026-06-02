@@ -1,7 +1,28 @@
 /* ============================================================
    Checkout Page Styles - صفحة إتمام الطلب
    ============================================================ */
+.dark-theme .checkout-summary, .dark-theme .checkout-payment {
+background: #393737;
+}
 
+.dark-theme .form-group input, .dark-theme .form-group textarea{
+background-color: hsl(225, 3%, 31%);
+color: #ffffff;
+}
+.dark-theme .form-group input:focus, .dark-theme .form-group textarea:focus{
+background-color: hsl(225, 3%, 31%);
+color: #ffffff;
+}
+.dark-theme .coupon-input-row input{
+background-color: hsl(225, 3%, 31%);
+color: #ffffff;
+}
+.dark-theme .totals-row {
+color: #ffffff;
+}
+.dark-theme .form-group label {
+  color: #ffffff;
+}
 .checkout-main {
   background: var(--section-background, #f6f6f6);
   min-height: 100vh;
@@ -240,7 +261,7 @@
   display: block;
   font-size: 13px;
   font-weight: bold;
-  color: var(--title-color, #1a1a4e);
+  color: #000000;
   margin-bottom: 6px;
   font-family: var(--font-2, 'Kufam', sans-serif);
 }

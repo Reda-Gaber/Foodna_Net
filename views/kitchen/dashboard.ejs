@@ -321,14 +321,14 @@
                     orders = data.data.orders.filter(o => 
                         o.status !== 'Completed' && o.status !== 'Delivered'
                     );
-                    console.log('✅ Filtered orders:', orders);
+                    console.log('Filtered orders:', orders);
                     renderOrders();
                 } else {
-                    console.error('❌ API error:', data.message);
+                    console.error(' API error:', data.message);
                     showError(data.message || 'فشل في جلب الطلبات', 'خطأ');
                 }
             } catch (err) {
-                console.error('❌ Error fetching orders:', err);
+                console.error(' Error fetching orders:', err);
                 showError('حدث خطأ في جلب الطلبات: ' + err.message, 'خطأ في الاتصال');
             }
         }
@@ -345,7 +345,7 @@
 
             try {
                 const payload = { orderId: Number(orderId), status: 'Completed' };
-                console.log('📤 Sending payload:', payload);
+                console.log(' Sending payload:', payload);
                 
                 const res = await fetch('/kitchen/api/update', {
                     method: 'POST',
@@ -354,9 +354,9 @@
                     body: JSON.stringify(payload)
                 });
                 
-                console.log('📥 Response status:', res.status);
+                console.log(' Response status:', res.status);
                 const data = await res.json();
-                console.log('📥 Response data:', data);
+                console.log(' Response data:', data);
                 
                 closeSwal();
                 
@@ -369,7 +369,7 @@
                     showError(data.message || 'فشل تحديث حالة الطلب', 'خطأ');
                 }
             } catch (err) {
-                console.error('❌ Error:', err);
+                console.error(' Error:', err);
                 closeSwal();
                 showError('حدث خطأ أثناء تحديث حالة الطلب: ' + err.message, 'خطأ في الاتصال');
             }
