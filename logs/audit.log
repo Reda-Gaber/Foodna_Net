@@ -1231,3 +1231,151 @@
   "email": "admin@foodna.com",
   "role": "Admin"
 }
+[2026-06-02T14:38:50.059Z] AUDIT: Action: USER_LOGIN, User: 9 {
+  "email": "chef@foodna.com",
+  "role": "Chef"
+}
+[2026-06-02T14:38:56.125Z] AUDIT: Action: USER_LOGIN, User: 9 {
+  "email": "chef@foodna.com",
+  "role": "Chef"
+}
+[2026-06-02T14:39:01.125Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-06-02T14:39:06.404Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-06-02T14:39:34.671Z] AUDIT: Action: USER_LOGIN, User: undefined {
+  "email": "ahmed@gmail.c",
+  "role": "Client"
+}
+[2026-06-02T14:40:03.777Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-06-02T14:40:31.571Z] AUDIT: Action: USER_LOGIN, User: undefined {
+  "email": "ahmed@gmail.c",
+  "role": "Client"
+}
+[2026-06-02T14:41:34.657Z] AUDIT: Action: USER_LOGIN, User: 9 {
+  "email": "chef@foodna.com",
+  "role": "Chef"
+}
+[2026-06-02T14:41:35.783Z] AUDIT: Action: USER_LOGIN, User: undefined {
+  "email": "ahmed@gmail.c",
+  "role": "Client"
+}
+[2026-06-02T14:41:36.642Z] AUDIT: Action: USER_LOGIN, User: undefined {
+  "email": "ahmed@gmail.c",
+  "role": "Client"
+}
+[2026-06-02T14:41:37.382Z] AUDIT: Action: USER_LOGIN, User: undefined {
+  "email": "ahmed@gmail.c",
+  "role": "Client"
+}
+[2026-06-02T14:41:38.088Z] AUDIT: Action: USER_LOGIN, User: undefined {
+  "email": "ahmed@gmail.c",
+  "role": "Client"
+}
+[2026-06-02T14:41:52.135Z] AUDIT: Action: USER_LOGIN, User: 9 {
+  "email": "chef@foodna.com",
+  "role": "Chef"
+}
+[2026-06-02T14:42:04.731Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-06-02T14:47:17.902Z] AUDIT: Action: USER_LOGIN, User: undefined {
+  "email": "ahmed@gmail.c",
+  "role": "Client"
+}
+[2026-06-02T14:49:22.780Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-06-02T21:46:49.499Z] AUDIT: Action: USER_LOGIN, User: 10 {
+  "email": "cashier@foodna.com",
+  "role": "Cashier"
+}
+[2026-06-02T21:47:23.635Z] AUDIT: Action: CASHIER_ORDER_STATUS_UPDATED, User: 10 {
+  "orderId": "750035",
+  "status": "Pending"
+}
+[2026-06-02T21:47:48.877Z] AUDIT: Action: PUBLIC_ORDER_CREATED, User: system {
+  "orderId": 810035,
+  "totalAmount": 2660,
+  "finalAmount": 2660
+}
+[2026-06-02T21:48:28.044Z] AUDIT: Action: PUBLIC_ORDER_CREATED, User: system {
+  "orderId": 810036,
+  "totalAmount": 170,
+  "finalAmount": 170
+}
+[2026-06-02T21:48:32.623Z] AUDIT: Action: PUBLIC_ORDER_CREATED, User: system {
+  "orderId": 810037,
+  "totalAmount": 170,
+  "finalAmount": 170
+}
+[2026-06-02T21:57:20.359Z] AUDIT: Action: PUBLIC_ORDER_CREATED, User: system {
+  "orderId": 810038,
+  "totalAmount": 294.98,
+  "finalAmount": 294.98
+}
+[2026-06-02T21:58:19.703Z] AUDIT: Action: PUBLIC_ORDER_CREATED, User: system {
+  "orderId": 810039,
+  "totalAmount": 30,
+  "finalAmount": 30
+}
+[2026-06-02T22:28:16.250Z] AUDIT: Action: USER_LOGIN, User: 10 {
+  "email": "cashier@foodna.com",
+  "role": "Cashier"
+}
+[2026-06-03T10:56:12.699Z] AUDIT: Action: USER_LOGIN, User: 10 {
+  "email": "cashier@foodna.com",
+  "role": "Cashier"
+}
+[2026-06-03T10:56:25.795Z] AUDIT: Action: PUBLIC_ORDER_CREATED, User: system {
+  "orderId": 840035,
+  "totalAmount": 195,
+  "finalAmount": 195
+}
+[2026-06-03T10:56:37.854Z] AUDIT: Action: PUBLIC_ORDER_CREATED, User: system {
+  "orderId": 840036,
+  "totalAmount": 20,
+  "finalAmount": 20
+}
+[2026-06-03T11:04:22.030Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-06-03T11:12:32.325Z] AUDIT: Action: USER_LOGIN, User: 10 {
+  "email": "cashier@foodna.com",
+  "role": "Cashier"
+}
+[2026-06-03T11:37:23.728Z] AUDIT: Action: USER_LOGIN, User: 9 {
+  "email": "chef@foodna.com",
+  "role": "Chef"
+}
+[2026-06-03T11:38:24.963Z] AUDIT: Action: KITCHEN_ORDER_UPDATED, User: 9 {
+  "orderId": 780035,
+  "status": "Completed"
+}
+[2026-06-03T12:23:25.017Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-06-03T12:24:43.834Z] AUDIT: Action: USER_LOGIN, User: 10 {
+  "email": "cashier@foodna.com",
+  "role": "Cashier"
+}
+[2026-06-03T12:24:56.166Z] AUDIT: Action: PUBLIC_ORDER_CREATED, User: system {
+  "orderId": 870035,
+  "totalAmount": 74.97999999999999,
+  "finalAmount": 74.97999999999999
+}
+[2026-06-03T12:25:59.527Z] AUDIT: Action: USER_LOGIN, User: 9 {
+  "email": "chef@foodna.com",
+  "role": "Chef"
+}

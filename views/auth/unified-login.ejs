@@ -4,132 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تسجيل الدخول - Foodna Shop</title>
-    <link rel="stylesheet" href="/css/design-system.css">
-    <link rel="stylesheet" href="/css/rtl-fix.css">
+    <link rel="stylesheet" href="/css/shared/design-system.css">
+    <link rel="stylesheet" href="/css/shared/rtl-fix.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600&family=Montserrat:wght@400;500;600&family=Oswald:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="/js/shared/sweetalert-config.js"></script>
-   
-    <style>
-        .login-container {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, var(--section-background) 0%, var(--body-color) 100%);
-            padding: var(--spacing-lg);
-        }
-        
-        .login-card {
-            background: var(--white-color);
-            border-radius: var(--radius-xl);
-            box-shadow: var(--shadow-lg);
-            padding: var(--spacing-xl);
-            max-width: 450px;
-            width: 100%;
-        }
-        
-        .login-header {
-            text-align: center;
-            margin-bottom: var(--spacing-xl);
-        }
-        
-        .login-header h1 {
-            color: var(--main-color);
-            font-size: var(--biggest-font-size);
-            margin-bottom: var(--spacing-sm);
-        }
-        
-        .login-header p {
-            color: var(--text-color);
-            font-size: var(--h3-font-size);
-        }
-        
-        .form-group {
-            margin-bottom: var(--spacing-md);
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: var(--spacing-xs);
-            color: var(--title-color);
-            font-weight: var(--font-medium);
-        }
-        
-        .form-control {
-            width: 100%;
-            padding: var(--spacing-md);
-            border: 2px solid var(--border-color);
-            border-radius: var(--radius-md);
-            font-size: var(--h3-font-size);
-            transition: all 0.3s ease;
-        }
-        
-        .form-control:focus {
-            outline: none;
-            border-color: var(--main-color);
-            box-shadow: 0 0 0 3px rgba(230, 42, 50, 0.1);
-        }
-        
-        .form-control.error {
-            border-color: #ef4444;
-        }
-        
-        .error-message {
-            color: #ef4444;
-            font-size: 0.875rem;
-            margin-top: var(--spacing-xs);
-            display: none;
-        }
-        
-        .error-message.show {
-            display: block;
-        }
-        
-        .form-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: var(--spacing-lg);
-        }
-        
-        .remember-me {
-            display: flex;
-            align-items: center;
-            gap: var(--spacing-xs);
-            font-size: 0.875rem;
-        }
-        
-        .forgot-password {
-            color: var(--main-color);
-            text-decoration: none;
-            font-size: 0.875rem;
-        }
-        
-        .forgot-password:hover {
-            text-decoration: underline;
-        }
-        
-        .register-link {
-            text-align: center;
-            margin-top: var(--spacing-lg);
-            padding-top: var(--spacing-lg);
-            border-top: 1px solid var(--border-color);
-        }
-        
-        .register-link a {
-            color: var(--main-color);
-            text-decoration: none;
-            font-weight: var(--font-medium);
-        }
-        
-        .register-link a:hover {
-            text-decoration: underline;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/auth/unified-login.css">
 </head>
 <body>
     <div class="login-container">
@@ -184,7 +67,6 @@
             </div>
         </div>
     </div>
-<<<<<<< HEAD
 
     <script>
         // Simple fallback notification (in case SweetAlert fails to load)
@@ -435,8 +317,5 @@
             });
         });
     </script>
-=======
-     <script src="/js/auth/auth.login.js"></script>
->>>>>>> 6517bd27652fce1957c73d1d71c2d57c20cc84aa
 </body>
 </html>

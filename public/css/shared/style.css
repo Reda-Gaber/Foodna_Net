@@ -1410,7 +1410,7 @@ footer p:last-child { margin: 0; color: white; text-align: center; padding-botto
   box-shadow: 0 2px 8px hsla(0, 0%, 0%, 0.1);
   border: 1px solid var(--main-color);
   display: inline-flex;
-  padding: 6px;
+  padding: 4px 7px;;
   font-size: 1.25rem;
   color: var(--main-color);
   z-index: var(--z-tooltip);

@@ -1,0 +1,163 @@
+       
+        body {
+            background: var(--section-background);
+            min-height: 100vh;
+        }
+        
+        .kitchen-header {
+            background: var(--main-color);
+            color: var(--white-color);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-md);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .kitchen-header h1 {
+            color: var(--white-color);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .kitchen-header p {
+            color: var(--white-color);
+            opacity: 0.9;
+        }
+        
+        .orders-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: var(--spacing-lg);
+            padding: var(--spacing-lg);
+        }
+        
+        .order-card {
+            background: var(--white-color);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--main-color);
+        }
+        
+        .order-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+        
+        .order-card.completed {
+            opacity: 0.6;
+            border-left-color: var(--border-color);
+        }
+        .content-header{
+          display: flex;
+        flex-direction: column;
+       align-items: center;
+       justify-content: center;
+        }
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+            padding-bottom: var(--spacing-md);
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .order-number {
+            font-size: var(--h2-font-size);
+            font-weight: var(--font-semi-bold);
+            color: var(--title-color);
+        }
+        
+        .order-time {
+            font-size: 0.875rem;
+            color: var(--text-color);
+        }
+        
+        .order-items {
+            margin: var(--spacing-md) 0;
+        }
+        
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--spacing-sm) 0;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        
+        .order-item:last-child {
+            border-bottom: none;
+        }
+        
+        .order-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: var(--spacing-md);
+            padding-top: var(--spacing-md);
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .order-total {
+            font-size: var(--h2-font-size);
+            font-weight: var(--font-semi-bold);
+            color: var(--main-color);
+        }
+        
+        .no-orders {
+            text-align: center;
+            padding: var(--spacing-xl);
+            color: var(--text-color);
+        }
+        
+        .no-orders i {
+            font-size: 4rem;
+            color: var(--border-color);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .badge {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-md);
+            font-size: 0.75rem;
+            font-weight: var(--font-medium);
+            text-transform: uppercase;
+        }
+        
+        .badge-warning {
+            background: #f59e0b;
+            color: var(--white-color);
+        }
+        
+        .badge-success {
+            background: #10b981;
+            color: var(--white-color);
+        }
+        
+        .badge-info {
+            background: #3b82f6;
+            color: var(--white-color);
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: var(--h3-font-size);
+            font-weight: var(--font-medium);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .btn-success {
+            background: var(--main-color);
+            color: var(--white-color);
+        }
+        
+        .btn-success:hover {
+            background: var(--main-color-dark);
+            transform: translateY(-1px);
+        }

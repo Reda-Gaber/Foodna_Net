@@ -47,64 +47,7 @@
     <i class="ri-moon-line chang-theme" id="theme-button"></i>
     <i class="ri-shopping-cart-line" id="cart-button"></i>
    </div>
-   <style>
-     /* green when authenticated */
-     /* .user-logged { color: #22c55e !important; } */
-   </style>
 
-   <script>
-window.fetchCustomerAuthCheck = window.fetchCustomerAuthCheck || function() {
-  if (!window.__customerAuthCheckPromise) {
-    window.__customerAuthCheckPromise = fetch('/auth/api/auth/check?audience=customer', {
-      credentials: 'include',
-      headers: { 'Accept': 'application/json' }
-    })
-      .then(function(res) {
-        const ct = res.headers.get('content-type') || '';
-        if (!res.ok || !ct.includes('application/json')) return { authenticated: false };
-        return res.json();
-      })
-      .catch(function() { return { authenticated: false }; })
-      .finally(function() {
-        window.__customerAuthCheckPromise = null;
-      });
-  }
-  return window.__customerAuthCheckPromise;
-};
-
-(async function(){
-  const userLink = document.getElementById('user-icon-link');
-  const userIcon = document.getElementById('login-button');
-  if (!userLink) return;
-
-  userLink.href = '/user/register';
-  userLink.setAttribute('aria-busy', 'true');
-  userLink.style.pointerEvents = 'none';
-
-  try {
-    const data = await window.fetchCustomerAuthCheck();
-    window.auth = { authenticated: !!data.authenticated, user: data.user || null };
-
-    if (window.auth.authenticated && (data.isClient !== false)) {
-      userLink.href = '/profile';
-      if (userIcon) userIcon.classList.add('user-logged');
-    } else {
-      userLink.href = '/user/register';
-      if (userIcon) userIcon.classList.remove('user-logged');
-    }
-
-    window.dispatchEvent(new CustomEvent('auth.changed', { detail: window.auth }));
-  } catch (e) {
-    window.auth = { authenticated: false, user: null };
-    userLink.href = '/user/register';
-  } finally {
-    // ✅ إعادة تفعيل الضغط بعد ما اتحدد الـ href الصح
-    userLink.removeAttribute('aria-busy');
-    userLink.style.pointerEvents = '';
-  }
-})();
-   </script>
-   <script src="/js/feature-user-search.js"></script>
    <script src="/js/shared/feature-user-search.js"></script>
   </nav>
 </header>

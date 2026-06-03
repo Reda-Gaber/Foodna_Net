@@ -52849,3 +52849,358 @@
   "syscall": "read",
   "fatal": true
 }
+[2026-06-02T16:26:06.148Z] ERROR: Unhandled Promise Rejection {
+  "reason": {
+    "errno": -4077,
+    "code": "ECONNRESET",
+    "syscall": "read",
+    "fatal": true
+  },
+  "promise": {}
+}
+[2026-06-02T22:23:45.179Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-02T22:23:51.743Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-02T22:23:56.735Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-02T22:24:10.283Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-02T22:24:17.807Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-02T22:24:34.425Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-02T22:40:47.667Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-02T22:40:47.686Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-02T22:40:47.704Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-02T22:40:47.726Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-02T22:40:47.735Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-02T22:41:37.065Z] ERROR: Get cashier products error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at PromisePool.query (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\mysql2\\lib\\promise\\pool.js:36:22)\n    at Cashier.fetchProducts (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\modules\\cashier\\cashier.model.js:13:33)\n    at exports.getProducts (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\modules\\cashier\\cashier.controller.js:17:41)\n    at Layer.handleRequest (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\router\\lib\\layer.js:152:17)\n    at next (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\router\\lib\\route.js:157:13)\n    at Route.dispatch (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\router\\lib\\route.js:117:3)\n    at handle (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\router\\index.js:435:11)\n    at Layer.handleRequest (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\router\\lib\\layer.js:152:17)\n    at C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\router\\index.js:295:15\n    at processParams (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\router\\index.js:582:12)",
+  "code": "ECONNRESET",
+  "errno": -4077
+}
+[2026-06-02T22:41:41.629Z] ERROR: Get orders error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at PromisePool.query (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\mysql2\\lib\\promise\\pool.js:36:22)\n    at Cashier.fetchOrders (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\modules\\cashier\\cashier.model.js:188:31)\n    at exports.getOrders (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\modules\\cashier\\cashier.controller.js:350:39)\n    at Layer.handleRequest (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\router\\lib\\layer.js:152:17)\n    at next (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\router\\lib\\route.js:157:13)\n    at Route.dispatch (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\router\\lib\\route.js:117:3)\n    at handle (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\router\\index.js:435:11)\n    at Layer.handleRequest (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\router\\lib\\layer.js:152:17)\n    at C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\router\\index.js:295:15\n    at processParams (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\router\\index.js:582:12)",
+  "code": "ECONNRESET",
+  "errno": -4077
+}
+[2026-06-02T23:00:49.222Z] ERROR: Unhandled Promise Rejection {
+  "reason": {
+    "errno": -4077,
+    "code": "ECONNRESET",
+    "syscall": "read",
+    "fatal": true
+  },
+  "promise": {}
+}
+[2026-06-02T23:01:41.940Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-02T23:01:49.830Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-03T11:02:31.764Z] ERROR: Unhandled error {
+  "message": "Connection lost: The server closed the connection.",
+  "stack": "Error: Connection lost: The server closed the connection.\n    at Socket.<anonymous> (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\mysql2\\lib\\base\\connection.js:113:31)\n    at Socket.emit (node:events:520:35)\n    at TCP.<anonymous> (node:net:346:12)",
+  "fatal": true,
+  "code": "PROTOCOL_CONNECTION_LOST"
+}
+[2026-06-03T11:02:35.114Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-03T11:02:40.578Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-03T11:02:47.787Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-03T11:02:52.470Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-03T11:02:56.917Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-03T11:11:54.570Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-03T11:11:54.599Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-03T11:11:54.660Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-03T11:11:54.674Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-03T11:11:54.691Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-03T11:37:45.302Z] ERROR: Get kitchen orders error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at PromisePool.query (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\mysql2\\lib\\promise\\pool.js:36:22)\n    at Kitchen.fetchOrderItems (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\modules\\kitchen\\kitchen.model.js:35:29)\n    at C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\modules\\kitchen\\kitchen.controller.js:22:42\n    at Array.map (<anonymous>)\n    at exports.getKitchenOrders (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\modules\\kitchen\\kitchen.controller.js:21:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)",
+  "code": "ECONNRESET",
+  "errno": -4077
+}
+[2026-06-03T11:45:06.326Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-03T11:45:06.329Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-03T11:45:06.332Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-03T12:08:48.734Z] ERROR: Unhandled Promise Rejection {
+  "reason": {
+    "errno": -4077,
+    "code": "ECONNRESET",
+    "syscall": "read",
+    "fatal": true
+  },
+  "promise": {}
+}
+[2026-06-03T12:22:08.179Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-03T12:22:15.845Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-03T12:22:26.038Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-03T12:22:28.547Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-03T12:22:31.710Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-03T12:22:32.506Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-03T12:37:39.947Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-03T12:37:42.656Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-03T12:37:46.762Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-03T12:37:47.799Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-03T12:37:49.030Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-03T12:37:49.868Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
