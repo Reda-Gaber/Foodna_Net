@@ -1379,3 +1379,30 @@
   "email": "chef@foodna.com",
   "role": "Chef"
 }
+[2026-06-03T13:15:36.878Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-06-03T13:16:48.026Z] AUDIT: Action: USER_LOGIN, User: 10 {
+  "email": "cashier@foodna.com",
+  "role": "Cashier"
+}
+[2026-06-03T13:28:36.277Z] AUDIT: Action: USER_LOGIN, User: 10 {
+  "email": "cashier@foodna.com",
+  "role": "Cashier"
+}
+[2026-06-03T13:28:53.120Z] AUDIT: Action: PUBLIC_ORDER_CREATED, User: system {
+  "orderId": 900035,
+  "totalAmount": 330,
+  "finalAmount": 330
+}
+[2026-06-03T13:31:42.252Z] AUDIT: Action: PUBLIC_ORDER_CREATED, User: system {
+  "orderId": 900036,
+  "totalAmount": 180,
+  "finalAmount": 180
+}
+[2026-06-03T13:33:09.380Z] AUDIT: Action: PUBLIC_ORDER_CREATED, User: system {
+  "orderId": 900037,
+  "totalAmount": 310,
+  "finalAmount": 310
+}

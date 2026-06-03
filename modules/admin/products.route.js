@@ -45,7 +45,7 @@ function requireAdmin(req, res, next) {
 router.post('/create', requireAdmin, upload.single('image'), ProductController.create);
 
 // تعديل منتج مع صورة
-router.post('/update', requireAdmin, upload.single('image'), ProductController.update);
+router.post('/update/:id', requireAdmin, upload.single('image'), ProductController.update);
 
 // حذف منتج
 router.delete('/delete/:id', requireAdmin, ProductController.delete);

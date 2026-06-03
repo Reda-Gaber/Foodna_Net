@@ -1,6 +1,7 @@
 const authModel = require('./auth.model');
 const bcrypt = require('bcrypt');
 const db = require('../../config/db');
+const cloudinaryService = require('../../config/cloudinary');
 const { resolveCustomerId } = require('../../core/middlewares/sessionHandler');
 
 const checkEmailExists = async (email) => {
@@ -169,10 +170,33 @@ const updateProfile = async (req, res) => {
     if (existing && existing.length > 0)
       return res.status(409).json({ success: false, message: 'البريد الإلكتروني مستخدم من حساب آخر' });
 
-    await db.query(
-      'UPDATE Customers SET Customer_Name = ?, Email = ?, Phone = ?, Address = ? WHERE Customer_Id = ?',
-      [name, email, phone || '', address || '', customerId]
-    );
+    let avatarUrl = null;
+    let oldAvatar = null;
+    if (req.file && req.file.buffer) {
+      const [rows] = await db.query('SELECT Avatar FROM Customers WHERE Customer_Id = ?', [customerId]);
+      oldAvatar = rows[0]?.Avatar || null;
+
+      const uploadResult = await cloudinaryService.uploadBuffer(req.file.buffer, {
+        folder: 'foodna/avatars'
+      });
+      avatarUrl = uploadResult.secure_url;
+    }
+
+    const updateFields = [name, email, phone || '', address || ''];
+    let query = 'UPDATE Customers SET Customer_Name = ?, Email = ?, Phone = ?, Address = ?';
+    if (avatarUrl) {
+      query += ', Avatar = ?';
+      updateFields.push(avatarUrl);
+    }
+    query += ' WHERE Customer_Id = ?';
+    updateFields.push(customerId);
+
+    await db.query(query, updateFields);
+
+    // حذف الصورة القديمة من Cloudinary إذا كانت موجودة
+    if (avatarUrl && oldAvatar && oldAvatar !== avatarUrl) {
+      await cloudinaryService.deleteResource(oldAvatar);
+    }
 
     // تحديث الـ session
     req.session.email = email;

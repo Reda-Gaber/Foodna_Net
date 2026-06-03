@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', function () {
 
     // ─── State ───────────────────────────────────────────
@@ -69,12 +70,15 @@ document.addEventListener('DOMContentLoaded', function () {
             grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;padding:2rem;color:#888;">لا توجد منتجات</p>';
             return;
         }
-        grid.innerHTML = products.map(p => `
+        grid.innerHTML = products.map(p => {
+            const imageSrc = /^(https?:)?\/\//.test(p.Image || '') ? p.Image : `/images/products/${p.Image || ''}`;
+            return `
             <div class="product-card" data-product-id="${p.Product_ID}">
-                <img src="/images/products/${p.Image || ''}" alt="${p.Product_Name}" class="product-image" onload="this.classList.add('loaded')" onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'180\' height=\'120\' viewBox=\'0 0 180 120\'%3E%3Crect width=\'180\' height=\'120\' fill=\'%23f3f4f6\'/%3E%3Ctext x=\'90\' y=\'55\' font-family=\'Arial\' font-size=\'28\' fill=\'%23d1d5db\' text-anchor=\'middle\'%3E🍽%3C/text%3E%3Ctext x=\'90\' y=\'80\' font-family=\'Arial\' font-size=\'10\' fill=\'%239ca3af\' text-anchor=\'middle\'%3Eلا توجد صورة%3C/text%3E%3C/svg%3E';this.classList.add('loaded')"/>
+                <img src="${imageSrc}" alt="${p.Product_Name}" class="product-image" onload="this.classList.add('loaded')" onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'180\' height=\'120\' viewBox=\'0 0 180 120\'%3E%3Crect width=\'180\' height=\'120\' fill=\'%23f3f4f6\'/%3E%3Ctext x=\'90\' y=\'55\' font-family=\'Arial\' font-size=\'28\' fill=\'%23d1d5db\' text-anchor=\'middle\'%3E🍽%3C/text%3E%3Ctext x=\'90\' y=\'80\' font-family=\'Arial\' font-size=\'10\' fill=\'%239ca3af\' text-anchor=\'middle\'%3Eلا توجد صورة%3C/text%3E%3C/svg%3E';this.classList.add('loaded')"/>
                 <div class="product-name">${p.Product_Name}</div>
                 <div class="product-price">${fmtMoney(p.Price)} جنيه</div>
-            </div>`).join('');
+            </div>`
+        }).join('');
         grid.querySelectorAll('.product-card').forEach(card => {
             card.addEventListener('click', () => addToCart(parseInt(card.dataset.productId)));
         });
@@ -201,7 +205,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 
                 // عرض رسالة النجاح مع أزرار الطباعة
                 await Swal.fire({
-                    title: 'نجح الدفع',
+                      title: 'نجح الدفع',
                     html: `
                         <div style="text-align: center; direction: rtl;">
                             <p style="font-size: 1.2rem; margin-bottom: 16px;">تم إنشاء الطلب!</p>

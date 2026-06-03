@@ -406,6 +406,7 @@ function normalizeProduct(item) {
         name: item.Product_Name || item.name || item.title || '',
         description: item.Description || item.description || '',
         category: item.Category || item.category || '',
+        category_id: item.Category_ID || item.category_id || null,
             price: (function() { const v = item.Price ?? item.price; const n = parseFloat(v); return Number.isFinite(n) ? n : 0; })(),
             discount: (function() { const v = item.Discount ?? item.discount; const n = parseFloat(v); return Number.isFinite(n) ? n : 0; })(),
             stock: (function() { const v = item.Quantity_Available ?? item.Quantity ?? item.stock; const n = parseInt(v); return Number.isFinite(n) ? n : 0; })(),
@@ -556,10 +557,11 @@ async function openProductModal(productId = null) {
 
             <div class="form-group">
                 <label for="productCategory">الفئة</label>
-                <select id="productCategory" name="category" required>
+                <select id="productCategory" name="category_id" required>
                     <option value="">اختر فئة...</option>
                     ${categoryOptions}
                 </select>
+                <input type="hidden" id="categoryNameHidden" name="category" value="">
             </div>
 
             <div class="form-group">
@@ -618,6 +620,20 @@ async function openProductModal(productId = null) {
                 const file = fileInput.files[0];
                 imageName.textContent = file ? `تم الاختيار: ${file.name}` : '';
             };
+        }
+
+        // تحديث اسم الفئة المخفي تلقائياً
+        const catSelect = document.getElementById('productCategory');
+        const catNameHidden = document.getElementById('categoryNameHidden');
+        if (catSelect && catNameHidden) {
+            const updateCategoryHidden = () => {
+                const selected = catSelect.options[catSelect.selectedIndex];
+                catNameHidden.value = selected?.dataset?.name || '';
+            };
+
+            catSelect.addEventListener('change', updateCategoryHidden);
+            // تعيين القيمة الابتدائية إذا كان تعديل
+            updateCategoryHidden();
         }
 
         // إرسال البيانات للـ Backend
@@ -699,10 +715,10 @@ async function openProductModal(productId = null) {
                 const categoryVal = document.getElementById('productCategory');
                 const categoryId = categoryVal.value;
                 const categoryName = categoryVal.options[categoryVal.selectedIndex]?.dataset?.name || '';
-                if (categoryId !== (original.category_id || '')) { 
-                    fd.append('category_id', categoryId); 
-                    fd.append('category', categoryName);
-                    changed = true; 
+                fd.append('category_id', categoryId);
+                fd.append('category', categoryName);
+                if (categoryId !== (original.category_id || '') || categoryName !== (original.category || '')) {
+                    changed = true;
                 }
 
                 const priceVal = document.getElementById('productPrice').value;

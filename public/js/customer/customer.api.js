@@ -73,6 +73,12 @@ async function apia() {
    ============================================================= */
 const mySwiper = document.querySelector('.slides_matc');
 
+function buildProductImageSrc(image) {
+  if (!image) return '/images/placeholder.png';
+  if (/^(https?:)?\/\//.test(image)) return image;
+  return `/images/products/${image}`;
+}
+
 function slider(actev) {
   if (!mySwiper) return;
 
@@ -208,7 +214,7 @@ function buildProductCard(product) {
   card.innerHTML = `
     ${discount > 0 ? `<div class="product-discount-badge">خصم ${discount.toFixed(0)}%</div>` : ''}
     <img
-      src="/images/products/${product.Image}"
+      src="${buildProductImageSrc(product.Image)}"
       alt="${product.Product_Name}"
       
       loading="lazy"
@@ -326,7 +332,7 @@ function addToCart(product) {
     id: product.Product_ID,
     title: product.Product_Name,
     price: Number(product.Price) || 0,
-    img: `images/products/${product.Image}`,
+    img: buildProductImageSrc(product.Image),
     quantity: 1,
   };
 
@@ -363,7 +369,7 @@ function updateCart() {
 
     cartItemContainer.innerHTML += `
       <div class="item_cart">
-        <img src="/${item.img}" alt="">
+        <img src="${item.img}" alt="">
         <div class="content">
           <h4>${item.title}</h4>
           <p class="price_cart">${totalPrice.toFixed(2)} جنيه</p>

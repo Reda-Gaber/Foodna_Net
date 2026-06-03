@@ -22,8 +22,7 @@ class GeminiService {
           // Add timeout to prevent hanging requests
           timeout: 30000 // 30 seconds timeout
         });
-        // llama-3.1-8b-instant - verified working model with good Arabic support
-        this.model = 'llama-3.1-8b-instant';
+        this.model = 'llama-3.3-70b-versatile';
         Logger.info('✓ Groq client initialized successfully with model: ' + this.model);
       } catch (err) {
         Logger.error('Failed to initialize Groq client:', err);
@@ -230,27 +229,15 @@ class GeminiService {
     try {
       const productContext = this.buildProductContext(products);
 
-      const systemPrompt = `أنت مساعد طلب الطعام الذكي لمطعم فودنا شوب.
-يجب أن تجيب فقط باستخدام قائمة المنتجات المقدمة أدناه.
-لا تخترع منتجات أو أسعار جديدة.
-كن مفيداً وودوداً وأجب باللغة العربية فقط.
+      const systemPrompt = `أنت مساعد طلب الطعام في مطعم فودنا.
 
-**تعليمات مهمة لعرض المنتجات:**
-- إذا طلب المستخدم بدائل أو خيارات (مثل: "اعطني خيارات"، "أرخص منتجات"، "أنواع العصائر")
-- فيجب أرجاع قائمة المنتجات بصيغة جدول Markdown بهذا الشكل تماماً:
+إذا طلب المستخدم منتجات أو خيارات أو أصناف، رد بـ JSON فقط بهذا الشكل الدقيق:
+{"type":"products","items":[{"id":1,"name":"اسم المنتج","price":20,"desc":"وصف مختصر"}]}
 
-| 🏷️ الصنف | 💰 السعر | 📝 الوصف | 📌 الكود |
-|---------|--------|---------|--------|
-| عصير برتقال طازج | 20 جنيه | عصير طبيعي من البرتقال الطازج | juice_1 |
-| عصير الشمام والزنجبيل | 25 جنيه | خليط صحي ومنعش | juice_2 |
+إذا كان السؤال عاماً أو تحية أو استفسار، رد بـ JSON فقط:
+{"type":"text","message":"ردك هنا"}
 
-- كل صف في الجدول يمثل منتج واحد
-- استخدم الرموز التعبيرية (Emojis) في رأس الجدول
-- ضمّن في الجدول: الاسم، السعر، الوصف المختصر، وكود فريد للمنتج
-- لا تضيف نصاً إضافياً قبل أو بعد الجدول، فقط الجدول الواحد
-
-- إذا كان السؤال عاماً أو تحية، أرد بشكل طبيعي دون جداول
-
+لا تكتب أي نص خارج الـ JSON. لا تضف markdown أو شرح.
 قائمة المنتجات المتاحة:
 ${productContext}`;
 
@@ -266,7 +253,7 @@ ${productContext}`;
             content: userMessage
           }
         ],
-        temperature: 0.7,
+        temperature: 0.1,
         max_tokens: 1024
       };
 

@@ -6,19 +6,26 @@ let allMenuProducts = []; // كل المنتجات
 let currentCategory = null; // الفئة الحالية المختارة
 let visibleCount = MENU_PAGE_SIZE; // عدد المنتجات المرئية الآن
 
+function buildProductImageSrc(image) {
+    if (!image) return '/images/placeholder.png';
+    if (/^(https?:)?\/\//.test(image)) return image;
+    return `/images/products/${image}`;
+}
+
 async function apiass() {
     try {
-        // قراءة الفئة من URL
+        // قراءة معرّف الفئة من URL
         const urlParams = new URLSearchParams(window.location.search);
-        currentCategory = urlParams.get('category') || null;
+        const categoryIdParam = urlParams.get('category_id');
+        currentCategory = categoryIdParam ? parseInt(categoryIdParam) : null;
 
         let myRequest = await fetch("/api/products?limit=1000");
         let dataRequest = await myRequest.json();
         allMenuProducts = dataRequest;
 
-        // فلترة حسب الفئة لو موجودة في URL
+        // فلترة حسب معرّف الفئة لو موجود في URL
         let filtered = currentCategory
-            ? allMenuProducts.filter(p => (p.Category || '').toLowerCase() === currentCategory.toLowerCase())
+            ? allMenuProducts.filter(p => p.Category_ID == currentCategory)
             : allMenuProducts;
 
         // لو all=1 في URL، اعرض كل المنتجات بدون حد
@@ -56,7 +63,7 @@ function renderMenuProducts(productData, count) {
 
         productCard.innerHTML = `
             ${discount > 0 ? `<div class="product-discount-badge">خصم ${discount.toFixed(0)}%</div>` : ''}
-            <img src="/images/products/${product.Image}" alt="${product.Product_Name}">
+            <img src="${buildProductImageSrc(product.Image)}" alt="${product.Product_Name}">
             <div class="product-info">
                 <h3>${product.Product_Name}</h3>
                 <div class="price">
@@ -128,11 +135,11 @@ function renderLoadMoreButton(productData) {
 
 function loadMoreMenuProducts() {
     const urlParams = new URLSearchParams(window.location.search);
-    const cat = urlParams.get('category') || null;
+    const catId = urlParams.get('category_id') || null;
 
-    // توجيه لصفحة المنيو مع الفئة
-    if (cat) {
-        const newUrl = `/menu?category=${encodeURIComponent(cat)}&all=1`;
+    // توجيه لصفحة المنيو مع معرّف الفئة
+    if (catId) {
+        const newUrl = `/menu?category_id=${catId}&all=1`;
         window.location.href = newUrl;
     } else {
         const newUrl = `/menu?all=1`;
@@ -182,7 +189,7 @@ function renderProductsToContainer(productData, containerSelector, quantityLabel
         productCard.setAttribute('data-original-price', oldPrice.toFixed(2));
 
         productCard.innerHTML = `
-            <img src="/images/products/${product.Image}" alt="${product.Product_Name}">
+            <img src="${buildProductImageSrc(product.Image)}" alt="${product.Product_Name}">
             <div class="product-info">
                 <h3>${product.Product_Name}</h3>
                 <div class="points">${product.Quantity} ${quantityLabel}</div>
@@ -289,41 +296,52 @@ async function buildCategoryNav() {
     try {
         const res = await fetch('/admin/api/categories');
 
-
         const response = await res.json();
         // جلب التصنيفات من جدول التصنيفات مباشرة
         const categoriesRaw = response.data || response.categories || (Array.isArray(response) ? response : []);
-        const categories = categoriesRaw.map(c => c.Category_Name || c.category_name || c.name).filter(Boolean);
 
         const nav = document.getElementById('menu-categories-nav');
-        if (nav && categories.length) {
+        if (nav && categoriesRaw.length) {
             // امسح الروابط القديمة غير الأساسية
             const existingLinks = nav.querySelectorAll('a.cat-dyn');
             existingLinks.forEach(l => l.remove());
 
-            categories.forEach(cat => {
-                const a = document.createElement('a');
-                a.href = `/menu?category=${encodeURIComponent(cat)}`;
-                a.className = 'cat-dyn';
-                a.innerHTML = `<span>${cat}</span>`;
-                nav.appendChild(a);
+            categoriesRaw.forEach(cat => {
+                const categoryId = cat.Category_ID || cat.category_id || cat.id;
+                const categoryName = cat.Category_Name || cat.category_name || cat.name;
+                
+                if (categoryId && categoryName) {
+                    const a = document.createElement('a');
+                    a.href = `/menu?category_id=${categoryId}`;
+                    a.className = 'cat-dyn';
+                    a.innerHTML = `<span>${categoryName}</span>`;
+                    nav.appendChild(a);
+                }
             });
         }
 
         // عرض عنوان الفئة المختارة
         const urlParams = new URLSearchParams(window.location.search);
-        const activeCat = urlParams.get('category');
+        const activeCatId = urlParams.get('category_id');
         const showAll   = urlParams.get('all') === '1';
         const titleBar  = document.getElementById('category-title-bar');
         const titleText = document.getElementById('category-title-text');
 
-        if (activeCat && titleBar && titleText) {
-            titleText.textContent = `${activeCat}${showAll ? ' — جميع المنتجات' : ''}`;
+        if (activeCatId && titleBar && titleText) {
+            // البحث عن اسم الفئة من بيانات الفئات
+            const activeCatRaw = categoriesRaw.find(c => 
+                (c.Category_ID || c.category_id || c.id) == activeCatId
+            );
+            const activeCatName = activeCatRaw 
+                ? (activeCatRaw.Category_Name || activeCatRaw.category_name || activeCatRaw.name)
+                : activeCatId;
+
+            titleText.textContent = `${activeCatName}${showAll ? ' — جميع المنتجات' : ''}`;
             titleBar.style.display = 'block';
 
             // تمييز الرابط النشط
             nav?.querySelectorAll('a').forEach(a => {
-                if (a.href.includes(`category=${encodeURIComponent(activeCat)}`)) {
+                if (a.href.includes(`category_id=${activeCatId}`)) {
                     a.style.fontWeight = 'bold';
                     a.style.color = 'var(--main-color,#e62a32)';
                 }
