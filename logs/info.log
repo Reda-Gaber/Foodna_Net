@@ -5358,3 +5358,7 @@
 [2026-06-03T13:32:48.960Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
 [2026-06-03T13:32:48.976Z] INFO: Server running on http://localhost:3001
 [2026-06-03T13:32:48.977Z] INFO: Environment: development
+[2026-06-03T16:00:10.598Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-03T16:00:10.602Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-03T16:00:10.618Z] INFO: Server running on http://localhost:3001
+[2026-06-03T16:00:10.619Z] INFO: Environment: development

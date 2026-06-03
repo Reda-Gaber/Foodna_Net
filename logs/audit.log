@@ -1406,3 +1406,38 @@
   "totalAmount": 310,
   "finalAmount": 310
 }
+[2026-06-03T16:02:28.641Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-06-03T16:04:32.971Z] AUDIT: Action: USER_LOGIN, User: 10 {
+  "email": "cashier@foodna.com",
+  "role": "Cashier"
+}
+[2026-06-03T16:04:52.202Z] AUDIT: Action: PUBLIC_ORDER_CREATED, User: system {
+  "orderId": 990035,
+  "totalAmount": 405,
+  "finalAmount": 405
+}
+[2026-06-03T16:08:02.255Z] AUDIT: Action: ORDER_CREATED, User: 1075151 {
+  "orderId": 990036,
+  "totalAmount": 230,
+  "paymentMethod": "cash"
+}
+[2026-06-03T17:13:59.699Z] AUDIT: Action: USER_LOGIN, User: 10 {
+  "email": "cashier@foodna.com",
+  "role": "Cashier"
+}
+[2026-06-03T17:24:19.265Z] AUDIT: Action: USER_LOGIN, User: 10 {
+  "email": "cashier@foodna.com",
+  "role": "Cashier"
+}
+[2026-06-03T17:25:33.247Z] AUDIT: Action: PUBLIC_ORDER_CREATED, User: system {
+  "orderId": 990038,
+  "totalAmount": 304.98,
+  "finalAmount": 304.98
+}
+[2026-06-03T17:38:14.679Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}

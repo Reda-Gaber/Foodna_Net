@@ -1,51 +1,7 @@
 /* ====== متغيرات التصميم (Variables) ====== */
+/* تم نقل المتغيرات المشتركة العامة إلى /css/shared/variables.css */
+/* هذا الملف الآن يحتوي على أنماط عامة ثابتة فقط، بينما يبقى الكود الخاص بواجهة العميل في هذا الملف دون تغيير */
 
-:root {
-  /* الخطوط المستخدمة في الموقع */
-  --section-background: #f6f6f6;
-  --font-1: "IBM Plex Sans Arabic", sans-serif;
-  --font-2: "Kufam", sans-serif;
-  --font-product:"Kufam", sans-serif;
-  --header-height: 3.5rem;
-
-  /* ألوان النظام*/
-  --first-color: hsl(0, 24%, 8%);
-  --title-color: hsl(230, 70%, 16%);
-  --text-color: #e62a32;
-  --border-color: hsl(230, 50%, 90%);
-  --white-color: hsl(0, 0%, 100%);
-  --color-prodect-box: hsl(0, 0%, 100%);
-  --body-color: #fff;
-  --heading-offer-color: #000;
-  --select-btn-color: #b71c1c;
-  --container-color: hsl(230, 100%, 99%);
-  --main-color: #e62a32;
-  --footer-color: #dc000a;
-  --text-footer-color: #fff;
-  --hover-color: #000;
-  --background-of-header-for-pages: #000;
-
-  /* أحجام الخطوط */
-  --body-font: "Montserrat", sans-serif;
-  --second-font: "Montagu Slab", serif;
-  --biggest-font-size: 2rem;
-  --h1-font-size: 1.5rem;
-  --h2-font-size: 1.25rem;
-  --h3-font-size: 1rem;
-  --special-size: 3.5rem;
-
-  /*  الخطوط */
-  --font-regular: 400;
-  --font-medium: 500;
-  --font-semi-bold: 600;
-
-  /* ترتيب الطبقات (z-index) */
-  --z-tooltip: 10;
-  --z-fixed: 100;
-
-  /* المسافات الافتراضية */
-  --padding-for-head-of-pages: 50px;
-}
 /* نهاية المتغيرات */
 
 /* ====== القواعد العامة للموقع ====== */

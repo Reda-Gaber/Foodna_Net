@@ -4,68 +4,9 @@
  * يجب استخدام هذه المتغيرات فقط في جميع الصفحات
  */
 
-:root {
-  /*========== Font ==========*/
-  --section-background: #F6F6F6;
-  --font-1: "Cairo", sans-serif;
-  --font-2: "Oswald", sans-serif;
-  --font-product: "Oswald", sans-serif;
-  --header-height: 3.5rem;
-
-  /*========== Colors ==========*/
-  --first-color: hsl(0, 24%, 8%);
-  --title-color: hsl(230, 70%, 16%);
-  --text-color: #e62a32;
-  --border-color: hsl(230, 55%, 96%);
-  --white-color: hsl(0, 0%, 100%);
-  --color-prodect-box: hsl(0, 0%, 100%);
-  --body-color: #FFF;
-  --heading-offer-color: #000;
-  --select-btn-color: #b71c1c;
-  --container-color: hsl(230, 100%, 99%);
-  --main-color: #e62a32;
-  --footer-color: #dc000a;
-  --text-footer-color: #FFF;
-  --hover-color: #000;
-  --background-of-header-for-pages: #000;
-
-  /*========== Typography ==========*/
-  --body-font: "Montserrat", sans-serif;
-  --second-font: "Montagu Slab", serif;
-  --biggest-font-size: 2rem;
-  --h1-font-size: 1.5rem;
-  --h2-font-size: 1.25rem;
-  --h3-font-size: 1rem;
-  --special-size: 3.5rem;
-
-  /*========== Font Weight ==========*/
-  --font-regular: 400;
-  --font-medium: 500;
-  --font-semi-bold: 600;
-
-  /*========== Layout ==========*/
-  --padding-for-head-of-pages: 50px;
-  --z-tooltip: 10;
-  --z-fixed: 100;
-  
-  /*========== Spacing ==========*/
-  --spacing-xs: 0.25rem;
-  --spacing-sm: 0.5rem;
-  --spacing-md: 1rem;
-  --spacing-lg: 1.4rem;
-  --spacing-xl: 2rem;
-  
-  /*========== Border Radius ==========*/
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
-  
-  /*========== Shadows ==========*/
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
-}
+/* ====== متغيرات التصميم المشتركة ====== */
+/* تم نقل متغيرات :root المشتركة إلى /css/shared/variables.css */
+/* يحتفظ ملف design-system.css بالقواعد العامة وأنماط نظام التصميم دون تكرار المتغيرات. */
 
 /*========== Global Reset ==========*/
 * {
@@ -124,14 +65,18 @@ p {
 }
 
 .btn-primary {
-  background-color: var(--main-color);
-  color: var(--white-color);
+ padding: 12px;
+    color: white;
+    background-color: var(--footer-color);
+    border: 1px solid white;
+    border-radius: 6px;
+    font-family: var(--font-1);
+    cursor: pointer;
 }
 
 .btn-primary:hover {
   background-color: var(--footer-color);
   color: var(--white-color);
-  transform: translateY(-2px);
   box-shadow: var(--shadow-md);
 }
 
