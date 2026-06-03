@@ -138,7 +138,7 @@
       const itemEl = document.createElement('div');
       itemEl.className = 'item_cart';
       itemEl.innerHTML = `
-        <img src="/${item.img}" alt="${item.title}">
+        <img src="${item.img}" alt="${item.title}">
         <div class="content">
           <h4>${item.title}</h4>
           <p class="price_cart">${(item.price * item.quantity).toFixed(2)} جنيه</p>

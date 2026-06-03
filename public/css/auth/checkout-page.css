@@ -9,6 +9,9 @@ background: #393737;
 background-color: hsl(225, 3%, 31%);
 color: #ffffff;
 }
+.dark-theme .form-group input::placeholder, .dark-theme .form-group textarea::placeholder {
+  color: #ecebeb; 
+}
 .dark-theme .form-group input:focus, .dark-theme .form-group textarea:focus{
 background-color: hsl(225, 3%, 31%);
 color: #ffffff;
@@ -16,6 +19,9 @@ color: #ffffff;
 .dark-theme .coupon-input-row input{
 background-color: hsl(225, 3%, 31%);
 color: #ffffff;
+}
+.dark-theme .coupon-input-row input::placeholder {
+  color: #ecebeb; 
 }
 .dark-theme .totals-row {
 color: #ffffff;
@@ -296,7 +302,14 @@ color: #ffffff;
 }
 @media (max-width: 500px) {
   .payment-methods { grid-template-columns: 1fr 1fr; }
+  .checkout-summary, .checkout-payment{
+     min-width: 330px;
 }
+.coupon-input-row{
+  flex-direction: column;
+}
+}
+
 .payment-method-card {
   display: flex;
   flex-direction: column;

@@ -9,8 +9,8 @@
               حسابي
         </div>      
         <div class="content-of-sub-pages">
-    <a href="/"><span>الرئيسية / </span></a>
-    <a href="#"><span>My Account</span></a>
+    <a href="/"><span>الرئيسية</span></a>
+    <a href="#"><span>حسابي</span></a>
 </div>
  </div>
  </div>
@@ -20,7 +20,7 @@
   <div class="containers">
     <section class="card" aria-labelledby="login-heading">
       <h2 id="login-heading">تسجيل الدخول</h2>
-      <form class="myform_one" id="loginForm" onsubmit="handleLogin(event)" novalidate>
+      <form class="myform_one" id="loginForm" method="post" action="/user/login" novalidate>
         <div class="field">
           <label for="login-email">البريد الالكتروني <span>*</span></label>
           <input class="input login_username login_email" type="email" id="login-email" name="email" autocomplete="email" required>
@@ -104,6 +104,5 @@
 </div>
 
 <script src="/js/auth/customer.registration.js"></script>
-
 
 <%- include("../customer/parts/footer.ejs") %>

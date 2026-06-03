@@ -6,6 +6,14 @@ const authController = require("./auth.controller");
 const { requireClient } = require('../../core/middlewares/authMiddleware');
 
 router.get("/register", (req, res) => {
+  // لا تُمرَّر بيانات الدخول في الرابط (أمان)
+  if (req.query.email || req.query.password) {
+    const q = new URLSearchParams();
+    if (req.query.next) q.set('next', req.query.next);
+    if (req.query.success) q.set('success', req.query.success);
+    const suffix = q.toString() ? '?' + q.toString() : '';
+    return res.redirect('/user/register' + suffix);
+  }
   res.render("auth/customer-register", { error: null, success: req.query.success, next: req.query.next || '' });
 });
 router.get("/emailisexist", authController.emailIsExists);

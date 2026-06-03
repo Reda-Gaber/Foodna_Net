@@ -241,39 +241,6 @@ navMenus?.addEventListener('click', () => {
 });
 
 // ============================
-// DARK MODE - تبديل الوضع الليلي
-// ============================
-const themButton = document.getElementById('theme-button');
-const darkTheme = 'dark-theme';
-const iconTheme = 'ri-sun-line';
-
-// الحصول على الوضع المحفوظ من localStorage
-const selectedTheme = localStorage.getItem('selected-theme');
-const selectedIcon = localStorage.getItem('selected-icon');
-
-// دوال الحصول على الحالة الحالية
-const getCurrentTheme = () => 
-    document.body.classList.contains(darkTheme) ? 'dark' : 'light';
-
-const getCurrentIcon = () => 
-    themButton.classList.contains(iconTheme) ? 'ri-moon-line' : 'ri-sun-line';
-
-// تطبيق الوضع المحفوظ عند تحميل الصفحة
-if (selectedTheme) {
-    document.body.classList[selectedTheme === 'dark' ? 'add' : 'remove'](darkTheme);
-    themButton?.classList[selectedIcon === 'ri-moon-line' ? 'add' : 'remove'](iconTheme);
-}
-
-// الاستماع لنقرات زر تبديل الوضع
-themButton?.addEventListener('click', () => {
-    document.body.classList.toggle(darkTheme);
-    themButton.classList.toggle(iconTheme);
-
-    localStorage.setItem('selected-theme', getCurrentTheme());
-    localStorage.setItem('selected-icon', getCurrentIcon());
-});
-
-// ============================
 // SCROLL - زر العودة للأعلى
 // ============================
 const scrollUps = () => {

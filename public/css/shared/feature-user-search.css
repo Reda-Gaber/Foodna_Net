@@ -1,5 +1,7 @@
 /* Feature-scoped CSS for search drawer and profile page (fsd- prefix) */
-
+.dark-theme .fsd-input::placeholder {
+  color: #fff; 
+}
 /* Overlay */
 .fsd-overlay{
   position:fixed;

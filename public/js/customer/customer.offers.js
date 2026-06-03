@@ -10,6 +10,22 @@ window.apiass = true;
   const container = document.querySelector('.products-grid_1');
   if (!container) { return; }
 
+  function normalizeProductImage(image) {
+    if (!image) return '/images/placeholder.png';
+    let img = String(image).trim().replace(/\\/g, '/');
+    img = img.replace(/^\/+/, '');
+
+    if (/^(https?:)?\/\//.test(img)) {
+      return img;
+    }
+
+    if (img.startsWith('images/') || img.startsWith('uploads/') || img.startsWith('products/')) {
+      return '/' + img;
+    }
+
+    return '/images/products/' + img;
+  }
+
   // ===== Loading skeleton =====
   container.innerHTML = Array(4).fill(
     `<div style="background:#f5f5f5;border-radius:12px;height:280px;animation:offerPulse 1.2s infinite alternate;"></div>`
@@ -33,7 +49,7 @@ window.apiass = true;
   } catch (err) {
     container.innerHTML = `
       <div style="grid-column:1/-1;text-align:center;padding:40px;color:#888;">
-        <p style="font-size:18px;">⚠️ تعذّر تحميل العروض</p>
+        <p style="font-size:18px;"> تعذّر تحميل العروض</p>
         <button onclick="location.reload()" style="margin-top:10px;padding:8px 20px;border:1.5px solid var(--text-color);border-radius:8px;color:var(--text-color);background:#fff;cursor:pointer;">إعادة المحاولة</button>
       </div>`;
     return;
@@ -62,12 +78,8 @@ window.apiass = true;
     const newPrice = oldPrice * (1 - discount / 100);
 
     // بناء مسار الصورة
-    let imgSrc = '';
     const rawImg = product.Image || product.img || '';
-    if (rawImg) {
-      const clean = rawImg.replace(/^\/+/, '');
-      imgSrc = clean.startsWith('images/') ? '/' + clean : '/images/products/' + clean;
-    }
+    const imgSrc = normalizeProductImage(rawImg);
 
     const card = document.createElement('div');
     card.className = 'product';
@@ -132,32 +144,13 @@ window.apiass = true;
         localStorage.setItem('cart', JSON.stringify(cart));
         btn.textContent   = '✓ أُضيف للسلة';
         btn.style.opacity = '0.75';
-        setTimeout(() => { btn.textContent = '🛒 أضف للسلة'; btn.style.opacity = '1'; }, 1800);
+        setTimeout(() => { btn.textContent = ' أضف للسلة'; btn.style.opacity = '1'; }, 1800);
       } catch (err) {
       }
     }
   });
 
-  // ===== Dark mode toggle (موروث من الملف القديم) =====
-  const themButton = document.getElementById('theme-button');
-  if (themButton) {
-    const darkTheme = 'dark-theme';
-    const iconTheme = 'ri-sun-line';
-    const selectedTheme = localStorage.getItem('selected-theme');
-    const selectedIcon  = localStorage.getItem('selected-icon');
-    if (selectedTheme) {
-      document.body.classList[selectedTheme === 'dark' ? 'add' : 'remove'](darkTheme);
-      themButton.classList[selectedIcon === 'ri-moon-line' ? 'add' : 'remove'](iconTheme);
-    }
-    themButton.addEventListener('click', () => {
-      document.body.classList.toggle(darkTheme);
-      themButton.classList.toggle(iconTheme);
-      localStorage.setItem('selected-theme', document.body.classList.contains(darkTheme) ? 'dark' : 'light');
-      localStorage.setItem('selected-icon', themButton.classList.contains(iconTheme) ? 'ri-moon-line' : 'ri-sun-line');
-    });
-  }
-
-  function escOffer(str) {
+function escOffer(str) {
     return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
@@ -166,19 +159,35 @@ window.apiass = true;
 
   // Fallback: Display offers if customer.offers.js doesn't load
     if (window.apiass === undefined) {
+        function normalizeProductImage(image) {
+          if (!image) return '/images/placeholder.png';
+          let img = String(image).trim().replace(/\\/g, '/');
+          img = img.replace(/^\/+/, '');
+
+          if (/^(https?:)?\/\//.test(img)) {
+            return img;
+          }
+
+          if (img.startsWith('images/') || img.startsWith('uploads/') || img.startsWith('products/')) {
+            return '/' + img;
+          }
+
+          return '/images/products/' + img;
+        }
+
         console.log('⚠️ customer.offers.js fallback بدأ');
         const container = document.querySelector('.products-grid_1');
         if (container) {
             fetch('/api/products?discounted=1&limit=100')
                 .then(r => r.json())
                 .then(products => {
-                    console.log('✅ تم جلب', products.length, 'منتج');
+                    console.log(' تم جلب', products.length, 'منتج');
                     container.innerHTML = '';
                     products.forEach(p => {
                         const oldPrice = Number(p.Price);
                         const discount = Number(p.Discount || 0);
                         const newPrice = oldPrice * (1 - discount / 100);
-                        const imageSrc = /^(https?:)?\/\//.test(p.Image) ? p.Image : `/images/products/${p.Image}`;
+                        const imageSrc = normalizeProductImage(p.Image || p.img || '');
                         const el = document.createElement('div');
                         el.className = 'product product_only';
                         el.innerHTML = `
@@ -199,6 +208,6 @@ window.apiass = true;
                         container.appendChild(el);
                     });
                 })
-                .catch(e => console.error('❌ Fallback error:', e));
+                .catch(e => console.error(' Fallback error:', e));
         }
     }

@@ -533,7 +533,9 @@ body {
     transition: all 0.3s ease;
     font-family: "IBM Plex Sans Arabic", sans-serif;
 }
-
+.search-box input::placeholder{
+    color: var(--text-secondary);
+}
 .search-box input:focus {
     outline: none;
     border-color: var(--primary-color);
@@ -649,7 +651,7 @@ body {
 }
 
 .stat-value {
-    font-size: 1.875rem;
+    font-size: 1.4rem;
     font-weight: 700;
     color: var(--text-primary);
     margin-bottom: 0.25rem;

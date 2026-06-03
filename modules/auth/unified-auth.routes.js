@@ -12,29 +12,8 @@ router.get('/register', (req, res) => {
   res.redirect('/user/register' + q);
 });
 
-// صفحة تسجيل الدخول
+// صفحة تسجيل الدخول — متاحة دائماً (حتى مع جلسة نشطة لتبديل الحساب)
 router.get('/login', (req, res) => {
-  const allowSwitch = req.query.switch === 'true';
-  const currentRole = req.session?.user?.role || req.session?.role;
-  const isLoggedIn  = !!(req.session?.userId || req.session?.user?.id);
-
-  if (isLoggedIn && !allowSwitch) {
-    // ✅ Client مسجل دخول → ارجعه للصفحة الرئيسية، مش صفحة الموظفين
-    if (!currentRole || currentRole === 'Client') {
-      return res.redirect('/');
-    }
-
-    // موظف مسجل دخول → ارجعه للـ dashboard بتاعه
-    switch (currentRole) {
-      case 'Admin':   return res.redirect('/admin/dashboard');
-      case 'Cashier': return res.redirect('/cashier');
-      case 'Chef':
-      case 'Kitchen': return res.redirect('/kitchen');
-      default:        return res.redirect('/');
-    }
-  }
-
-  // مش مسجل دخول أو allowSwitch=true → اعرض صفحة اللوجين
   res.render('auth/unified-login');
 });
 
@@ -45,7 +24,7 @@ router.get('/login', (req, res) => {
 router.post('/login', authController.unifiedLogin);
 
 // تسجيل الخروج
-// Logout now requires POST with CSRF protection
+router.get('/logout', authController.unifiedLogoutGet);
 router.post('/logout', authController.unifiedLogout);
 
 // API: التحقق من حالة تسجيل الدخول

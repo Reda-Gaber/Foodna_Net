@@ -353,8 +353,8 @@ function renderRevenueChart() {
         const width = barWidth * 0.6;
 
         const gradient = ctx.createLinearGradient(x, y, x, canvas.height - padding);
-        gradient.addColorStop(0, '#3b82f6');
-        gradient.addColorStop(1, '#2563eb');
+        gradient.addColorStop(0, '#f63b3b');
+        gradient.addColorStop(1, '#eb2525');
 
         ctx.fillStyle = gradient;
         ctx.fillRect(x, y, width, barHeight);
@@ -812,7 +812,7 @@ async function deleteProduct(id) {
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
+        cancelButtonColor: '#d63046',
         confirmButtonText: 'نعم، احذفه',
         cancelButtonText: 'إلغاء'
     });
@@ -994,7 +994,7 @@ function deleteCustomer(id) {
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#ef4444',
-            cancelButtonColor: '#6b7280',
+            cancelButtonColor: '#e73939',
             confirmButtonText: 'نعم، احذف',
             cancelButtonText: 'إلغاء'
         }).then(async (result) => {
@@ -1296,7 +1296,7 @@ function renderInventory() {
     const lowStockContainer = document.getElementById('lowStockList');
 
     if (lowStockProducts.length === 0) {
-        lowStockContainer.innerHTML = '<p style="color: #64748b;">No low stock items</p>';
+        lowStockContainer.innerHTML = '<p style="color: #c25454;">No low stock items</p>';
     } else {
         lowStockContainer.innerHTML = lowStockProducts.map(product => `
             <div class="inventory-item">
@@ -1442,7 +1442,7 @@ async function saveCategoryEdit(id) {
         });
         const data = await res.json();
         if (res.ok) {
-            if (msg) { msg.textContent = '✓ تم الحفظ'; msg.style.color = '#2e7d32'; }
+            if (msg) { msg.textContent = ' تم الحفظ'; msg.style.color = '#2e7d32'; }
             setTimeout(() => { closeModal(); loadCategories(); }, 800);
         } else {
             if (msg) { msg.textContent = data.message || 'فشل الحفظ'; msg.style.color = '#e53935'; }

@@ -83,7 +83,7 @@
       itemEl.className = 'checkout-item';
       const itemTotal = (Number(item.price) * Number(item.quantity)).toFixed(2);
       itemEl.innerHTML = `
-        <img src="/${item.img || 'images/placeholder.png'}" alt="${item.title}"
+        <img src="${item.img || '/images/placeholder.png'}" alt="${item.title}"
              onerror="this.src='/images/placeholder.png';this.onerror=null;">
         <div class="checkout-item-info">
           <div class="checkout-item-name">${item.title}</div>

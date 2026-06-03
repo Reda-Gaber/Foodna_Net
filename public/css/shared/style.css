@@ -191,6 +191,12 @@ body.dark-theme {
   background-color:  hsl(225, 3%, 31%);
   color: var(--text-color);
 }
+.dark-theme .contact-us .grid-of-contact-us .second-part .contact-form .form-group .input-container .form-control::placeholder{
+  color: var(--text-color);
+}
+.dark-theme .contact-us .grid-of-contact-us .second-part .contact-form .form-group .input-container .icon {
+  color: var(--text-color);
+}
 .dark-theme .contact-us .grid-of-contact-us .second-part .contact-form .submit-btn{
    background-color: #ef4444;
 }
@@ -1348,6 +1354,12 @@ footer p:last-child { margin: 0; color: white; text-align: center; padding-botto
 
 @media (max-width: 840px) {
   .nav { gap: 350px; }
+  .special-heading span {
+     font-size: 40px;
+    }
+    .sub-pages .content-of-sub-pages{
+      top: 80%;
+    }
 }
 
 @media (max-width: 628px) {
@@ -1530,6 +1542,7 @@ footer p:last-child { margin: 0; color: white; text-align: center; padding-botto
     height: 150px !important;
     min-height: 150px !important;
     max-height: 150px !important;
+    
   }
 }
 

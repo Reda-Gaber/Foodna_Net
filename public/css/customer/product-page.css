@@ -582,6 +582,14 @@ img {
     min-height: 300px;
     padding: 30px;
   }
+  .button-data-id {
+    width: 100%;
+  }
+  
+
+.img-product{
+  position: initial;
+}
 }
 
 /* Small screens */

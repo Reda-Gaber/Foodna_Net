@@ -1,74 +1,58 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>خطأ - Foodna Shop</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #ea6666 0%, #f10a0a 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .error-container {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            max-width: 500px;
-            width: 100%;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        }
-        .error-icon {
-            font-size: 80px;
-            margin-bottom: 20px;
-        }
-        h1 {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 28px;
-        }
-        p {
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 16px;
-            line-height: 1.6;
-        }
-        .btn {
-            display: inline-block;
-            padding: 12px 30px;
-            background: #ec2424;
-            color: white;
-            text-decoration: none;
-            border-radius: 25px;
-            transition: all 0.3s;
-            font-weight: 600;
-        }
-        .btn:hover {
-            background: #d60b0b;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>حدث خطأ | Foodna</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared/error.page.css"/>
 </head>
 <body>
-    <div class="error-container">
-        <div class="error-icon">⚠️</div>
-        <h1>حدث خطأ</h1>
-        <p><%= typeof message !== 'undefined' ? message : 'حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.' %></p>
-        <a href="/" class="btn">العودة للصفحة الرئيسية</a>
+
+<div class="error-container">
+
+    <!-- شعار Foodna -->
+    <img
+        src="/images/logo.png"
+        alt="Foodna"
+        class="logo"
+    >
+
+    <div class="error-badge">
+        ⚠
     </div>
+
+    <h1>حدث خطأ غير متوقع</h1>
+
+    <p class="message">
+        <%= typeof message !== 'undefined'
+        ? message
+        : 'عذراً، حدث خطأ أثناء معالجة طلبك. يرجى المحاولة مرة أخرى بعد قليل.' %>
+    </p>
+
+    <div class="actions">
+
+        <a href="/" class="btn btn-primary">
+            العودة للرئيسية
+        </a>
+
+        <button
+            onclick="window.history.back()"
+            class="btn btn-secondary">
+            الرجوع للصفحة السابقة
+        </button>
+
+    </div>
+
+    <div class="code">
+        Foodna Error Page
+    </div>
+
+</div>
+
 </body>
 </html>
-
-
-

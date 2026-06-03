@@ -71,13 +71,15 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
         grid.innerHTML = products.map(p => {
-            const imageSrc = /^(https?:)?\/\//.test(p.Image || '') ? p.Image : `/images/products/${p.Image || ''}`;
+            const imageSrc = /^(https?:)?\/\//.test(p.Image || '')
+                ? p.Image
+                : `/images/products/${p.Image || ''}`;
             return `
             <div class="product-card" data-product-id="${p.Product_ID}">
                 <img src="${imageSrc}" alt="${p.Product_Name}" class="product-image" onload="this.classList.add('loaded')" onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'180\' height=\'120\' viewBox=\'0 0 180 120\'%3E%3Crect width=\'180\' height=\'120\' fill=\'%23f3f4f6\'/%3E%3Ctext x=\'90\' y=\'55\' font-family=\'Arial\' font-size=\'28\' fill=\'%23d1d5db\' text-anchor=\'middle\'%3E🍽%3C/text%3E%3Ctext x=\'90\' y=\'80\' font-family=\'Arial\' font-size=\'10\' fill=\'%239ca3af\' text-anchor=\'middle\'%3Eلا توجد صورة%3C/text%3E%3C/svg%3E';this.classList.add('loaded')"/>
                 <div class="product-name">${p.Product_Name}</div>
                 <div class="product-price">${fmtMoney(p.Price)} جنيه</div>
-            </div>`
+            </div>`;
         }).join('');
         grid.querySelectorAll('.product-card').forEach(card => {
             card.addEventListener('click', () => addToCart(parseInt(card.dataset.productId)));
@@ -204,7 +206,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const orderNumber = data.data.orderNumber;
                 
                 // عرض رسالة النجاح مع أزرار الطباعة
-                await Swal.fire({
+                 await Swal.fire({
                       title: 'نجح الدفع',
                     html: `
                         <div style="text-align: center; direction: rtl;">
