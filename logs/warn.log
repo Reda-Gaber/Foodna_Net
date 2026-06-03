@@ -229,3 +229,4 @@
   "sid": "e0NNUaZuHcbbY44jSPMJuRjRxtMr1Crh",
   "message": "failed to load session"
 }
+[2026-06-03T13:26:45.635Z] WARN: [Chatbot] Transient error on attempt 1, retrying in 1000ms...

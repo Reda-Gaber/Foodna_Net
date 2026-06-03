@@ -140,18 +140,19 @@ app.use("/auth", unifiedAuth);
 // مسار /login المباشر — توجيه العميل لـ /user/register والموظف لـ /auth/login
 const CUSTOMER_LOGIN_PATHS = ['/checkout', '/profile', '/orders', '/customer/orders'];
 app.get("/login", (req, res) => {
-  if (isLoggedIn(req)) {
-    const next = req.query.next ? decodeURIComponent(req.query.next) : '/';
-    return res.redirect(next);
-  }
   const nextRaw = req.query.next ? decodeURIComponent(req.query.next) : '';
   const isCustomerFlow = CUSTOMER_LOGIN_PATHS.some((p) => nextRaw === p || nextRaw.startsWith(p + '?'));
   if (isCustomerFlow) {
     const q = req.query.next ? '?next=' + encodeURIComponent(req.query.next) : '';
     return res.redirect('/user/register' + q);
   }
-  res.redirect("/auth/login");
+  const q = req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '';
+  res.redirect('/auth/login' + q);
 });
+
+// مسارات مختصرة (توافق مع التسمية الشائعة)
+app.get('/dashboard', (req, res) => res.redirect('/admin/dashboard'));
+app.get('/chef', (req, res) => res.redirect('/kitchen'));
 app.post("/login", (req, res, next) => {
   const authController = require("./modules/auth/unified-auth.controller");
   return authController.unifiedLogin(req, res, next);

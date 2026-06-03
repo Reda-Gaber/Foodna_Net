@@ -34,55 +34,53 @@
 
     // ----- User icon logic -----
     async function checkAuth(){
-      // Always verify with backend; do not rely only on window.auth
       try{
-        const res = await fetch('/auth/api/auth/check', {
+        if (typeof window.fetchCustomerAuthCheck === 'function') {
+          return await window.fetchCustomerAuthCheck();
+        }
+        const res = await fetch('/auth/api/auth/check?audience=customer', {
           method: 'GET',
           credentials: 'include',
-          headers: { 'Content-Type': 'application/json' }
+          headers: { 'Accept': 'application/json' }
         });
-        let data = { authenticated: false };
-        try{ data = await res.json(); }catch(e){ /* ignore parse error */ }
-        if (!res.ok) return { authenticated: false };
-        return data;
+        const ct = res.headers.get('content-type') || '';
+        if (!res.ok || !ct.includes('application/json')) return { authenticated: false };
+        return await res.json();
       }catch(e){
         return { authenticated: false };
       }
     }
 
-    function handleUserIconClick(e){
-      window.location.assign('/profile');
+    function applyCustomerUserLinkHref(userLink, userIcon, authenticated) {
+      if (!userLink) return;
+      userLink.href = authenticated ? '/profile' : '/user/register';
+      if (userIcon) {
+        userIcon.classList.toggle('user-logged', !!authenticated);
+      }
     }
 
-    // Listen for navbar's auth.changed event to keep local window.auth up-to-date
+    // مزامنة مع navbar.ejs — لا نعترض النقر، نحدّث href فقط
     try{
       window.addEventListener('auth.changed', function(e){
-        try{ window.auth = e.detail; }catch(_){ }
+        try{
+          window.auth = e.detail;
+          const userLink = document.getElementById(USER_LINK_ID);
+          const userIcon = document.getElementById('login-button');
+          applyCustomerUserLinkHref(userLink, userIcon, !!(e.detail && e.detail.authenticated));
+        }catch(_){ }
       });
     }catch(_){ }
 
     function initUserIcon(){
       const userLink = document.getElementById(USER_LINK_ID);
+      const userIcon = document.getElementById('login-button');
       if (!userLink) return;
       if (userLink.dataset.fsdBound) return;
       userLink.dataset.fsdBound = '1';
 
-      // neutralize legacy hrefs that point to orders register or similar to avoid full navigation
-      try{
-        const href = userLink.getAttribute('href');
-        if (href && (href.indexOf('/customer/orders') !== -1 || href.indexOf('/user/register') !== -1 || href.indexOf('/register') !== -1)){
-          userLink.setAttribute('href', '#');
-        }
-      }catch(_){ }
-
-      userLink.addEventListener('click', function fsd_user_click_interceptor(ev){
-        try{
-          ev.preventDefault();
-          if (typeof ev.stopImmediatePropagation === 'function') ev.stopImmediatePropagation();
-          if (typeof ev.stopPropagation === 'function') ev.stopPropagation();
-        }catch(_){ }
-        handleUserIconClick(ev);
-      }, true); // capture-phase
+      if (window.auth && typeof window.auth.authenticated === 'boolean') {
+        applyCustomerUserLinkHref(userLink, userIcon, window.auth.authenticated);
+      }
     }
 
     // ----- Search drawer and triggers -----
@@ -287,8 +285,7 @@
       // Fetch stored address if available
       (async () => {
         try{
-          const res = await fetch('/auth/api/auth/check', { method: 'GET', credentials: 'include', headers: { 'Content-Type':'application/json' } });
-          const data = await res.json();
+          const data = await checkAuth();
           if (data && data.user && data.user.Address) addrEl.value = data.user.Address;
         }catch(e){ }
       })();
@@ -327,42 +324,4 @@
     window.fsd.closeAddressModal = closeAddressModal;
     window.fsd.checkAuth = checkAuth;
   });
-})();
-
-
-(async function(){
-  const userLink = document.getElementById('user-icon-link');
-  const userIcon = document.getElementById('login-button');
-  if (!userLink) return;
-
-  // Set default immediately before fetch
-  userLink.href = '/profile';
-
-  try {
-    const res = await fetch('/auth/api/auth/check', {
-      credentials: 'include',
-      headers: { 'Accept': 'application/json' }
-    });
-
-    const contentType = res.headers.get('content-type') || '';
-    if (!res.ok || !contentType.includes('application/json')) {
-      userLink.href = '/auth/login';
-      return;
-    }
-
-    const data = await res.json();
-    window.auth = { authenticated: !!data.authenticated, user: data.user || null };
-
-    if (window.auth.authenticated) {
-      userLink.href = '/profile';
-      if (userIcon) userIcon.classList.add('user-logged');
-    } else {
-      userLink.href = '/auth/login';
-    }
-
-    window.dispatchEvent(new CustomEvent('auth.changed', { detail: window.auth }));
-  } catch (e) {
-    window.auth = { authenticated: false, user: null };
-    userLink.href = '/auth/login';
-  }
 })();

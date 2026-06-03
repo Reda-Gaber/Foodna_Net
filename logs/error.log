@@ -52917,3 +52917,11 @@
   "name": "Error",
   "http_code": 401
 }
+[2026-06-03T14:57:34.393Z] ERROR: [Chatbot] Unexpected error in handleMessage: {
+  "message": "geminiService.generateAdvisoryResponse is not a function",
+  "stack": "TypeError: geminiService.generateAdvisoryResponse is not a function\n    at ChatbotOrchestrator.handleAdvisory (D:\\programming\\projects\\foodna_zip\\modules\\chatbot\\chatbot.orchestrator.js:94:37)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async handleMessage (D:\\programming\\projects\\foodna_zip\\modules\\chatbot\\chatbot.controller.js:37:34)"
+}
+[2026-06-03T15:08:02.755Z] ERROR: [Chatbot] Unexpected error in handleMessage: {
+  "message": "geminiService.generateAdvisoryResponse is not a function",
+  "stack": "TypeError: geminiService.generateAdvisoryResponse is not a function\n    at ChatbotOrchestrator.handleAdvisory (D:\\programming\\projects\\foodna_zip\\modules\\chatbot\\chatbot.orchestrator.js:94:37)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async handleMessage (D:\\programming\\projects\\foodna_zip\\modules\\chatbot\\chatbot.controller.js:37:34)"
+}
