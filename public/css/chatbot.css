@@ -176,11 +176,54 @@
 /* رسائل البوت - محاذاة لليسار */
 .chatbot-message.bot-message {
   justify-content: flex-start;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
 }
 
 .chatbot-message.bot-message p {
   background-color: #f0f0f0;
   color: var(--first-color);
+}
+
+/* رسائل نصية منظمة (PRICE / COMPARE / ADVISORY) */
+.chatbot-text-response {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-color);
+  font-family: var(--font-1);
+  max-width: 95%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  background-color: #f0f0f0;
+  white-space: normal;
+}
+
+.chatbot-text-compare {
+  border-right: 3px solid #2196F3;
+}
+
+.chatbot-text-price {
+  border-right: 3px solid #4CAF50;
+}
+
+.chatbot-text-advisory {
+  border-right: 3px solid #ff9800;
+}
+
+/* رسائل تحتوي جدول — عرض كامل */
+.chatbot-message.bot-message.has-table {
+  max-width: 100%;
+}
+
+.chatbot-table-wrap {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* رسالة الترحيب */
@@ -369,6 +412,39 @@ body.dark-theme .chatbot-message.bot-message p {
   color: #ffffff;
 }
 
+body.dark-theme .chatbot-text-response {
+  background-color: #3a3a3a;
+  color: #ffffff;
+}
+
+/* إشعار الشات بوت */
+.chatbot-toast {
+  position: fixed;
+  bottom: 100px;
+  right: 24px;
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: var(--font-1);
+  color: #fff;
+  background-color: #4CAF50;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: calc(var(--z-fixed) + 10);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s, transform 0.3s;
+  max-width: 280px;
+}
+
+.chatbot-toast.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.chatbot-toast-error {
+  background-color: var(--main-color);
+}
+
 body.dark-theme .chatbot-input {
   background-color: #3a3a3a;
   color: #ffffff;
@@ -394,8 +470,9 @@ body.dark-theme .chatbot-messages::-webkit-scrollbar-track {
 
 .chatbot-products-table {
   width: 100%;
+  min-width: 320px;
   border-collapse: collapse;
-  margin: 10px 0;
+  margin: 0;
   font-size: 12px;
   background-color: var(--white-color);
   border-radius: 8px;

@@ -1295,3 +1295,25 @@
   "email": "admin@foodna.com",
   "role": "Admin"
 }
+[2026-06-03T15:27:46.280Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-06-03T15:28:10.402Z] AUDIT: Action: USER_LOGIN, User: 10 {
+  "email": "cashier@foodna.com",
+  "role": "Cashier"
+}
+[2026-06-03T15:30:06.541Z] AUDIT: Action: PUBLIC_ORDER_CREATED, User: system {
+  "orderId": 930035,
+  "totalAmount": 15,
+  "finalAmount": 15
+}
+[2026-06-03T15:37:55.365Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-06-03T15:38:30.364Z] AUDIT: Action: ORDER_CREATED, User: 835150 {
+  "orderId": 930036,
+  "totalAmount": 40,
+  "paymentMethod": "cash"
+}

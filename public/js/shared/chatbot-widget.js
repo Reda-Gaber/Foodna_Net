@@ -1,10 +1,12 @@
 /**
- * مكون واجهة الدردشة الآلية - عنصر الواجهة الأمامية
- * واجهة دردشة عائمة متكاملة مع واجهة برمجية Gemini
+ * مكون واجهة الدردشة الآلية
  */
 
 (function() {
   'use strict';
+
+  const TEXT_RESPONSE_TYPES = ['PRICE', 'COMPARE', 'ADVISORY', 'TEXT'];
+  const TABLE_RESPONSE_TYPES = ['LIST', 'FILTER', 'PRODUCTS'];
 
   class ChatbotWidget {
     constructor() {
@@ -14,18 +16,12 @@
       this.init();
     }
 
-    /**
-     * تهيئة مكون الدردشة الآلية
-     */
     init() {
       this.createHTML();
       this.attachEventListeners();
       this.loadChatHistory();
     }
 
-    /**
-     * بناء هيكل HTML لمكون الدردشة الآلية
-     */
     createHTML() {
       const html = `
         <div id="chatbot-widget" class="chatbot-widget">
@@ -54,12 +50,11 @@
               </div>
             </div>
 
-            <!-- Input Area -->
             <div class="chatbot-input-area">
-              <input 
-                type="text" 
-                id="chatbot-input" 
-                class="chatbot-input" 
+              <input
+                type="text"
+                id="chatbot-input"
+                class="chatbot-input"
                 placeholder="اكتب سؤالك هنا..."
                 aria-label="حقل الإدخال للدردشة"
               >
@@ -71,130 +66,119 @@
         </div>
       `;
 
-      // Insert into DOM
-      const container = document.body;
       const fragment = document.createElement('div');
       fragment.innerHTML = html;
-      container.appendChild(fragment);
+      document.body.appendChild(fragment);
     }
 
-    /**
-     * إضافة مستمعي الأحداث - الفتح والإغلاق والإرسال
-     */
     attachEventListeners() {
       const icon = document.getElementById('chatbot-icon');
       const closeBtn = document.getElementById('chatbot-close');
       const sendBtn = document.getElementById('chatbot-send');
       const input = document.getElementById('chatbot-input');
+      const messagesContainer = document.getElementById('chatbot-messages');
 
-      // Toggle chat window
       icon.addEventListener('click', () => this.toggleWindow());
       closeBtn.addEventListener('click', () => this.closeWindow());
-
-      // Send message on button click
       sendBtn.addEventListener('click', () => this.sendMessage());
-
-      // Send message on Enter key
       input.addEventListener('keypress', (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
           e.preventDefault();
           this.sendMessage();
         }
       });
+
+      messagesContainer.addEventListener('click', (e) => {
+        const orderBtn = e.target.closest('.btn-order');
+        const detailsBtn = e.target.closest('.btn-details');
+
+        if (orderBtn) {
+          e.preventDefault();
+          this.addProductToCart({
+            id: orderBtn.dataset.id,
+            name: orderBtn.dataset.name,
+            price: orderBtn.dataset.price,
+            img: orderBtn.dataset.img,
+          });
+        }
+
+        if (detailsBtn) {
+          e.preventDefault();
+          this.requestProductDetails(detailsBtn.dataset.name);
+        }
+      });
     }
 
-    /**
-     * تبديل ظهور/إخفاء نافذة الدردشة
-     */
     toggleWindow() {
       this.isOpen ? this.closeWindow() : this.openWindow();
     }
 
-    /**
-     * فتح نافذة الدردشة والتركيز على حقل الإدخال
-     */
     openWindow() {
-      const window = document.getElementById('chatbot-window');
-      window.classList.remove('hidden');
+      document.getElementById('chatbot-window').classList.remove('hidden');
       this.isOpen = true;
       document.getElementById('chatbot-input').focus();
     }
 
-    /**
-     * إغلاق نافذة الدردشة وإخفاؤها
-     */
     closeWindow() {
-      const window = document.getElementById('chatbot-window');
-      window.classList.add('hidden');
+      document.getElementById('chatbot-window').classList.add('hidden');
       this.isOpen = false;
     }
 
-    /**
-     * إرسال رسالة المستخدم والحصول على رد من الخادم
-     */
-    async sendMessage() {
-      const input = document.getElementById('chatbot-input');
-      const message = input.value.trim();
+    async sendMessage(customMessage = null) {
+      if (this.isLoading) return;
 
+      const input = document.getElementById('chatbot-input');
+      const message = (customMessage || input.value).trim();
       if (!message) return;
 
-      // Clear input
-      input.value = '';
+      if (!customMessage) {
+        input.value = '';
+      }
 
-      // Add user message to display
       this.addMessage(message, 'user');
-
-      // Show loading state
       this.showLoadingIndicator();
 
       try {
-        // Send to backend API
         const response = await fetch('/api/chatbot', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ message })
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message }),
         });
 
-        let data;
         const text = await response.text();
+        let data;
         try {
           data = JSON.parse(text);
         } catch (err) {
           throw new Error('Invalid JSON response from chatbot API');
         }
 
+        if (!response.ok) {
+          throw new Error(data?.message || `خطأ في الخادم (${response.status})`);
+        }
+
         if (data.success) {
           const structured = data.data?.structuredResponse;
-          this.addMessage(data.message, 'bot', structured);
+          const displayText = data.message || '';
+          this.addMessage(displayText, 'bot', structured);
         } else {
           this.addMessage(data.message || 'حدث خطأ. يرجى المحاولة لاحقاً.', 'bot');
         }
       } catch (error) {
-        let message = 'عذراً، حدث خطأ في الاتصال. يرجى المحاولة لاحقاً.';
-        if (error instanceof SyntaxError || error.message.includes('Invalid JSON')) {
-          message = 'عذراً، استجابة خدمة الدردشة غير صالحة. حاول مرة أخرى.';
+        let errMsg = 'عذراً، حدث خطأ في الاتصال. يرجى المحاولة لاحقاً.';
+        if (error.message && !error.message.includes('Invalid JSON')) {
+          errMsg = error.message;
         }
-        this.addMessage(message, 'bot');
+        this.addMessage(errMsg, 'bot');
       }
 
-      // Hide loading
       this.hideLoadingIndicator();
-
-      // Save chat history
       this.saveChatHistory();
     }
 
-    /**
-     * إضافة رسالة إلى شاشة الدردشة
-     * @param {string} text - نص الرسالة
-     * @param {string} sender - 'user' أو 'bot'
-     * @param {object|null} structuredResponse - استجابة منظمة من الخادم
-     */
     addMessage(text, sender = 'bot', structuredResponse = null) {
       const messagesContainer = document.getElementById('chatbot-messages');
-
       const messageDiv = document.createElement('div');
       messageDiv.className = `chatbot-message ${sender}-message`;
 
@@ -202,13 +186,13 @@
 
       if (sender === 'bot') {
         const parsedResponse = structuredResponse || this.tryParseJson(text);
-
         if (parsedResponse) {
           html = this.renderStructuredBotMessage(parsedResponse);
-        } else if (this.isMarkdownTable(text)) {
-          html = this.parseMarkdownTable(text);
-        } else {
-          html = `<p>${this.escapeHtml(text)}</p>`;
+          if (this.isTableResponse(parsedResponse)) {
+            messageDiv.classList.add('has-table');
+          }
+        } else if (text && String(text).trim()) {
+          html = this.renderTextBlock(text);
         }
       } else {
         html = `<p>${this.escapeHtml(text)}</p>`;
@@ -216,221 +200,238 @@
 
       messageDiv.innerHTML = html;
       messagesContainer.appendChild(messageDiv);
-
-      // Store in memory
       this.messages.push({ text, sender, timestamp: new Date(), structuredResponse });
-
-      // Scroll to bottom
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
 
-    /**
-     * تحويل استجابة روبوت منظمة إلى HTML
-     * @param {object} response - استجابة JSON المنظمة
-     * @returns {string}
-     */
     renderStructuredBotMessage(response) {
-      if (!response || typeof response !== 'object') {
-        return `<p>${this.escapeHtml(JSON.stringify(response))}</p>`;
+      const normalized = this.normalizeStructuredResponse(response);
+      if (!normalized || typeof normalized !== 'object') {
+        return this.renderTextBlock(String(response));
       }
 
-      if (response.type === 'text' && typeof response.message === 'string') {
-        return `<p>${this.escapeHtml(response.message)}</p>`;
+      const type = String(normalized.type || '').toUpperCase();
+
+      if (type === 'FILTER' && (!normalized.items || normalized.items.length === 0)) {
+        return this.renderTextBlock(normalized.message || 'مفيش نتائج مطابقة');
       }
 
-      if (response.type === 'products' && Array.isArray(response.items)) {
-        let html = '<table class="chatbot-products-table">';
-        html += '<thead><tr><th>المنتج</th><th>السعر</th><th>الوصف</th><th>الإجراءات</th></tr></thead>';
-        html += '<tbody>';
-
-        response.items.forEach((item, index) => {
-          const productName = item.name || `منتج ${index + 1}`;
-          const productCode = item.id || productName;
-          const productDesc = item.desc || '';
-          const productPrice = item.price != null ? item.price : '';
-
-          html += '<tr>';
-          html += `<td>${this.escapeHtml(productName)}</td>`;
-          html += `<td>${this.escapeHtml(String(productPrice))}</td>`;
-          html += `<td>${this.escapeHtml(productDesc)}</td>`;
-          html += '<td class="action-buttons">';
-          html += `<button class="btn-order" onclick="window.chatbotWidget.orderProduct('${this.escapeJs(productName)}', '${this.escapeJs(productCode)}')">اطلب الآن</button>`;
-          html += `<button class="btn-details" onclick="window.chatbotWidget.showProductDetails('${this.escapeJs(productName)}')">التفاصيل</button>`;
-          html += '</td>';
-          html += '</tr>';
-        });
-
-        html += '</tbody></table>';
+      if (TABLE_RESPONSE_TYPES.includes(type) && Array.isArray(normalized.items) && normalized.items.length > 0) {
+        let html = '';
+        if (normalized.message && String(normalized.message).trim()) {
+          html += this.renderTextBlock(normalized.message, type === 'FILTER' ? 'filter' : null);
+        }
+        html += this.renderProductsTable(normalized.items);
         return html;
       }
 
-      return `<pre>${this.escapeHtml(JSON.stringify(response, null, 2))}</pre>`;
-    }
-
-    /**
-     * محاولة تحليل النص كـ JSON
-     * @param {string} text
-     * @returns {object|null}
-     */
-    tryParseJson(text) {
-      if (typeof text !== 'string') {
-        return null;
+      if (TEXT_RESPONSE_TYPES.includes(type) && typeof normalized.message === 'string') {
+        return this.renderTextBlock(normalized.message, type);
       }
 
-      const trimmed = text.trim();
+      if (Array.isArray(normalized.items) && normalized.items.length > 0) {
+        return this.renderProductsTable(normalized.items);
+      }
 
+      if (typeof normalized.message === 'string' && normalized.message.trim()) {
+        return this.renderTextBlock(normalized.message);
+      }
+
+      return this.renderTextBlock('عذراً، لم أتمكن من عرض الرد.');
+    }
+
+    renderTextBlock(text, type) {
+      const content = this.formatMultilineText(text);
+      const typeClass = type ? ` chatbot-text-${type.toLowerCase()}` : '';
+      return `<div class="chatbot-text-response${typeClass}">${content}</div>`;
+    }
+
+    renderProductsTable(items) {
+      let html = '<div class="chatbot-table-wrap"><table class="chatbot-products-table">';
+      html += '<thead><tr><th>المنتج</th><th>السعر</th><th>الوصف</th><th>الإجراءات</th></tr></thead><tbody>';
+
+      items.forEach((item, index) => {
+        const productName = item.name || `منتج ${index + 1}`;
+        const productId = item.id != null ? item.id : '';
+        const productDesc = item.desc || '';
+        const productPrice = item.price != null ? item.price : '';
+        const productImg = this.buildProductImageSrc(item.img);
+
+        html += '<tr>';
+        html += `<td>${this.escapeHtml(productName)}</td>`;
+        html += `<td>${this.escapeHtml(String(productPrice))} جنيه</td>`;
+        html += `<td>${this.escapeHtml(productDesc)}</td>`;
+        html += '<td class="action-buttons">';
+        html += `<button type="button" class="btn-order" data-id="${this.escapeAttr(productId)}" data-name="${this.escapeAttr(productName)}" data-price="${this.escapeAttr(productPrice)}" data-img="${this.escapeAttr(productImg)}">اطلب الآن</button>`;
+        html += `<button type="button" class="btn-details" data-name="${this.escapeAttr(productName)}">التفاصيل</button>`;
+        html += '</td></tr>';
+      });
+
+      html += '</tbody></table></div>';
+      return html;
+    }
+
+    isTableResponse(response) {
+      const normalized = this.normalizeStructuredResponse(response);
+      if (!normalized) return false;
+      const type = String(normalized.type || '').toUpperCase();
+      if (type === 'FILTER' && (!normalized.items || normalized.items.length === 0)) return false;
+      return TABLE_RESPONSE_TYPES.includes(type) || (Array.isArray(normalized.items) && normalized.items.length > 0);
+    }
+
+    normalizeStructuredResponse(response) {
+      if (!response || typeof response !== 'object') return response;
+
+      const normalized = {};
+      const keyMap = {
+        type: 'type', Type: 'type', TYPE: 'type',
+        items: 'items', Items: 'items', ITEMS: 'items',
+        message: 'message', Message: 'message', MESSAGE: 'message',
+      };
+
+      Object.entries(response).forEach(([key, value]) => {
+        const mappedKey = keyMap[key] || key.toLowerCase();
+        if (mappedKey === 'items' && Array.isArray(value)) {
+          normalized.items = value.map((item) => this.normalizeStructuredItem(item));
+        } else {
+          normalized[mappedKey] = value;
+        }
+      });
+
+      if (normalized.type) {
+        normalized.type = String(normalized.type).toUpperCase();
+        if (normalized.type === 'PRODUCTS') normalized.type = 'LIST';
+        if (normalized.type === 'TEXT') normalized.type = 'ADVISORY';
+      }
+
+      return normalized;
+    }
+
+    normalizeStructuredItem(item) {
+      if (!item || typeof item !== 'object') return item;
+
+      const normalized = {};
+      const keyMap = {
+        id: 'id', Id: 'id', ID: 'id',
+        name: 'name', Name: 'name', NAME: 'name',
+        price: 'price', Price: 'price', PRICE: 'price',
+        desc: 'desc', Desc: 'desc', DESC: 'desc',
+        description: 'desc', Description: 'desc', DESCRIPTION: 'desc',
+        img: 'img', Img: 'img', image: 'img', Image: 'img',
+      };
+
+      Object.entries(item).forEach(([key, value]) => {
+        const mappedKey = keyMap[key] || key.toLowerCase();
+        normalized[mappedKey] = value;
+      });
+
+      return normalized;
+    }
+
+    addProductToCart({ id, name, price, img }) {
+      const productId = Number(id);
+      if (!productId) {
+        this.showToast('تعذر إضافة المنتج للسلة', 'error');
+        return;
+      }
+
+      const cartProduct = {
+        id: productId,
+        title: name,
+        price: Number(price) || 0,
+        img: img || '/images/placeholder.png',
+        quantity: 1,
+      };
+
+      if (window.cartState && typeof window.cartState.addItem === 'function') {
+        window.cartState.addItem(cartProduct);
+        if (typeof window.cartState.open === 'function') {
+          window.cartState.open();
+        }
+      } else {
+        try {
+          const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+          const existing = cart.find((item) => Number(item.id) === productId);
+          if (existing) {
+            existing.quantity = (existing.quantity || 1) + 1;
+          } else {
+            cart.push(cartProduct);
+          }
+          localStorage.setItem('cart', JSON.stringify(cart));
+          document.querySelector('.cart')?.classList.add('active');
+        } catch (e) {
+          this.showToast('تعذر إضافة المنتج للسلة', 'error');
+          return;
+        }
+      }
+
+      if (typeof updetecart === 'function') {
+        updetecart();
+      }
+
+      this.showToast(`تم إضافة «${name}» للسلة`);
+    }
+
+    requestProductDetails(productName) {
+      if (!productName) return;
+      this.sendMessage(`أخبرني المزيد عن ${productName}`);
+    }
+
+    showToast(message, type = 'success') {
+      const toast = document.createElement('div');
+      toast.className = `chatbot-toast chatbot-toast-${type}`;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      requestAnimationFrame(() => toast.classList.add('visible'));
+      setTimeout(() => {
+        toast.classList.remove('visible');
+        setTimeout(() => toast.remove(), 300);
+      }, 2800);
+    }
+
+    buildProductImageSrc(image) {
+      if (!image) return '/images/placeholder.png';
+      if (/^(https?:)?\/\//.test(image)) return image;
+      return `/images/products/${image}`;
+    }
+
+    formatMultilineText(text) {
+      return this.escapeHtml(String(text || '')).replace(/\n/g, '<br>');
+    }
+
+    tryParseJson(text) {
+      if (typeof text !== 'string') return null;
+      const trimmed = text.trim();
       try {
         return JSON.parse(trimmed);
       } catch (error) {
-        // Ignore parse failures
+        // continue
       }
-
       const objectMatch = trimmed.match(/(\{[\s\S]*\})/m);
       if (objectMatch) {
         try {
           return JSON.parse(objectMatch[1]);
         } catch (error) {
+          // ignore
         }
       }
-
-      const arrayMatch = trimmed.match(/(\[[\s\S]*\])/m);
-      if (arrayMatch) {
-        try {
-          return JSON.parse(arrayMatch[1]);
-        } catch (error) {
-        }
-      }
-
       return null;
     }
 
-    /**
-     * التحقق مما إذا كانت الرسالة تحتوي على جدول Markdown
-     * @param {string} text - نص الرسالة
-     * @returns {boolean}
-     */
-    isMarkdownTable(text) {
-      return text.includes('|') && text.includes('---');
+    escapeHtml(text) {
+      const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+      return String(text ?? '').replace(/[&<>"']/g, (m) => map[m]);
     }
 
-    /**
-     * تحويل جدول Markdown إلى جدول HTML تفاعلي مع أزرار
-     * @param {string} markdown - نص جدول Markdown
-     * @returns {string}
-     */
-    parseMarkdownTable(markdown) {
-      const lines = markdown.trim().split('\n');
-      const tableLines = lines.filter(line => line.trim().startsWith('|'));
-
-      if (tableLines.length < 2) {
-        return `<p>${this.escapeHtml(markdown)}</p>`;
-      }
-
-      // Parse header
-      const headerLine = tableLines[0];
-      const headers = this.parseTableRow(headerLine);
-
-      // Parse rows (skip header and separator)
-      const rows = [];
-      for (let i = 2; i < tableLines.length; i++) {
-        const rowData = this.parseTableRow(tableLines[i]);
-        if (rowData.length > 0) {
-          rows.push(rowData);
-        }
-      }
-
-      if (rows.length === 0) {
-        return `<p>${this.escapeHtml(markdown)}</p>`;
-      }
-
-      // Build HTML table with products
-      let html = '<table class="chatbot-products-table">';
-      html += '<thead><tr>';
-
-      // Add headers
-      headers.forEach(header => {
-        html += `<th>${this.escapeHtml(header)}</th>`;
-      });
-      html += '<th>الإجراءات</th></tr></thead>';
-
-      html += '<tbody>';
-
-      // Add rows with buttons
-      rows.forEach((row, index) => {
-        html += '<tr>';
-        row.forEach(cell => {
-          html += `<td>${this.escapeHtml(cell)}</td>`;
-        });
-
-        // Get product name and code from row data
-        const productName = row[0] || `منتج ${index + 1}`;
-        const productCode = row[row.length - 1] || `product_${index}`;
-
-        // Add action buttons
-        html += '<td class="action-buttons">';
-        html += `<button class="btn-order" onclick="window.chatbotWidget.orderProduct('${this.escapeJs(productName)}', '${this.escapeJs(productCode)}')">
-           اطلب الآن
-        </button>`;
-        html += `<button class="btn-details" onclick="window.chatbotWidget.showProductDetails('${this.escapeJs(productName)}')">
-           التفاصيل
-        </button>`;
-        html += '</td>';
-        html += '</tr>';
-      });
-
-      html += '</tbody></table>';
-      return html;
+    escapeAttr(text) {
+      return String(text ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
     }
 
-    /**
-     * تحليل صف من جدول Markdown
-     * @param {string} line - سطر من الجدول
-     * @returns {string[]}
-     */
-    parseTableRow(line) {
-      return line
-        .split('|')
-        .slice(1, -1) // Remove first and last empty elements
-        .map(cell => cell.trim())
-        .map(cell => cell.replace(/^[^\s]*\s+/, '')) // Remove emoji prefix
-        .filter(cell => cell.length > 0);
-    }
-
-    /**
-     * معالجة طلب المنتج
-     * @param {string} productName - اسم المنتج
-     * @param {string} productCode - كود المنتج
-     */
-    orderProduct(productName, productCode) {
-      const message = `أريد طلب ${productName}`;
-      const input = document.getElementById('chatbot-input');
-      input.value = message;
-      this.sendMessage();
-    }
-
-    /**
-     * عرض تفاصيل المنتج
-     * @param {string} productName - اسم المنتج
-     */
-    showProductDetails(productName) {
-      const message = `أخبرني المزيد عن ${productName}`;
-      const input = document.getElementById('chatbot-input');
-      input.value = message;
-      this.sendMessage();
-    }
-
-    /**
-     * تنظيف JavaScript strings لمنع الأخطاء
-     * @param {string} str - النص المراد تنظيفه
-     * @returns {string}
-     */
-    escapeJs(str) {
-      return str.replace(/'/g, "\\'").replace(/"/g, '\\"');
-    }
-
-    /**
-     * عرض مؤشر التحميل (نقطة تحميل)
-     */
     showLoadingIndicator() {
       const messagesContainer = document.getElementById('chatbot-messages');
       const loadingDiv = document.createElement('div');
@@ -439,82 +440,58 @@
       loadingDiv.innerHTML = '<div class="loading-spinner"></div>';
       messagesContainer.appendChild(loadingDiv);
       this.isLoading = true;
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
 
-    /**
-     * إخفاء مؤشر التحميل
-     */
     hideLoadingIndicator() {
-      const loading = document.getElementById('chatbot-loading');
-      if (loading) {
-        loading.remove();
-      }
+      document.getElementById('chatbot-loading')?.remove();
       this.isLoading = false;
     }
 
-    /**
-     * تنظيف HTML لمنع الهجمات (XSS Protection)
-     * @param {string} text - النص المراد تنظيفه
-     * @returns {string}
-     */
-    escapeHtml(text) {
-      const map = {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#039;'
-      };
-      return text.replace(/[&<>"']/g, m => map[m]);
-    }
-
-    /**
-     * حفظ سجل الدردشة في التخزين المحلي
-     */
     saveChatHistory() {
       try {
-        localStorage.setItem(
-          'chatbot_history',
-          JSON.stringify(this.messages.slice(-20)) // Keep last 20 messages
-        );
+        localStorage.setItem('chatbot_history', JSON.stringify(this.messages.slice(-20)));
       } catch (error) {
+        // ignore
       }
     }
 
-    /**
-     * تحميل سجل الدردشة من التخزين المحلي
-     */
     loadChatHistory() {
       try {
         const history = localStorage.getItem('chatbot_history');
-        if (history) {
-          this.messages = JSON.parse(history);
-          // Restore messages to display
-          const messagesContainer = document.getElementById('chatbot-messages');
-          this.messages.forEach(msg => {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `chatbot-message ${msg.sender}-message`;
-            if (msg.sender === 'bot') {
-              const parsedResponse = msg.structuredResponse || this.tryParseJson(msg.text);
-              if (parsedResponse) {
-                messageDiv.innerHTML = this.renderStructuredBotMessage(parsedResponse);
-              } else if (this.isMarkdownTable(msg.text)) {
-                messageDiv.innerHTML = this.parseMarkdownTable(msg.text);
-              } else {
-                messageDiv.innerHTML = `<p>${this.escapeHtml(msg.text)}</p>`;
+        if (!history) return;
+
+        this.messages = JSON.parse(history);
+        const messagesContainer = document.getElementById('chatbot-messages');
+
+        this.messages.forEach((msg) => {
+          const messageDiv = document.createElement('div');
+          messageDiv.className = `chatbot-message ${msg.sender}-message`;
+
+          if (msg.sender === 'bot') {
+            const parsedResponse = msg.structuredResponse || this.tryParseJson(msg.text);
+            if (parsedResponse) {
+              messageDiv.innerHTML = this.renderStructuredBotMessage(parsedResponse);
+              if (this.isTableResponse(parsedResponse)) {
+                messageDiv.classList.add('has-table');
               }
-            } else {
-              messageDiv.innerHTML = `<p>${this.escapeHtml(msg.text)}</p>`;
+            } else if (msg.text && String(msg.text).trim()) {
+              messageDiv.innerHTML = this.renderTextBlock(msg.text);
             }
-            messagesContainer.appendChild(messageDiv);
-          });
-        }
+          } else {
+            messageDiv.innerHTML = `<p>${this.escapeHtml(msg.text)}</p>`;
+          }
+
+          messagesContainer.appendChild(messageDiv);
+        });
+
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
       } catch (error) {
+        // ignore
       }
     }
   }
 
-  // التهيئة عند تحميل DOM
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
       window.chatbotWidget = new ChatbotWidget();
@@ -523,4 +500,3 @@
     window.chatbotWidget = new ChatbotWidget();
   }
 })();
-

@@ -12,6 +12,10 @@ const {
   resolveCustomerId,
   resolveEmployeeId
 } = require('../../core/middlewares/sessionHandler');
+const {
+  normalizeEmployeeRole,
+  getRedirectUrlForRole
+} = require('../../core/utils/roleRedirect');
 
 async function restoreSessionUserId(req) {
   if (!req.session?.email) return null;
@@ -81,7 +85,7 @@ exports.unifiedLogin = async (req, res) => {
       tableName = 'Employees';
       idField = 'Employee_ID';
       nameField = 'Employee_Name';
-      userRole = user.Role;
+      userRole = normalizeEmployeeRole(user.Role) || user.Role;
     } else {
       // البحث في جدول العملاء
       const [customerRows] = await db.query(
@@ -126,67 +130,52 @@ exports.unifiedLogin = async (req, res) => {
       console.error('[unifiedLogin] Cannot resolve user ID! idField=', idField, 'user keys:', Object.keys(user));
     }
 
-    req.session.userId        = resolvedId;
-    req.session.email         = user.Email;
-    req.session.role          = userRole;
-    req.session.authenticated = true;
-    req.session.user = {
-      id:    resolvedId,
-      name:  user[nameField],
+    const redirectUrl = getRedirectUrlForRole(userRole, req.body?.next);
+    const sessionUser = {
+      id: resolvedId,
+      name: user[nameField],
       email: user.Email,
-      role:  userRole
+      role: userRole
     };
-
-    const redirectUrl = (() => {
-      switch (userRole) {
-        case 'Admin':    return '/admin/dashboard';
-        case 'Cashier':  return '/cashier';
-        case 'Chef':
-        case 'Kitchen':  return '/kitchen';
-        case 'Client':
-        default:         return req.body?.next ? decodeURIComponent(req.body.next) : '/';
-      }
-    })();
 
     Logger.audit('USER_LOGIN', user[idField], { email, role: userRole });
 
-    // ==========================================
-    // مهم جداً على Vercel:
-    // 1. نستخدم session.save() صراحة قبل ما نرد
-    // 2. نضمن إن الـ cookie بيتبعته مع الـ response
-    // 3. نستخدم res.writeHead() قبل session.save() عشان الـ cookie يتحط
-    // ==========================================
+    const sendLoginSuccess = () => {
+      req.session.save((err) => {
+        if (err) {
+          Logger.error('Session save error after login', err);
+          return res.status(500).json({
+            success: false,
+            message: 'خطأ في حفظ الجلسة، حاول مرة أخرى'
+          });
+        }
 
-    // نضمن إن الـ session هتتحفظ قبل الـ response
-    req.session.save((err) => {
-      if (err) {
-        Logger.error('Session save error after login', err);
+        return res.json({
+          success: true,
+          message: 'تم تسجيل الدخول بنجاح',
+          user: sessionUser,
+          redirect: redirectUrl
+        });
+      });
+    };
+
+    // استبدال الجلسة القديمة بالكامل عند تسجيل دخول حساب جديد
+    req.session.regenerate((regenErr) => {
+      if (regenErr) {
+        Logger.error('Session regenerate error after login', regenErr);
         return res.status(500).json({
           success: false,
-          message: 'خطأ في حفظ الجلسة، حاول مرة أخرى'
+          message: 'خطأ في إنشاء الجلسة، حاول مرة أخرى'
         });
       }
 
-      // نتأكد من إن الـ cookie اتحط في الـ response headers
-      const setCookieHeader = res.getHeader('Set-Cookie');
-      if (setCookieHeader) {
-        Logger.info('Session cookie set:', {
-          path: req.path,
-          cookieCount: Array.isArray(setCookieHeader) ? setCookieHeader.length : 1
-        });
-      }
+      req.session.userId = resolvedId;
+      req.session.email = user.Email;
+      req.session.role = userRole;
+      req.session.authenticated = true;
+      req.session.user = sessionUser;
 
-      return res.json({
-        success: true,
-        message: 'تم تسجيل الدخول بنجاح',
-        user: {
-          id:    user[idField],
-          name:  user[nameField],
-          email: user.Email,
-          role:  userRole
-        },
-        redirect: redirectUrl
-      });
+      sendLoginSuccess();
     });
 
   } catch (error) {
@@ -201,32 +190,45 @@ exports.unifiedLogin = async (req, res) => {
 /**
  * تسجيل الخروج الموحد
  */
-exports.unifiedLogout = (req, res) => {
-  // Validate CSRF token for POST requests - IMPORTANT: do this BEFORE destroying session
-  const submittedToken = (req.body && req.body._csrf) || (req.query && req.query._csrf) || '';
-  const validCsrf = submittedToken && req.session?.csrfToken && submittedToken === req.session.csrfToken;
+function destroySessionAndRespond(req, res) {
+  req.session.destroy((err) => {
+    if (err) {
+      Logger.error('Logout error', err);
+    }
 
-  if (!validCsrf) {
+    if (req.path.startsWith('/api') || req.get('Accept')?.includes('application/json')) {
+      return res.json({
+        success: true,
+        message: 'تم تسجيل الخروج بنجاح',
+        redirect: '/'
+      });
+    }
+
+    res.redirect('/');
+  });
+}
+
+/** GET — زر الخروج في واجهات الموظفين */
+exports.unifiedLogoutGet = (req, res) => {
+  destroySessionAndRespond(req, res);
+};
+
+/** POST — مع CSRF اختياري للتوافق */
+exports.unifiedLogout = (req, res) => {
+  const submittedToken = (req.body && req.body._csrf) || (req.query && req.query._csrf) || '';
+  const validCsrf =
+    submittedToken &&
+    req.session?.csrfToken &&
+    submittedToken === req.session.csrfToken;
+
+  if (req.session?.csrfToken && !validCsrf) {
     if (req.path.startsWith('/api')) {
       return res.status(403).json({ success: false, message: 'طلب غير صالح' });
     }
     return res.status(403).render('error', { message: 'طلب غير صالح' });
   }
 
-  req.session.destroy((err) => {
-    if (err) {
-      Logger.error('Logout error', err);
-    }
-
-    if (req.path.startsWith('/api')) {
-      return res.json({
-        success: true,
-        message: 'تم تسجيل الخروج بنجاح'
-      });
-    }
-
-    res.redirect('/login');
-  });
+  destroySessionAndRespond(req, res);
 };
 
 /**

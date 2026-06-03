@@ -1,27 +1,23 @@
 /**
  * Groq API Service
- * Handles communication with Groq API with comprehensive error handling and retry logic
  */
 
 const Groq = require('groq-sdk');
 const Logger = require('../../core/utils/logger');
+const ChatbotUtils = require('./chatbot.utils');
 
 class GeminiService {
   constructor() {
     const apiKey = process.env.GROQ_API_KEY;
-    
+
     Logger.info(`Groq Service: Initializing with API key: ${apiKey ? 'EXISTS (length: ' + apiKey.length + ')' : 'NOT SET'}`);
-    
+
     if (!apiKey) {
       Logger.warn('GROQ_API_KEY not configured in environment');
       this.client = null;
     } else {
       try {
-        this.client = new Groq({ 
-          apiKey,
-          // Add timeout to prevent hanging requests
-          timeout: 30000 // 30 seconds timeout
-        });
+        this.client = new Groq({ apiKey, timeout: 30000 });
         this.model = 'llama-3.3-70b-versatile';
         Logger.info('✓ Groq client initialized successfully with model: ' + this.model);
       } catch (err) {
@@ -30,270 +26,256 @@ class GeminiService {
       }
     }
 
-    // Configuration for resilience
     this.maxRetries = 2;
     this.retryDelayMs = 1000;
   }
 
-  /**
-   * Generate response using Groq API with retry logic
-   * @param {string} userMessage - User's question
-   * @param {array} products - Filtered products from database
-   * @returns {Promise<string>} - Groq's response
-   */
-  async generateResponse(userMessage, products = []) {
+  async generateAdvisoryResponse(userMessage, menu = [], history = []) {
     try {
       if (!this.client) {
-        Logger.error('CRITICAL: Groq client not initialized - check GROQ_API_KEY environment variable');
-        return 'عذراً، لم يتم تكوين خدمة الذكاء الاصطناعي. يرجى التواصل مع الإدارة.';
+        return JSON.stringify({
+          type: 'ADVISORY',
+          message: 'بحذر: لا يمكن تقديم نصيحة مفصّلة حالياً. راجع فريق المطعم للتفاصيل الصحية أو الغذائية.',
+        });
       }
 
-      // Validate input
       if (!userMessage || typeof userMessage !== 'string' || userMessage.trim().length === 0) {
-        Logger.warn('Empty or invalid message received');
-        return 'عذراً، الرجاء إرسال رسالة صحيحة.';
+        return JSON.stringify({
+          type: 'ADVISORY',
+          message: 'الرجاء إرسال سؤال أوضح.',
+        });
       }
 
-      const sanitizedMsg = userMessage.trim().substring(0, 1000); // Limit length
-      Logger.info(`[Chatbot] Processing message: "${sanitizedMsg}" | Products: ${products.length}`);
+      const sanitizedMsg = userMessage.trim().substring(0, 500);
+      Logger.info(`[Chatbot] ADVISORY: "${sanitizedMsg}" | Menu: ${menu.length}`);
 
-      // Call with retry logic
-      return await this.askGeminiWithRetry(sanitizedMsg, products);
+      return await this.askAdvisoryWithRetry(sanitizedMsg, menu, history);
     } catch (error) {
-      Logger.error('generateResponse - Unexpected error:', error);
-      return 'عذراً، حدث خطأ غير متوقع. يرجى المحاولة لاحقاً.';
+      Logger.error('generateAdvisoryResponse - Unexpected error:', error);
+      return JSON.stringify({
+        type: 'ADVISORY',
+        message: 'بحذر: حدث خطأ أثناء معالجة سؤالك. يُفضّل التواصل مع فريق المطعم.',
+      });
     }
   }
 
-  /**
-   * Call Groq API with automatic retry on transient failures
-   * @param {string} userMessage
-   * @param {array} products
-   * @param {number} attempt
-   * @returns {Promise<string>}
-   */
-  async askGeminiWithRetry(userMessage, products = [], attempt = 1) {
+  async askAdvisoryWithRetry(userMessage, menu = [], history = [], attempt = 1) {
     try {
-      return await this.askGemini(userMessage, products);
+      const raw = await this.askAdvisory(userMessage, menu, history, attempt);
+      const parsed = ChatbotUtils.parseStructuredResponse(raw);
+      const valid = ChatbotUtils.validateAdvisoryResponse(parsed);
+
+      if (attempt < this.maxRetries && !valid) {
+        Logger.warn(`[Chatbot] Invalid ADVISORY JSON on attempt ${attempt}, retrying...`);
+        await this.sleep(this.retryDelayMs);
+        return await this.askAdvisoryWithRetry(userMessage, menu, history, attempt + 1);
+      }
+
+      return raw;
+    } catch (error) {
+      const isTransient = this.isTransientError(error);
+      if (isTransient && attempt < this.maxRetries) {
+        await this.sleep(this.retryDelayMs);
+        return await this.askAdvisoryWithRetry(userMessage, menu, history, attempt + 1);
+      }
+
+      this.logDetailedError(error, userMessage);
+      return JSON.stringify({
+        type: 'ADVISORY',
+        message: this.getErrorMessage(error),
+      });
+    }
+  }
+
+  async askAdvisory(userMessage, menu = [], history = [], attempt = 1) {
+    if (!this.client) {
+      return JSON.stringify({
+        type: 'ADVISORY',
+        message: 'بحذر: خدمة النصائح غير متاحة حالياً.',
+      });
+    }
+
+    const productContext = this.buildProductContext(menu);
+    const hasJuice = menu.some((p) => /عصير|juice/i.test(`${p.Product_Name} ${p.Description || ''}`));
+    const menuNote = hasJuice
+      ? ''
+      : '\n\nملاحظة: لا يوجد عصير طبيعي في المنيو. المنتجات المعروضة قد تكون مشروبات غازية وليست عصيراً.';
+    const retryNote = attempt > 1 ? '\n\nأعد JSON صالح فقط: {"type":"ADVISORY","message":"..."}' : '';
+
+    const systemPrompt = `أنت "فودي" — مساعد مطعم فودنا. مهمتك: نصائح عامة فقط (ADVISORY).
+ردودك بالعربي فقط.
+
+## مصدر الحقيقة الوحيد
+المنيو التالي — ممنوع اختراع منتجات أو أسعار:
+${productContext}${menuNote}
+
+## قواعد ADVISORY (إلزامي)
+- أعد JSON فقط: {"type":"ADVISORY","message":"..."}
+- ممنوع جدول — نص فقط
+- ابدأ الرسالة بأحد: "مناسب" أو "غير مناسب" أو "بحذر"
+- ثم السبب باختصار
+- أجب عن السؤال المحدد: إذا ذكر "دايت" أو "رجيم" لا تتحدث عن "مرضى السكر" إلا إذا سُئل عنهم
+- إذا سُئل عن العصير ولا يوجد عصير في المنيو: وضّح ذلك ثم علّق على المشروبات المتاحة إن وُجدت
+- لا تقدم تشخيصاً أو نصائح طبية قطعية
+- لو البيانات غير كافية: اذكر ذلك بوضوح
+- اعتمد على المنتجات الموجودة في المنيو فقط${retryNote}`;
+
+    const messages = [{ role: 'system', content: systemPrompt }];
+
+    for (const entry of history) {
+      if (entry && (entry.role === 'user' || entry.role === 'assistant') && typeof entry.content === 'string') {
+        messages.push({ role: entry.role, content: entry.content.substring(0, 500) });
+      }
+    }
+
+    messages.push({ role: 'user', content: userMessage });
+
+    const completion = await this.client.chat.completions.create({
+      model: this.model,
+      messages,
+      temperature: 0,
+      max_tokens: 512,
+      response_format: { type: 'json_object' },
+    });
+
+    const responseText = this.extractResponseText(completion);
+    if (!responseText) {
+      throw new Error('Empty response from Groq');
+    }
+
+    return responseText;
+  }
+
+  async generateResponse(userMessage, products = [], history = []) {
+    try {
+      if (!this.client) {
+        Logger.error('CRITICAL: Groq client not initialized');
+        return JSON.stringify({
+          type: 'text',
+          message: 'عذراً، لم يتم تكوين خدمة الذكاء الاصطناعي. يرجى التواصل مع الإدارة.'
+        });
+      }
+
+      if (!userMessage || typeof userMessage !== 'string' || userMessage.trim().length === 0) {
+        return JSON.stringify({
+          type: 'text',
+          message: 'عذراً، الرجاء إرسال رسالة صحيحة.'
+        });
+      }
+
+      const sanitizedMsg = userMessage.trim().substring(0, 500);
+      Logger.info(`[Chatbot] Processing message: "${sanitizedMsg}" | Products: ${products.length} | History: ${history.length}`);
+
+      return await this.askGeminiWithRetry(sanitizedMsg, products, history);
+    } catch (error) {
+      Logger.error('generateResponse - Unexpected error:', error);
+      return JSON.stringify({
+        type: 'text',
+        message: 'عذراً، حدث خطأ غير متوقع. يرجى المحاولة لاحقاً.'
+      });
+    }
+  }
+
+  async askGeminiWithRetry(userMessage, products = [], history = [], attempt = 1) {
+    try {
+      const raw = await this.askGemini(userMessage, products, history, attempt);
+
+      if (attempt < this.maxRetries && !ChatbotUtils.parseStructuredResponse(raw)) {
+        Logger.warn(`[Chatbot] Invalid JSON on attempt ${attempt}, retrying...`);
+        await this.sleep(this.retryDelayMs);
+        return await this.askGeminiWithRetry(userMessage, products, history, attempt + 1);
+      }
+
+      return raw;
     } catch (error) {
       const isTransient = this.isTransientError(error);
       const shouldRetry = isTransient && attempt < this.maxRetries;
 
-      console.error(`\n[RETRY_CHECK] Attempt: ${attempt}, IsTransient: ${isTransient}, ShouldRetry: ${shouldRetry}`);
-      console.error(`[RETRY_CHECK] Status: ${error.status}, Code: ${error.code}`);
-
       if (shouldRetry) {
-        Logger.warn(`[Chatbot] Transient error on attempt ${attempt}, retrying in ${this.retryDelayMs}ms...`, {
-          errorCode: error.code || error.status,
-          message: error.message
-        });
-        
-        // Wait before retrying
+        Logger.warn(`[Chatbot] Retrying attempt ${attempt} after transient error...`);
         await this.sleep(this.retryDelayMs);
-        return await this.askGeminiWithRetry(userMessage, products, attempt + 1);
+        return await this.askGeminiWithRetry(userMessage, products, history, attempt + 1);
       }
 
-      // Log full error details for debugging
       this.logDetailedError(error, userMessage);
-
-      // Return user-friendly error message based on error type
-      return this.getErrorMessage(error);
-    }
-  }
-
-  /**
-   * Check if error is transient (can be retried)
-   * @param {Error} error
-   * @returns {boolean}
-   */
-  isTransientError(error) {
-    // Network timeouts
-    if (error.code === 'ETIMEDOUT' || error.code === 'ECONNREFUSED' || error.code === 'ECONNRESET') {
-      return true;
-    }
-
-    // HTTP 429 (rate limit) and 503 (service unavailable) are transient
-    if (error.status === 429 || error.status === 503 || error.status === 502 || error.status === 504) {
-      return true;
-    }
-
-    // Check error message for transient indicators
-    const msg = error.message || '';
-    if (msg.includes('timeout') || msg.includes('temporarily')) {
-      return true;
-    }
-
-    return false;
-  }
-
-  /**
-   * Get user-friendly error message based on error type
-   * @param {Error} error
-   * @returns {string}
-   */
-  getErrorMessage(error) {
-    const status = error.status;
-    const code = error.code;
-    const msg = error.message || '';
-
-    Logger.error(`[Chatbot] ERROR Details:`, {
-      status,
-      code,
-      message: msg,
-      type: error.constructor.name,
-      hasApiError: !!error.error,
-      hasResponse: !!error.response
-    });
-
-    // API key issues - more specific logging
-    if (status === 401 || msg.includes('API key') || msg.includes('Unauthorized') || msg.includes('api_key')) {
-      Logger.error('❌ [AUTHENTICATION FAILED] - Check your GROQ_API_KEY in .env file', {
-        apiKeyConfigured: !!process.env.GROQ_API_KEY,
-        apiKeyLength: process.env.GROQ_API_KEY ? process.env.GROQ_API_KEY.length : 0,
-        apiKeyPrefix: process.env.GROQ_API_KEY ? process.env.GROQ_API_KEY.substring(0, 10) + '...' : 'NOT SET'
+      return JSON.stringify({
+        type: 'text',
+        message: this.getErrorMessage(error)
       });
-      return 'عذراً، حدث خطأ في المصادقة مع خدمة الذكاء الاصطناعي. يرجى التواصل مع الإدارة.';
     }
-
-    // Rate limit
-    if (status === 429) {
-      Logger.warn('Rate limit exceeded');
-      return 'عذراً، تم تجاوز حد الطلبات. يرجى المحاولة مرة أخرى بعد قليل.';
-    }
-
-    // Server errors (500+)
-    if (status && status >= 500) {
-      Logger.error('Groq server error: ' + status);
-      return 'عذراً، خدمة الذكاء الاصطناعي غير متاحة حالياً. يرجى المحاولة لاحقاً.';
-    }
-
-    // Invalid request (400)
-    if (status === 400 || msg.includes('Invalid')) {
-      Logger.error('Invalid request to Groq API');
-      return 'عذراً، حدث خطأ في معالجة طلبك. يرجى إعادة الصيغة.';
-    }
-
-    // Network/timeout errors
-    if (code === 'ETIMEDOUT' || code === 'ECONNREFUSED' || msg.includes('timeout')) {
-      Logger.error('Network timeout');
-      return 'عذراً، انتهت مهلة الانتظار. يرجى المحاولة مرة أخرى.';
-    }
-
-    // Generic fallback
-    Logger.error(`Unknown error - Status: ${status}, Code: ${code}, Message: ${msg}`);
-    return 'عذراً، حدث خطأ في معالجة سؤالك. يرجى المحاولة لاحقاً.';
   }
 
-  /**
-   * Log detailed error information for debugging
-   * @param {Error} error
-   * @param {string} userMessage
-   */
-  logDetailedError(error, userMessage) {
-    const errorData = {
-      status: error.status || 'N/A',
-      code: error.code || 'N/A',
-      message: error.message || 'Unknown error',
-      type: error.constructor.name,
-      headers: error.headers || {},
-      userMessage: userMessage.substring(0, 100) // Log first 100 chars of message
-    };
-
-    try {
-      // Try to extract API response body if available
-      if (error.response) {
-        errorData.responseBody = error.response;
-      }
-      if (error.error) {
-        errorData.apiError = error.error;
-      }
-    } catch (e) {
-      // Ignore error in error logging
-    }
-
-    Logger.error('[Chatbot] Groq API Error Details:', errorData);
-  }
-
-  /**
-   * askGemini - Build product context, call the Groq API and return text
-   * @param {string} userMessage
-   * @param {Array} products
-   * @returns {Promise<string>}
-   */
-  async askGemini(userMessage, products = []) {
+  async askGemini(userMessage, products = [], history = [], attempt = 1) {
     if (!this.client) {
-      Logger.error('askGemini: Groq client not configured');
-      return 'عذراً، لم يتم تكوين خدمة الذكاء الاصطناعي. يرجى التواصل مع الإدارة.';
+      return JSON.stringify({
+        type: 'text',
+        message: 'عذراً، لم يتم تكوين خدمة الذكاء الاصطناعي.'
+      });
     }
 
     try {
       const productContext = this.buildProductContext(products);
+      const retryNote = attempt > 1 ? '\n\nمهم: أعد JSON صالح فقط بدون أي نص إضافي.' : '';
 
-      const systemPrompt = `أنت مساعد طلب الطعام في مطعم فودنا.
+      const systemPrompt = `أنت "فودي" — المساعد الذكي لمطعم فودنا. شخصيتك ودودة وحماسية.
+ردودك بالعربي فقط.
 
-إذا طلب المستخدم منتجات أو خيارات أو أصناف، رد بـ JSON فقط بهذا الشكل الدقيق:
-{"type":"products","items":[{"id":1,"name":"اسم المنتج","price":20,"desc":"وصف مختصر"}]}
+## مهمتك
+- الرد على التحيات والأسئلة العامة (ليست عن منتجات محددة)
+- لا تخترع منتجات أو أسعار — المنتجات تأتي من قاعدة البيانات فقط
 
-إذا كان السؤال عاماً أو تحية أو استفسار، رد بـ JSON فقط:
-{"type":"text","message":"ردك هنا"}
+## قواعد الرد (إلزامي)
+أعد JSON فقط — بدون markdown أو نص خارج JSON.
 
-لا تكتب أي نص خارج الـ JSON. لا تضف markdown أو شرح.
-قائمة المنتجات المتاحة:
-${productContext}`;
+### للتحيات والشكر والأسئلة العامة:
+{"type":"text","message":"ردك الودود هنا"}
+
+### إذا وُجدت منتجات في السياق وسأل الزبون عنها:
+{"type":"products","items":[{"id":1,"name":"اسم المنتج","price":20,"category":"الفئة","desc":"وصف مختصر"}]}
+- استخدم id وname وprice من القائمة فقط — لا تغيّرها
+- ممنوع type:text يقول "مفيش" إذا كانت القائمة غير فارغة
+
+## المنتجات المتاحة (من قاعدة البيانات):
+${productContext}${retryNote}`;
+
+      const messages = [{ role: 'system', content: systemPrompt }];
+
+      for (const entry of history) {
+        if (entry && (entry.role === 'user' || entry.role === 'assistant') && typeof entry.content === 'string') {
+          messages.push({ role: entry.role, content: entry.content.substring(0, 500) });
+        }
+      }
+
+      messages.push({ role: 'user', content: userMessage });
 
       const payload = {
         model: this.model,
-        messages: [
-          {
-            role: 'system',
-            content: systemPrompt
-          },
-          {
-            role: 'user',
-            content: userMessage
-          }
-        ],
-        temperature: 0.1,
-        max_tokens: 1024
+        messages,
+        temperature: 0,
+        max_tokens: 1024,
+        response_format: { type: 'json_object' }
       };
 
       Logger.info('[Groq API] Sending request', {
         model: this.model,
-        systemPromptLength: systemPrompt.length,
-        userMessageLength: userMessage.length,
-        productsCount: products.length
+        productsCount: products.length,
+        historyCount: history.length
       });
 
       const completion = await this.client.chat.completions.create(payload);
-
       Logger.info('[Groq API] Received response successfully');
 
-      // Safe response extraction with validation
       const responseText = this.extractResponseText(completion);
-      
+
       if (!responseText) {
-        Logger.error('askGemini: No text extracted from response', {
-          hasCompletion: !!completion,
-          hasChoices: !!(completion && completion.choices),
-          choicesLength: completion && completion.choices ? completion.choices.length : 0,
-          firstChoice: completion && completion.choices && completion.choices[0] ? 'present' : 'missing',
-          message: completion && completion.choices && completion.choices[0] ? JSON.stringify(completion.choices[0].message) : 'N/A'
-        });
-        return 'عذراً، لم أتمكن من الحصول على استجابة من خدمة الذكاء الاصطناعي.';
+        Logger.error('askGemini: No text extracted from response');
+        throw new Error('Empty response from Groq');
       }
 
       Logger.info(`[Groq API] Response length: ${responseText.length} characters`);
       return responseText;
 
     } catch (err) {
-      // Log raw error for debugging
-      console.error('\n[GROQ_ERROR_RAW]', err);
-      console.error('[GROQ_ERROR_MESSAGE]', err.message);
-      console.error('[GROQ_ERROR_STATUS]', err.status);
-      console.error('[GROQ_ERROR_CODE]', err.code);
-      console.error('[GROQ_ERROR_RESPONSE]', err.response);
-      
-      // Re-throw to be caught by retry logic
       Logger.error('askGemini: API call failed', {
         status: err.status,
         code: err.code,
@@ -303,85 +285,84 @@ ${productContext}`;
     }
   }
 
-  /**
-   * Safely extract response text from Groq API response
-   * @param {Object} completion
-   * @returns {string|null}
-   */
   extractResponseText(completion) {
     try {
-      // Validate completion object
-      if (!completion) {
-        Logger.warn('extractResponseText: completion is null');
-        return null;
-      }
-
-      // Navigate safely through the response structure
-      if (!Array.isArray(completion.choices) || completion.choices.length === 0) {
-        Logger.warn('extractResponseText: no choices in response', { choicesType: typeof completion.choices });
-        return null;
-      }
+      if (!completion) return null;
+      if (!Array.isArray(completion.choices) || completion.choices.length === 0) return null;
 
       const firstChoice = completion.choices[0];
-      if (!firstChoice || !firstChoice.message) {
-        Logger.warn('extractResponseText: no message in first choice');
-        return null;
-      }
+      if (!firstChoice || !firstChoice.message) return null;
 
       const content = firstChoice.message.content;
-      if (!content || typeof content !== 'string') {
-        Logger.warn('extractResponseText: content is not a string', { contentType: typeof content });
-        return null;
-      }
+      if (!content || typeof content !== 'string') return null;
 
-      // Validate content is not empty after trimming
-      const trimmedContent = content.trim();
-      if (trimmedContent.length === 0) {
-        Logger.warn('extractResponseText: content is empty after trimming');
-        return null;
-      }
-
-      return trimmedContent;
+      const trimmed = content.trim();
+      return trimmed.length === 0 ? null : trimmed;
     } catch (error) {
-      Logger.error('extractResponseText: Error extracting text', { error: error.message });
+      Logger.error('extractResponseText: Error', { error: error.message });
       return null;
     }
   }
 
-  /**
-   * Build product context string for Groq
-   * @param {array} products - Array of product objects
-   * @returns {string} - Formatted product list
-   */
   buildProductContext(products) {
     if (!products || products.length === 0) {
-      return 'لا توجد منتجات متاحة حالياً.';
+      return 'لا توجد منتجات في السياق — استخدم type:text للرد العام فقط.';
     }
 
-    return products
-      .map((product, index) => {
-        return `${index + 1}. ${product.Product_Name}
-   السعر: ${product.Price} جنيه
-   الفئة: ${product.Category || 'عام'}
-   الوصف: ${product.Description || 'بدون وصف'}
-   الكمية المتاحة: ${product.Quantity || 'متاح'}`;
+    const byCategory = {};
+    for (const p of products) {
+      const cat = p.Category || 'عام';
+      if (!byCategory[cat]) byCategory[cat] = [];
+      byCategory[cat].push(p);
+    }
+
+    return Object.entries(byCategory)
+      .map(([cat, items]) => {
+        const lines = items.map(p =>
+          `  - [ID:${p.Product_ID}] ${p.Product_Name} | السعر: ${p.Price} جنيه | ${p.Description || 'بدون وصف'}`
+        ).join('\n');
+        return `### فئة: ${cat}\n${lines}`;
       })
       .join('\n\n');
   }
 
-  /**
-   * Check if Groq API is configured
-   * @returns {boolean}
-   */
+  isTransientError(error) {
+    if (error.code === 'ETIMEDOUT' || error.code === 'ECONNREFUSED' || error.code === 'ECONNRESET') return true;
+    if (error.status === 429 || error.status === 503 || error.status === 502 || error.status === 504) return true;
+    const msg = error.message || '';
+    if (msg.includes('timeout') || msg.includes('temporarily')) return true;
+    return false;
+  }
+
+  getErrorMessage(error) {
+    const status = error.status;
+    const code = error.code;
+    const msg = error.message || '';
+
+    if (status === 401 || msg.includes('API key') || msg.includes('Unauthorized')) {
+      return 'عذراً، حدث خطأ في المصادقة مع خدمة الذكاء الاصطناعي. يرجى التواصل مع الإدارة.';
+    }
+    if (status === 429) return 'عذراً، تم تجاوز حد الطلبات. يرجى المحاولة بعد قليل.';
+    if (status && status >= 500) return 'عذراً، خدمة الذكاء الاصطناعي غير متاحة حالياً. يرجى المحاولة لاحقاً.';
+    if (code === 'ETIMEDOUT' || code === 'ECONNREFUSED' || msg.includes('timeout')) {
+      return 'عذراً، انتهت مهلة الانتظار. يرجى المحاولة مرة أخرى.';
+    }
+    return 'عذراً، حدث خطأ في معالجة سؤالك. يرجى المحاولة لاحقاً.';
+  }
+
+  logDetailedError(error, userMessage) {
+    Logger.error('[Chatbot] Groq API Error:', {
+      status: error.status || 'N/A',
+      code: error.code || 'N/A',
+      message: error.message || 'Unknown',
+      userMessage: userMessage.substring(0, 100)
+    });
+  }
+
   isConfigured() {
     return this.client !== null;
   }
 
-  /**
-   * Sleep utility for retry delays
-   * @param {number} ms - Milliseconds to sleep
-   * @returns {Promise}
-   */
   sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
