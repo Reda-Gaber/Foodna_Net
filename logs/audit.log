@@ -1573,3 +1573,7 @@
   "email": "admin@foodna.com",
   "role": "Admin"
 }
+[2026-06-04T23:21:14.924Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}

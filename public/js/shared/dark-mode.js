@@ -10,13 +10,9 @@
   // ============================
   // DARK MODE - تبديل الوضع الليلي
   // ============================
-  const themButton = document.getElementById('theme-button');
+  const themeButton = document.getElementById('theme-button');
   const darkTheme = 'dark-theme';
   const iconTheme = 'ri-sun-line';
-
-  if (!themButton) {
-    return;
-  }
 
   // ============================
   // تحميل الحالة المحفوظة
@@ -26,36 +22,54 @@
 
   // تطبيق الوضع المحفوظ
   if (savedTheme === 'dark') {
+    document.documentElement.classList.add(darkTheme);
     document.body.classList.add(darkTheme);
-    themButton.classList.add(iconTheme); // تغيير الأيقونة إلى sun
+    if (themeButton) {
+      themeButton.classList.add(iconTheme); // تغيير الأيقونة إلى sun
+      themeButton.classList.remove('ri-moon-line');
+    }
   } else {
+    document.documentElement.classList.remove(darkTheme);
     document.body.classList.remove(darkTheme);
-    themButton.classList.remove(iconTheme); // تغيير الأيقونة إلى moon
+    if (themeButton) {
+      themeButton.classList.remove(iconTheme); // تغيير الأيقونة إلى moon
+      themeButton.classList.add('ri-moon-line');
+    }
+  }
+
+  if (!themeButton) {
+    return;
   }
 
   // ============================
   // دوال مساعدة
   // ============================
-  const getCurrentTheme = () => 
-    document.body.classList.contains(darkTheme) ? 'dark' : 'light';
+  const setDarkMode = (isDark) => {
+    document.documentElement.classList[isDark ? 'add' : 'remove'](darkTheme);
+    document.body.classList[isDark ? 'add' : 'remove'](darkTheme);
+    themeButton.classList[isDark ? 'add' : 'remove'](iconTheme);
+    themeButton.classList[isDark ? 'remove' : 'add']('ri-moon-line');
+  };
 
-  const getCurrentIcon = () => 
-    themButton.classList.contains(iconTheme) ? 'ri-sun-line' : 'ri-moon-line';
+  const getCurrentTheme = () =>
+    document.documentElement.classList.contains(darkTheme) ? 'dark' : 'light';
+
+  const getCurrentIcon = () =>
+    themeButton.classList.contains(iconTheme) ? 'ri-sun-line' : 'ri-moon-line';
 
   // ============================
   // الاستماع لنقرات زر تبديل الوضع
   // ============================
-  themButton.addEventListener('click', (e) => {
+  themeButton.addEventListener('click', (e) => {
     e.preventDefault();
-    
-    // تبديل الفئة
-    document.body.classList.toggle(darkTheme);
-    themButton.classList.toggle(iconTheme);
+
+    const isDark = !document.documentElement.classList.contains(darkTheme);
+    setDarkMode(isDark);
 
     // حفظ الاختيار في localStorage
     const newTheme = getCurrentTheme();
     const newIcon = getCurrentIcon();
-    
+
     localStorage.setItem('selected-theme', newTheme);
     localStorage.setItem('selected-icon', newIcon);
   });
@@ -66,13 +80,11 @@
   window.addEventListener('storage', (e) => {
     if (e.key === 'selected-theme') {
       const newTheme = e.newValue;
-      
+
       if (newTheme === 'dark') {
-        document.body.classList.add(darkTheme);
-        themButton.classList.add(iconTheme);
+        setDarkMode(true);
       } else {
-        document.body.classList.remove(darkTheme);
-        themButton.classList.remove(iconTheme);
+        setDarkMode(false);
       }
     }
   });

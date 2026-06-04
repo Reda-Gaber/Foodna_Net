@@ -52,6 +52,7 @@ img {
 }
 
 /* متغيرات الألوان للوضع الليلي */
+html.dark-theme,
 body.dark-theme {
   --title-color: hsl(228, 36%, 95%);
   --text-color: #ffffff;
