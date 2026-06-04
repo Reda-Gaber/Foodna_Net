@@ -42,12 +42,12 @@
 /* نافذة الدردشة */
 .chatbot-window {
   position: fixed;
-  bottom: calc(var(--chat-bottom) + 80px);
+  bottom: calc(var(--chat-bottom) + 60px);
   right: var(--chat-right);
   /* width: var(--chat-width); */
   /* height: var(--chat-height); */
   width: 400px;
-  height: 90%;
+  height: 89%;
   background-color: var(--container-color);
   border: 1px solid var(--border-color);
   border-radius: 12px;
