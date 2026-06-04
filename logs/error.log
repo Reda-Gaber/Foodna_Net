@@ -53777,3 +53777,132 @@
   "syscall": "read",
   "fatal": true
 }
+[2026-06-04T10:18:28.497Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-04T10:18:28.501Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-04T10:18:28.507Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-04T10:18:28.511Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-04T10:18:28.525Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-04T10:29:32.683Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-04T10:29:32.839Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-04T10:29:32.908Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-04T10:29:32.925Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-04T10:29:35.867Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-04T10:36:49.224Z] ERROR: Unhandled Promise Rejection {
+  "reason": {
+    "errno": -4077,
+    "code": "ECONNRESET",
+    "syscall": "read",
+    "fatal": true
+  },
+  "promise": {}
+}
+[2026-06-04T10:37:22.597Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-04T10:37:22.607Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-04T10:37:22.630Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-04T10:37:22.929Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-04T10:37:22.948Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}

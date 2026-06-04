@@ -1569,3 +1569,7 @@
   "totalAmount": 230,
   "finalAmount": 230
 }
+[2026-06-04T10:12:31.640Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}

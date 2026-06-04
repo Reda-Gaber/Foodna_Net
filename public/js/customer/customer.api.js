@@ -72,6 +72,25 @@ async function apia() {
    SLIDER (الإعلانات)
    ============================================================= */
 const mySwiper = document.querySelector('.slides_matc');
+let latestSliderData = null;
+let lastSliderKey = null;
+const sliderMediaQuery = window.matchMedia('(max-width: 767px)');
+
+function getActiveSliderKey() {
+  return sliderMediaQuery.matches ? 'sliderB' : 'sliderA';
+}
+
+function getSliderImages(actev) {
+  const key = getActiveSliderKey();
+  return actev?.[key] ?? actev?.slider ?? actev?.sliderA ?? actev?.sliderB ?? [];
+}
+
+window.addEventListener('resize', () => {
+  if (!latestSliderData) return;
+  const currentKey = getActiveSliderKey();
+  if (currentKey === lastSliderKey) return;
+  slider(latestSliderData);
+});
 
 function buildProductImageSrc(image) {
   if (!image) return '/images/placeholder.png';
@@ -81,6 +100,7 @@ function buildProductImageSrc(image) {
 
 function slider(actev) {
   if (!mySwiper) return;
+  latestSliderData = actev;
 
   const sliderContainer = document.querySelector('.mySwiper');
   const prevButton = sliderContainer?.querySelector('.swiper-button-prev');
@@ -92,12 +112,13 @@ function slider(actev) {
   }
 
   mySwiper.innerHTML = '';
-  const slideCount = Math.min(actev?.slider?.length || 0, 4);
+  const sliderImages = getSliderImages(actev);
+  const slideCount = Math.min(sliderImages.length, 4);
 
   for (let i = 0; i < slideCount; i++) {
     const div = document.createElement('div');
     div.className = 'swiper-slide';
-    div.innerHTML = `<img src="${actev.slider[i].imgs}" alt="" loading="lazy">`;
+    div.innerHTML = `<img src="${sliderImages[i].imgs}" alt="" loading="lazy">`;
     mySwiper.appendChild(div);
   }
 
@@ -114,6 +135,8 @@ function slider(actev) {
     },
     pagination: { el: '.mySwiper .swiper-pagination', clickable: true },
   });
+
+  lastSliderKey = getActiveSliderKey();
 }
 
 /* =============================================================

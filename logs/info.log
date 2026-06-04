@@ -7000,3 +7000,27 @@
 [2026-06-03T22:15:50.817Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
 [2026-06-03T22:15:50.831Z] INFO: Server running on http://localhost:3001
 [2026-06-03T22:15:50.832Z] INFO: Environment: development
+[2026-06-04T10:06:45.135Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-04T10:06:45.588Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-04T10:06:46.137Z] INFO: Server running on http://localhost:3001
+[2026-06-04T10:06:46.138Z] INFO: Environment: development
+[2026-06-04T10:13:27.066Z] INFO: [Chatbot] Received message: "في فراخ"
+[2026-06-04T10:13:27.237Z] INFO: [ChatbotOrchestrator] Intent=FILTER message="في فراخ"
+[2026-06-04T10:13:27.321Z] INFO: [MenuSearch] query="في فراخ" terms=[فراخ,فرخ,دجاج,chicken] hits=1
+[2026-06-04T10:13:27.325Z] INFO: [Chatbot] Response type=FILTER items=1
+[2026-06-04T10:13:41.114Z] INFO: [Chatbot] Received message: "أخبرني المزيد عن ساندويتش برجر فراخ"
+[2026-06-04T10:13:41.122Z] INFO: [ChatbotOrchestrator] Intent=FILTER message="أخبرني المزيد عن ساندويتش برجر فراخ"
+[2026-06-04T10:13:41.196Z] INFO: [MenuSearch] query="أخبرني المزيد عن ساندويتش برجر فراخ" terms=[برجر,burger,همبرجر,هامبرجر,فراخ,فرخ,دجاج,chicken] hits=2
+[2026-06-04T10:13:41.197Z] INFO: [Chatbot] Response type=FILTER items=2
+[2026-06-04T10:39:28.281Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-04T10:39:28.300Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-04T10:39:28.377Z] INFO: Server running on http://localhost:3001
+[2026-06-04T10:39:28.379Z] INFO: Environment: development
+[2026-06-04T10:39:39.082Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-04T10:39:39.087Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-04T10:39:39.107Z] INFO: Server running on http://localhost:3001
+[2026-06-04T10:39:39.108Z] INFO: Environment: development
+[2026-06-04T10:39:44.063Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-04T10:39:44.067Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-04T10:39:44.081Z] INFO: Server running on http://localhost:3001
+[2026-06-04T10:39:44.082Z] INFO: Environment: development

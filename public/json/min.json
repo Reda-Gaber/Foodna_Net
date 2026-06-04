@@ -1,5 +1,5 @@
 {
-    "slider": [
+    "sliderA": [
         {
             "imgs": "images/slide2.png"
         },
@@ -11,6 +11,17 @@
         },
          {
             "imgs": "images/image3.jpg"
+        }
+    ],
+    "sliderB": [
+         {
+            "imgs": "images/image4.jpg"
+        },
+         {
+            "imgs": "images/image5.jpg"
+        },
+         {
+            "imgs": "images/image6.jpg"
         }
     ],
     "Offers": [

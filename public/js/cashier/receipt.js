@@ -1,8 +1,8 @@
  
         // البيانات من السيرفر
-        const orderData = <%- JSON.stringify(order) %>;
-        const itemsData = <%- JSON.stringify(items) %>;
-        const discountData = <%- JSON.stringify(discount || 0) %>;
+        const orderData = JSON.stringify(order) ;
+        const itemsData = JSON.stringify(items);
+        const discountData = JSON.stringify(discount || 0);
 
         /**
          * طباعة الإيصال الحراري
