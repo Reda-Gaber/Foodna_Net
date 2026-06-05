@@ -7064,3 +7064,359 @@
 [2026-06-04T23:47:22.857Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
 [2026-06-04T23:47:22.880Z] INFO: Server running on http://localhost:3001
 [2026-06-04T23:47:22.881Z] INFO: Environment: development
+[2026-06-04T23:53:44.709Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-04T23:53:44.713Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-04T23:53:44.739Z] INFO: Server running on http://localhost:3001
+[2026-06-04T23:53:44.740Z] INFO: Environment: development
+[2026-06-05T12:24:31.755Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-05T12:24:31.760Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-05T12:24:31.779Z] INFO: Server running on http://localhost:3001
+[2026-06-05T12:24:31.780Z] INFO: Environment: development
+[2026-06-05T15:25:41.263Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-05T15:25:41.273Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-05T15:25:41.297Z] INFO: Server running on http://localhost:3001
+[2026-06-05T15:25:41.299Z] INFO: Environment: development
+[2026-06-05T16:04:26.653Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-05T16:04:26.659Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-05T16:04:26.690Z] INFO: Server running on http://localhost:3001
+[2026-06-05T16:04:26.691Z] INFO: Environment: development
+[2026-06-05T16:11:06.005Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-05T16:11:06.016Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-05T16:11:06.072Z] INFO: Server running on http://localhost:3001
+[2026-06-05T16:11:06.107Z] INFO: Environment: development
+[2026-06-05T16:11:09.915Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-05T16:11:09.919Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-05T16:11:09.944Z] INFO: Server running on http://localhost:3001
+[2026-06-05T16:11:09.945Z] INFO: Environment: development
+[2026-06-05T16:11:18.213Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-05T16:11:18.218Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-05T16:11:18.237Z] INFO: Server running on http://localhost:3001
+[2026-06-05T16:11:18.245Z] INFO: Environment: development
+[2026-06-05T16:12:47.529Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-05T16:12:47.535Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-05T16:12:47.550Z] INFO: Server running on http://localhost:3001
+[2026-06-05T16:12:47.552Z] INFO: Environment: development
+[2026-06-05T16:16:17.622Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-05T16:16:17.626Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-05T16:16:17.651Z] INFO: Server running on http://localhost:3001
+[2026-06-05T16:16:17.653Z] INFO: Environment: development
+[2026-06-05T16:16:32.304Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-05T16:16:32.310Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-05T16:16:32.344Z] INFO: Server running on http://localhost:3001
+[2026-06-05T16:16:32.345Z] INFO: Environment: development
+[2026-06-05T16:17:04.857Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-05T16:17:04.872Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-05T16:17:04.941Z] INFO: Server running on http://localhost:3001
+[2026-06-05T16:17:04.952Z] INFO: Environment: development
+[2026-06-05T16:22:52.451Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-05T16:22:52.456Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-05T16:22:52.489Z] INFO: Server running on http://localhost:3001
+[2026-06-05T16:22:52.496Z] INFO: Environment: development
+[2026-06-05T16:36:29.450Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-05T16:36:29.458Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-05T16:36:29.492Z] INFO: Server running on http://localhost:3001
+[2026-06-05T16:36:29.494Z] INFO: Environment: development
+[2026-06-05T16:37:31.397Z] INFO: 📨 Received update product request {
+  "id": 210126,
+  "body": {
+    "id": "210126",
+    "category_id": "90025",
+    "category": "مشروبات"
+  },
+  "hasFile": true
+}
+[2026-06-05T16:37:41.738Z] INFO: 📨 Received update product request {
+  "id": 210126,
+  "body": {
+    "id": "210126",
+    "category_id": "90025",
+    "category": "مشروبات"
+  },
+  "hasFile": true
+}
+[2026-06-05T16:38:11.283Z] INFO: 📨 Received update product request {
+  "id": 210127,
+  "body": {
+    "id": "210127",
+    "category_id": "4",
+    "category": "ساندويتشات"
+  },
+  "hasFile": false
+}
+[2026-06-05T16:38:25.820Z] INFO: 📨 Received update product request {
+  "id": 210127,
+  "body": {
+    "id": "210127",
+    "category_id": "3",
+    "category": "بيتزا"
+  },
+  "hasFile": true
+}
+[2026-06-05T16:48:06.458Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-05T16:48:06.467Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-05T16:48:06.483Z] INFO: Server running on http://localhost:3001
+[2026-06-05T16:48:06.484Z] INFO: Environment: development
+[2026-06-05T16:48:18.761Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-05T16:48:18.774Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-05T16:48:18.804Z] INFO: Server running on http://localhost:3001
+[2026-06-05T16:48:18.807Z] INFO: Environment: development
+[2026-06-05T16:48:25.376Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-05T16:48:25.381Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-05T16:48:25.408Z] INFO: Server running on http://localhost:3001
+[2026-06-05T16:48:25.409Z] INFO: Environment: development
+[2026-06-05T16:48:48.062Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-05T16:48:48.067Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-05T16:48:48.080Z] INFO: Server running on http://localhost:3001
+[2026-06-05T16:48:48.082Z] INFO: Environment: development
+[2026-06-05T16:49:11.862Z] INFO: 📨 Received update product request {
+  "id": 210128,
+  "body": {
+    "id": "210128",
+    "category_id": "3",
+    "category": "بيتزا"
+  },
+  "hasFile": true
+}
+[2026-06-05T16:49:40.418Z] INFO: 📨 Received update product request {
+  "id": 210128,
+  "body": {
+    "id": "210128",
+    "category_id": "6",
+    "category": "حلويات"
+  },
+  "hasFile": true
+}
+[2026-06-05T16:52:20.968Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-05T16:52:20.975Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-05T16:52:20.991Z] INFO: Server running on http://localhost:3001
+[2026-06-05T16:52:20.993Z] INFO: Environment: development
+[2026-06-05T16:53:13.908Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-05T16:53:13.912Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-05T16:53:13.924Z] INFO: Server running on http://localhost:3001
+[2026-06-05T16:53:13.926Z] INFO: Environment: development
+[2026-06-05T16:53:40.603Z] INFO: 📨 Received update product request {
+  "id": 210129,
+  "body": {
+    "id": "210129",
+    "category_id": "90025",
+    "category": "مشروبات"
+  },
+  "hasFile": true
+}
+[2026-06-05T16:54:44.854Z] INFO: 📨 Received update product request {
+  "id": 210131,
+  "body": {
+    "id": "210131",
+    "category_id": "3",
+    "category": "بيتزا"
+  },
+  "hasFile": true
+}
+[2026-06-05T16:57:45.909Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-05T16:57:45.914Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-05T16:57:45.943Z] INFO: Server running on http://localhost:3001
+[2026-06-05T16:57:45.944Z] INFO: Environment: development
+[2026-06-05T16:58:00.057Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-05T16:58:00.061Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-05T16:58:00.083Z] INFO: Server running on http://localhost:3001
+[2026-06-05T16:58:00.085Z] INFO: Environment: development
+[2026-06-05T16:59:02.188Z] INFO: 📨 Received update product request {
+  "id": 360124,
+  "body": {
+    "id": "360124",
+    "name": "ساندويتش",
+    "category_id": "3",
+    "category": "بيتزا"
+  },
+  "hasFile": true
+}
+[2026-06-05T17:02:51.261Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-05T17:02:51.267Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-05T17:02:51.301Z] INFO: Server running on http://localhost:3001
+[2026-06-05T17:02:51.302Z] INFO: Environment: development
+[2026-06-05T17:03:14.614Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-05T17:03:14.618Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-05T17:03:14.634Z] INFO: Server running on http://localhost:3001
+[2026-06-05T17:03:14.635Z] INFO: Environment: development
+[2026-06-05T17:04:16.173Z] INFO: 📨 Received create product request {
+  "body": {
+    "id": "",
+    "name": "لحم حار",
+    "description": "قخترحثقخلى",
+    "category_id": "3",
+    "category": "بيتزا",
+    "price": "4564",
+    "discount": "45",
+    "quantity": "299"
+  },
+  "hasFile": true
+}
+[2026-06-05T17:06:01.525Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-05T17:06:01.530Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-05T17:06:01.574Z] INFO: Server running on http://localhost:3001
+[2026-06-05T17:06:01.584Z] INFO: Environment: development
+[2026-06-05T17:06:09.139Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-05T17:06:09.143Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-05T17:06:09.179Z] INFO: Server running on http://localhost:3001
+[2026-06-05T17:06:09.182Z] INFO: Environment: development
+[2026-06-05T17:06:16.583Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-05T17:06:16.587Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-05T17:06:16.600Z] INFO: Server running on http://localhost:3001
+[2026-06-05T17:06:16.601Z] INFO: Environment: development
+[2026-06-05T17:06:27.840Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-05T17:06:27.848Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-05T17:06:27.865Z] INFO: Server running on http://localhost:3001
+[2026-06-05T17:06:27.867Z] INFO: Environment: development
+[2026-06-05T17:07:35.243Z] INFO: 📨 Received create product request {
+  "body": {
+    "id": "",
+    "name": "هحهىجبةر",
+    "description": "بةرق",
+    "category_id": "3",
+    "category": "بيتزا",
+    "price": "435",
+    "discount": "3",
+    "quantity": "233"
+  },
+  "hasFile": true
+}
+[2026-06-05T17:07:35.264Z] INFO: 💾 Data to save: {
+  "name": "هحهىجبةر",
+  "category": "بيتزا",
+  "category_id": "3",
+  "description": "بةرق",
+  "quantity": 233,
+  "price": 435,
+  "discount": 3,
+  "supplier_id": null
+}
+[2026-06-05T17:07:55.500Z] INFO: 📨 Received update product request {
+  "id": 360126,
+  "body": {
+    "id": "360126",
+    "category_id": "4",
+    "category": "ساندويتشات"
+  },
+  "hasFile": true
+}
+[2026-06-05T17:11:49.768Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-05T17:11:49.779Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-05T17:11:49.812Z] INFO: Server running on http://localhost:3001
+[2026-06-05T17:11:49.814Z] INFO: Environment: development
+[2026-06-05T17:12:06.504Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-05T17:12:06.516Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-05T17:12:06.544Z] INFO: Server running on http://localhost:3001
+[2026-06-05T17:12:06.546Z] INFO: Environment: development
+[2026-06-05T17:12:13.695Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-05T17:12:13.713Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-05T17:12:13.751Z] INFO: Server running on http://localhost:3001
+[2026-06-05T17:12:13.770Z] INFO: Environment: development
+[2026-06-05T17:12:38.220Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-05T17:12:38.231Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-05T17:12:38.260Z] INFO: Server running on http://localhost:3001
+[2026-06-05T17:12:38.263Z] INFO: Environment: development
+[2026-06-05T17:12:54.539Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-05T17:12:54.544Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-05T17:12:54.568Z] INFO: Server running on http://localhost:3001
+[2026-06-05T17:12:54.571Z] INFO: Environment: development
+[2026-06-05T17:13:10.781Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-05T17:13:10.787Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-05T17:13:10.818Z] INFO: Server running on http://localhost:3001
+[2026-06-05T17:13:10.823Z] INFO: Environment: development
+[2026-06-05T17:13:18.970Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-05T17:13:18.981Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-05T17:13:19.004Z] INFO: Server running on http://localhost:3001
+[2026-06-05T17:13:19.005Z] INFO: Environment: development
+[2026-06-05T17:13:40.116Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-05T17:13:40.120Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-05T17:13:40.136Z] INFO: Server running on http://localhost:3001
+[2026-06-05T17:13:40.137Z] INFO: Environment: development
+[2026-06-05T17:13:44.291Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-05T17:13:44.698Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-05T17:13:44.786Z] INFO: Server running on http://localhost:3001
+[2026-06-05T17:13:44.802Z] INFO: Environment: development
+[2026-06-05T17:14:09.118Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-05T17:14:09.131Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-05T17:14:09.155Z] INFO: Server running on http://localhost:3001
+[2026-06-05T17:14:09.156Z] INFO: Environment: development
+[2026-06-05T17:14:25.119Z] INFO: Groq Service: Initializing with API key: EXISTS (length: 56)
+[2026-06-05T17:14:25.128Z] INFO: ✓ Groq client initialized successfully with model: llama-3.3-70b-versatile
+[2026-06-05T17:14:25.152Z] INFO: Server running on http://localhost:3001
+[2026-06-05T17:14:25.153Z] INFO: Environment: development
+[2026-06-05T17:15:00.104Z] INFO: 📨 Received create product request {
+  "body": {
+    "id": "",
+    "name": "ثقلاهخثقلق",
+    "description": "ثقصثحب",
+    "category_id": "6",
+    "category": "حلويات",
+    "price": "452344.98",
+    "discount": "3",
+    "quantity": "435"
+  },
+  "hasFile": true
+}
+[2026-06-05T17:15:00.160Z] INFO: 💾 Data to save: {
+  "name": "ثقلاهخثقلق",
+  "category": "حلويات",
+  "category_id": "6",
+  "description": "ثقصثحب",
+  "quantity": 435,
+  "price": 452344.98,
+  "discount": 3,
+  "supplier_id": null
+}
+[2026-06-05T17:16:00.695Z] INFO: 📨 Received update product request {
+  "id": 360127,
+  "body": {
+    "id": "360127",
+    "category_id": "4",
+    "category": "ساندويتشات",
+    "price": "2345678902345678"
+  },
+  "hasFile": true
+}
+[2026-06-05T17:16:14.994Z] INFO: 📨 Received update product request {
+  "id": 360127,
+  "body": {
+    "id": "360127",
+    "category_id": "6",
+    "category": "حلويات"
+  },
+  "hasFile": true
+}
+[2026-06-05T17:16:40.706Z] INFO: 📨 Received update product request {
+  "id": 360127,
+  "body": {
+    "id": "360127",
+    "category_id": "6",
+    "category": "حلويات",
+    "price": "234567",
+    "discount": "34"
+  },
+  "hasFile": false
+}
+[2026-06-05T17:16:54.336Z] INFO: 📨 Received update product request {
+  "id": 360127,
+  "body": {
+    "id": "360127",
+    "name": "ثقلاباخحلحفلخهبخه",
+    "category_id": "6",
+    "category": "حلويات"
+  },
+  "hasFile": false
+}
+[2026-06-05T17:17:31.222Z] INFO: 📨 Received update product request {
+  "id": 360127,
+  "body": {
+    "discount": "0"
+  },
+  "hasFile": false
+}
+[2026-06-05T17:17:50.753Z] INFO: 📨 Received update product request {
+  "id": 360127,
+  "body": {
+    "discount": "0"
+  },
+  "hasFile": false
+}

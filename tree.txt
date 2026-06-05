@@ -1,0 +1,26 @@
+
+C:\Users\skandr store\.ms-ad\fodna-servir-net\Foodna_Net
+├── complete_database_schema.sql
+├── config
+├── core
+├── database_schema.sql
+├── graph.svg
+├── logs
+├── modules
+├── node_modules
+├── package-lock.json
+├── package.json
+├── public
+├── README.md
+├── routes
+├── scripts
+├── server.js
+├── tree.txt
+├── vercel.json
+└── views
+
+directory: 9 file: 9
+
+
+
+[2K[1G

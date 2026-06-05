@@ -1,14 +1,26 @@
-let state = { products: [] }; 
+let state = [];
+
+function resolveProductImage(image) {
+  if (!image) return '';
+  if (/^https?:\/\//i.test(image)) return image;
+  if (image.startsWith('/')) return image;
+  if (image.startsWith('images/')) return `/${image}`;
+  return `/images/products/${image}`;
+}
 
 async function loadProducts() {
   try {
     const response = await fetch("/admin/products");
     if (!response.ok) throw new Error("Network error");
 
-    const data = await response.json();
-    state = data;
-    window._allProducts = data;
-    document.getElementById('totalProducts').textContent = state.length;
+    const json = await response.json();
+
+    // الـ API بيرجع { success: true, data: { products: [...], pagination: {...} } }
+    state = (json.data && json.data.products) ? json.data.products : (Array.isArray(json.data) ? json.data : []);
+    window._allProducts = state;
+
+    const totalEl = document.getElementById('totalProducts');
+    if (totalEl) totalEl.textContent = state.length;
 
     const tbody = document.getElementById('productsTableBody');
 
@@ -21,9 +33,9 @@ async function loadProducts() {
         <tr data-id="${product.Product_ID}">
             <td>${product.Product_ID}</td>
             <td>${product.Product_Name}</td>
-            <td>${product.Category}</td>
-            <td>$${parseFloat(product.Price).toFixed(2)}</td>
-            <td>${product.Quantity}</td>
+            <td>${product.Category || ''}</td>
+            <td>${parseFloat(product.Price || 0).toFixed(2)}</td>
+            <td>${product.Quantity_Available ?? product.Quantity ?? 0}</td>
             <td>
                 <div class="action-buttons">
                 <button class="action-btn edit" data-action="edit" data-id="${product.Product_ID}">تعديل</button>
@@ -32,21 +44,21 @@ async function loadProducts() {
             </td>
         </tr>
     `).join('');
-                
+
   } catch (err) {
     const tbody = document.getElementById('productsTableBody');
     tbody.innerHTML = `<tr><td colspan="8" style="color:red; text-align:center;">خطأ في تحميل البيانات: ${err.message}</td></tr>`;
     if (typeof showError !== 'undefined') {
-        showError('فشل تحميل المنتجات', 'خطأ في التحميل');
+      showError('فشل تحميل المنتجات', 'خطأ في التحميل');
     }
   }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   loadProducts();
-  
+
   document.getElementById('addProductBtn').addEventListener('click', () => openProductModal());
-  
+
   document.getElementById('productsTableBody').addEventListener('click', (e) => {
     const btn = e.target.closest('[data-action]');
     if (!btn) return;
@@ -59,145 +71,201 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 function openProductModal(productId = null) {
-    openProductModalAsync(productId);
+  openProductModalAsync(productId);
 }
 
 async function openProductModalAsync(productId = null) {
-    try {
-        // جلب الفئات
-        const catRes = await fetch('/admin/api/categories', { credentials: 'include' });
-        const categoriesResponse = await catRes.json();
-        
-        // استخراج البيانات الفعلية من الـ API response
-        const categories = categoriesResponse.data || categoriesResponse || [];
+  try {
+    // جلب الفئات
+    const catRes = await fetch('/admin/api/categories', { credentials: 'include' });
+    const categoriesResponse = await catRes.json();
+    const categories = categoriesResponse.data || categoriesResponse || [];
 
-        const product = productId ? (window._allProducts || []).find(p => p.Product_ID == productId) : null;
-        const isEdit = !!product;
-
-        const modalTitle = isEdit ? 'Edit Product' : 'Add New Product';
-        const categoryOptions = categories.map(c => `
-            <option value="${c.Category_ID}" ${product?.Category_ID == c.Category_ID ? 'selected' : ''}>
-                ${c.Category_Name}
-            </option>
-        `).join('');
-
-        const modalBody = `
-            <form id="productForm" enctype="multipart/form-data">
-                <div class="form-group">
-                    <label for="productName">Product Name</label>
-                    <input type="text" id="productName" value="${product?.Product_Name || ''}" required>
-                </div>
-                <div class="form-group">
-                    <label for="productCategoryId">Category</label>
-                    <select id="productCategoryId" required>
-                        <option value="">-- Select Category --</option>
-                        ${categoryOptions}
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="productPrice">Price</label>
-                    <input type="number" id="productPrice" step="0.01" value="${product?.Price || ''}" required>
-                </div>
-                <div class="form-group">
-                    <label for="productStock">Stock</label>
-                    <input type="number" id="productStock" value="${product?.Quantity || ''}" required>
-                </div>
-                <div class="form-group">
-                    <label for="productImage">Image</label>
-                    <input type="file" id="productImage" accept="image/*">
-                </div>
-                <div class="form-group">
-                    <label for="productStatus">Status</label>
-                    <select id="productStatus">
-                        <option value="active" ${product?.status === 'active' ? 'selected' : ''}>Active</option>
-                        <option value="inactive" ${product?.status === 'inactive' ? 'selected' : ''}>Inactive</option>
-                    </select>
-                </div>
-                <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                    <button type="submit" class="btn btn-primary">${isEdit ? 'Update' : 'Add'} Product</button>
-                </div>
-            </form>
-        `;
-
-        openModal(modalTitle, modalBody);
-
-        document.getElementById('productForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-
-            const categorySelect = document.getElementById('productCategoryId');
-            const categoryId = parseInt(categorySelect.value);
-            
-            // التأكد من الحصول على اسم الفئة بشكل صحيح
-            let categoryName = '';
-            if (categorySelect.selectedIndex > 0) {
-                categoryName = categorySelect.options[categorySelect.selectedIndex].text;
-            }
-            
-            if (!categoryName) {
-                alert('يرجى اختيار فئة صحيحة');
-                return;
-            }
-
-            const formData = new FormData();
-            formData.append('name', document.getElementById('productName').value);
-            formData.append('category_id', categoryId);
-            formData.append('category', categoryName);
-            formData.append('price', parseFloat(document.getElementById('productPrice').value));
-            formData.append('quantity', parseInt(document.getElementById('productStock').value));
-            formData.append('status', document.getElementById('productStatus').value);
-            
-            // إضافة الصورة إن وجدت
-            const imageInput = document.getElementById('productImage');
-            if (imageInput.files && imageInput.files[0]) {
-                formData.append('image', imageInput.files[0]);
-            }
-            
-            console.log('📤 إرسال البيانات:', { categoryId, categoryName });
-
-            if (isEdit) {
-                // UPDATE
-                fetch(`/admin/products/update/${product.Product_ID}`, {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        loadProducts();
-                        closeModal();
-                    } else {
-                        alert('فشل التحديث: ' + (data.message || ''));
-                    }
-                })
-                .catch(err => alert('خطأ في التحديث'));
-            } else {
-                // CREATE
-                fetch(`/admin/products/create`, {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        loadProducts();
-                        closeModal();
-                    } else {
-                        alert('فشل الإنشاء: ' + (data.message || ''));
-                    }
-                })
-                .catch(err => alert('خطأ في الإنشاء'));
-            }
-        });
-    } catch (error) {
-        console.error('Error in openProductModal:', error);
-        alert('خطأ في تحميل الفئات');
+    // ====================================================
+    // جلب بيانات المنتج الحالي من الـ API مباشرة
+    // عشان نضمن إن الصورة والداتا الكاملة موجودة
+    // ====================================================
+    let product = null;
+    if (productId) {
+      try {
+        const prodRes = await fetch(`/admin/products/${productId}`, { credentials: 'include' });
+        const prodJson = await prodRes.json();
+        product = (prodJson.data) ? prodJson.data : null;
+      } catch (e) {
+        // fallback على الـ state المحلي
+        product = (window._allProducts || []).find(p => p.Product_ID == productId) || null;
+      }
     }
+
+    const isEdit = !!product;
+    const modalTitle = isEdit ? 'تعديل المنتج' : 'إضافة منتج جديد';
+
+    const categoryOptions = categories.map(c => `
+        <option value="${c.Category_ID}" ${product?.Category_ID == c.Category_ID ? 'selected' : ''}>
+            ${c.Category_Name}
+        </option>
+    `).join('');
+
+    // عرض الصورة الحالية إن وجدت
+    const currentImageHtml = (isEdit && product.Image)
+      ? `<div class="form-group">
+           <label>الصورة الحالية</label>
+           <img src="${resolveProductImage(product.Image)}" alt="صورة المنتج" style="max-width:120px; max-height:120px; border-radius:8px; display:block; margin-bottom:6px;">
+           <small style="color:#888;">اترك حقل الصورة فارغاً للإبقاء على الصورة الحالية</small>
+         </div>`
+      : '';
+
+    const modalBody = `
+        <div id="productForm">
+            <div class="form-group">
+                <label for="productName">اسم المنتج</label>
+                <input type="text" id="productName" value="${product?.Product_Name || ''}" required>
+            </div>
+            <div class="form-group">
+                <label for="productCategoryId">الفئة</label>
+                <select id="productCategoryId" required>
+                    <option value="">-- اختر الفئة --</option>
+                    ${categoryOptions}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="productDescription">الوصف</label>
+                <textarea id="productDescription" rows="3" style="width:100%">${product?.Description || ''}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="productPrice">السعر</label>
+                <input type="number" id="productPrice" step="0.01" value="${product?.Price || ''}" required>
+            </div>
+            <div class="form-group">
+                <label for="productDiscount">الخصم (%)</label>
+                <input type="number" id="productDiscount" step="0.01" min="0" max="100" value="${product?.Discount ?? 0}">
+            </div>
+            <div class="form-group">
+                <label for="productStock">الكمية</label>
+                <input type="number" id="productStock" value="${product?.Quantity_Available ?? product?.Quantity ?? ''}" required>
+            </div>
+            ${currentImageHtml}
+            <div class="form-group">
+                <label for="productImage">صورة جديدة ${isEdit ? '(اختياري)' : ''}</label>
+                <input type="file" id="productImage" accept="image/*">
+            </div>
+            <div class="form-group">
+                <label for="productStatus">الحالة</label>
+                <select id="productStatus">
+                    <option value="active" ${(product?.status || product?.Status) === 'active' ? 'selected' : ''}>نشط</option>
+                    <option value="inactive" ${(product?.status || product?.Status) === 'inactive' ? 'selected' : ''}>غير نشط</option>
+                </select>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeModal()">إلغاء</button>
+                <button type="button" class="btn btn-primary" id="submitProductBtn">${isEdit ? 'تحديث' : 'إضافة'} المنتج</button>
+            </div>
+        </div>
+    `;
+
+    openModal(modalTitle, modalBody);
+
+    document.getElementById('submitProductBtn').addEventListener('click', async () => {
+      const categorySelect = document.getElementById('productCategoryId');
+      const categoryId = parseInt(categorySelect.value);
+
+      let categoryName = '';
+      if (categorySelect.selectedIndex > 0) {
+        categoryName = categorySelect.options[categorySelect.selectedIndex].text;
+      }
+
+      if (!categoryName) {
+        alert('يرجى اختيار فئة صحيحة');
+        return;
+      }
+
+      const nameVal = document.getElementById('productName').value.trim();
+      const priceVal = document.getElementById('productPrice').value.trim();
+      const stockVal = document.getElementById('productStock').value.trim();
+
+      if (!nameVal || !priceVal || !stockVal) {
+        alert('يرجى ملء جميع الحقول المطلوبة');
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('name', nameVal);
+      formData.append('category_id', categoryId);
+      formData.append('category', categoryName);
+      formData.append('price', parseFloat(priceVal));
+      formData.append('quantity', parseInt(stockVal));
+      formData.append('discount', parseFloat(document.getElementById('productDiscount').value) || 0);
+      formData.append('description', document.getElementById('productDescription').value || '');
+      formData.append('status', document.getElementById('productStatus').value);
+
+      // إضافة الصورة فقط لو المستخدم اختار صورة جديدة
+      const imageInput = document.getElementById('productImage');
+      if (imageInput.files && imageInput.files[0]) {
+        formData.append('image', imageInput.files[0]);
+      }
+
+      const submitBtn = document.getElementById('submitProductBtn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'جاري الحفظ...';
+
+      try {
+        const fetchAndParse = async (url, options) => {
+          const res = await fetch(url, options);
+          const text = await res.text();
+          let data;
+          try {
+            data = text ? JSON.parse(text) : {};
+          } catch (parseError) {
+            data = { success: false, message: text || `خطأ غير متوقع: ${res.status}` };
+          }
+          return { res, data };
+        };
+
+        if (isEdit) {
+          // UPDATE
+          const { res, data } = await fetchAndParse(`/admin/products/update/${product.Product_ID}`, {
+            method: 'POST',
+            body: formData
+          });
+          if (res.ok && data.success) {
+            await loadProducts();
+            closeModal();
+          } else {
+            alert('فشل التحديث: ' + (data.message || 'خطأ غير معروف'));
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'تحديث المنتج';
+          }
+        } else {
+          // CREATE
+          const { res, data } = await fetchAndParse(`/admin/products/create`, {
+            method: 'POST',
+            body: formData
+          });
+          if (res.ok && data.success) {
+            await loadProducts();
+            closeModal();
+          } else {
+            alert('فشل الإنشاء: ' + (data.message || 'خطأ غير معروف'));
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'إضافة المنتج';
+          }
+        }
+      } catch (err) {
+        alert('خطأ في الاتصال: ' + err.message);
+        submitBtn.disabled = false;
+        submitBtn.textContent = isEdit ? 'تحديث المنتج' : 'إضافة المنتج';
+      }
+    });
+
+  } catch (error) {
+    console.error('Error in openProductModal:', error);
+    alert('خطأ في تحميل الفئات: ' + error.message);
+  }
 }
 
 
 function editProduct(id) {
-    openProductModal(id);
+  openProductModal(id);
 }
 
 async function deleteProduct(id) {
@@ -206,11 +274,11 @@ async function deleteProduct(id) {
     const res = await fetch(`/admin/products/delete/${id}`, { method: 'DELETE' });
     const data = await res.json();
     if (data.success) {
-      loadProducts();
+      await loadProducts();
     } else {
       alert('فشل الحذف: ' + (data.message || ''));
     }
   } catch (err) {
-    alert('خطأ في الحذف');
+    alert('خطأ في الحذف: ' + err.message);
   }
 }

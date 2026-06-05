@@ -10,6 +10,8 @@ const path = require('path');
 const fs = require('fs');
 const { promisify } = require('util');
 const unlinkAsync = promisify(fs.unlink);
+const writeFileAsync = promisify(fs.writeFile);
+const mkdirAsync = promisify(fs.mkdir);
 
 function isCloudinaryUrl(value) {
     return typeof value === 'string' && value.includes('res.cloudinary.com');
@@ -35,6 +37,16 @@ async function deleteImageFile(reference) {
     }
 }
 
+async function saveLocalImage(buffer, originalName) {
+    const extension = path.extname(originalName).toLowerCase() || '.png';
+    const filename = `${Date.now()}-${Math.random().toString(36).slice(2, 10)}${extension}`;
+    const folderPath = path.join(__dirname, '../../public/images/products');
+    await mkdirAsync(folderPath, { recursive: true });
+    const filePath = path.join(folderPath, filename);
+    await writeFileAsync(filePath, buffer);
+    return filename;
+}
+
 class ProductController {
     /**
      * إنشاء منتج جديد
@@ -49,10 +61,16 @@ class ProductController {
 
             // رفع الصورة إلى Cloudinary إن كانت موجودة
             if (req.file && req.file.buffer) {
-                const uploadResult = await cloudinaryService.uploadBuffer(req.file.buffer, {
-                    folder: 'foodna/products'
-                });
-                imageUrl = uploadResult.secure_url;
+                if (cloudinaryService.isCloudinaryConfigured()) {
+                    const uploadResult = await cloudinaryService.uploadBuffer(req.file.buffer, {
+                        folder: 'foodna/products'
+                    });
+                    imageUrl = uploadResult.secure_url;
+                } else if (!process.env.VERCEL) {
+                    imageUrl = await saveLocalImage(req.file.buffer, req.file.originalname);
+                } else {
+                    throw new Error('Cloudinary غير مهيأ ولا يمكن حفظ الصورة محلياً في بيئة Vercel');
+                }
             }
 
             const parsedQuantity = (req.body.quantity !== undefined && req.body.quantity !== '') ? parseInt(req.body.quantity) : null;
@@ -112,14 +130,24 @@ class ProductController {
             let imageUrl = product.Image;
 
             if (req.file && req.file.buffer) {
-                const uploadResult = await cloudinaryService.uploadBuffer(req.file.buffer, {
-                    folder: 'foodna/products'
-                });
-                const newImageUrl = uploadResult.secure_url;
-                if (product.Image && product.Image !== newImageUrl) {
-                    await deleteImageFile(product.Image);
+                if (cloudinaryService.isCloudinaryConfigured()) {
+                    const uploadResult = await cloudinaryService.uploadBuffer(req.file.buffer, {
+                        folder: 'foodna/products'
+                    });
+                    const newImageUrl = uploadResult.secure_url;
+                    if (product.Image && product.Image !== newImageUrl) {
+                        await deleteImageFile(product.Image);
+                    }
+                    imageUrl = newImageUrl;
+                } else if (!process.env.VERCEL) {
+                    const localFilename = await saveLocalImage(req.file.buffer, req.file.originalname);
+                    if (product.Image && product.Image !== localFilename) {
+                        await deleteImageFile(product.Image);
+                    }
+                    imageUrl = localFilename;
+                } else {
+                    throw new Error('Cloudinary غير مهيأ ولا يمكن حفظ الصورة محلياً في بيئة Vercel');
                 }
-                imageUrl = newImageUrl;
             }
 
             const parsedQuantity = (req.body.quantity !== undefined && req.body.quantity !== '') ? parseInt(req.body.quantity)     : undefined;

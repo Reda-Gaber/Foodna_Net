@@ -53996,3 +53996,294 @@
   "code": "ECONNRESET",
   "errno": -4077
 }
+[2026-06-05T13:39:52.584Z] ERROR: Unhandled Promise Rejection {
+  "reason": {
+    "errno": -4077,
+    "code": "ECONNRESET",
+    "syscall": "read",
+    "fatal": true
+  },
+  "promise": {}
+}
+[2026-06-05T14:09:52.640Z] ERROR: Unhandled Promise Rejection {
+  "reason": {
+    "errno": -4077,
+    "code": "ECONNRESET",
+    "syscall": "read",
+    "fatal": true
+  },
+  "promise": {}
+}
+[2026-06-05T15:32:41.062Z] ERROR: Unhandled error {
+  "message": "Failed to lookup view \"customer/privacy-policy\" in views directory \"C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\views\"",
+  "stack": "Error: Failed to lookup view \"customer/privacy-policy\" in views directory \"C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\views\"\n    at app.render (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\express\\lib\\application.js:562:17)\n    at ServerResponse.render (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\express\\lib\\response.js:909:7)\n    at C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\routes\\customer.routes.js:22:50\n    at Layer.handleRequest (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\router\\lib\\layer.js:152:17)\n    at next (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\router\\lib\\route.js:157:13)\n    at Route.dispatch (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\router\\lib\\route.js:117:3)\n    at handle (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\router\\index.js:435:11)\n    at Layer.handleRequest (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\router\\lib\\layer.js:152:17)\n    at C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\router\\index.js:295:15\n    at processParams (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\router\\index.js:582:12)",
+  "view": {
+    "defaultEngine": "ejs",
+    "ext": ".ejs",
+    "name": "customer/privacy-policy",
+    "root": "C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\views"
+  }
+}
+[2026-06-05T15:33:42.182Z] ERROR: Unhandled error {
+  "message": "Failed to lookup view \"customer/privacy-policy\" in views directory \"C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\views\"",
+  "stack": "Error: Failed to lookup view \"customer/privacy-policy\" in views directory \"C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\views\"\n    at app.render (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\express\\lib\\application.js:562:17)\n    at ServerResponse.render (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\express\\lib\\response.js:909:7)\n    at C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\routes\\customer.routes.js:22:50\n    at Layer.handleRequest (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\router\\lib\\layer.js:152:17)\n    at next (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\router\\lib\\route.js:157:13)\n    at Route.dispatch (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\router\\lib\\route.js:117:3)\n    at handle (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\router\\index.js:435:11)\n    at Layer.handleRequest (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\router\\lib\\layer.js:152:17)\n    at C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\router\\index.js:295:15\n    at processParams (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\router\\index.js:582:12)",
+  "view": {
+    "defaultEngine": "ejs",
+    "ext": ".ejs",
+    "name": "customer/privacy-policy",
+    "root": "C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\views"
+  }
+}
+[2026-06-05T15:36:48.300Z] ERROR: Unhandled error {
+  "message": "Failed to lookup view \"customer/privacy-policy\" in views directory \"C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\views\"",
+  "stack": "Error: Failed to lookup view \"customer/privacy-policy\" in views directory \"C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\views\"\n    at app.render (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\express\\lib\\application.js:562:17)\n    at ServerResponse.render (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\express\\lib\\response.js:909:7)\n    at C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\routes\\customer.routes.js:22:50\n    at Layer.handleRequest (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\router\\lib\\layer.js:152:17)\n    at next (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\router\\lib\\route.js:157:13)\n    at Route.dispatch (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\router\\lib\\route.js:117:3)\n    at handle (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\router\\index.js:435:11)\n    at Layer.handleRequest (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\router\\lib\\layer.js:152:17)\n    at C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\router\\index.js:295:15\n    at processParams (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\router\\index.js:582:12)",
+  "view": {
+    "defaultEngine": "ejs",
+    "ext": ".ejs",
+    "name": "customer/privacy-policy",
+    "root": "C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\views"
+  }
+}
+[2026-06-05T16:10:35.392Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-05T16:10:35.400Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-05T16:10:35.407Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-05T16:10:35.426Z] ERROR: Unhandled error {
+  "message": "read ECONNRESET",
+  "stack": "Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)",
+  "errno": -4077,
+  "code": "ECONNRESET",
+  "syscall": "read",
+  "fatal": true
+}
+[2026-06-05T16:37:31.485Z] ERROR: Update product error {
+  "0": "M",
+  "1": "u",
+  "2": "s",
+  "3": "t",
+  "4": " ",
+  "5": "s",
+  "6": "u",
+  "7": "p",
+  "8": "p",
+  "9": "l",
+  "10": "y",
+  "11": " ",
+  "12": "a",
+  "13": "p",
+  "14": "i",
+  "15": "_",
+  "16": "k",
+  "17": "e",
+  "18": "y"
+}
+[2026-06-05T16:37:41.818Z] ERROR: Update product error {
+  "0": "M",
+  "1": "u",
+  "2": "s",
+  "3": "t",
+  "4": " ",
+  "5": "s",
+  "6": "u",
+  "7": "p",
+  "8": "p",
+  "9": "l",
+  "10": "y",
+  "11": " ",
+  "12": "a",
+  "13": "p",
+  "14": "i",
+  "15": "_",
+  "16": "k",
+  "17": "e",
+  "18": "y"
+}
+[2026-06-05T16:38:25.888Z] ERROR: Update product error {
+  "0": "M",
+  "1": "u",
+  "2": "s",
+  "3": "t",
+  "4": " ",
+  "5": "s",
+  "6": "u",
+  "7": "p",
+  "8": "p",
+  "9": "l",
+  "10": "y",
+  "11": " ",
+  "12": "a",
+  "13": "p",
+  "14": "i",
+  "15": "_",
+  "16": "k",
+  "17": "e",
+  "18": "y"
+}
+[2026-06-05T16:49:11.936Z] ERROR: Update product error {
+  "0": "M",
+  "1": "u",
+  "2": "s",
+  "3": "t",
+  "4": " ",
+  "5": "s",
+  "6": "u",
+  "7": "p",
+  "8": "p",
+  "9": "l",
+  "10": "y",
+  "11": " ",
+  "12": "a",
+  "13": "p",
+  "14": "i",
+  "15": "_",
+  "16": "k",
+  "17": "e",
+  "18": "y"
+}
+[2026-06-05T16:49:40.525Z] ERROR: Update product error {
+  "0": "M",
+  "1": "u",
+  "2": "s",
+  "3": "t",
+  "4": " ",
+  "5": "s",
+  "6": "u",
+  "7": "p",
+  "8": "p",
+  "9": "l",
+  "10": "y",
+  "11": " ",
+  "12": "a",
+  "13": "p",
+  "14": "i",
+  "15": "_",
+  "16": "k",
+  "17": "e",
+  "18": "y"
+}
+[2026-06-05T16:53:41.040Z] ERROR: Update product error {
+  "0": "M",
+  "1": "u",
+  "2": "s",
+  "3": "t",
+  "4": " ",
+  "5": "s",
+  "6": "u",
+  "7": "p",
+  "8": "p",
+  "9": "l",
+  "10": "y",
+  "11": " ",
+  "12": "a",
+  "13": "p",
+  "14": "i",
+  "15": "_",
+  "16": "k",
+  "17": "e",
+  "18": "y"
+}
+[2026-06-05T16:54:44.936Z] ERROR: Update product error {
+  "0": "M",
+  "1": "u",
+  "2": "s",
+  "3": "t",
+  "4": " ",
+  "5": "s",
+  "6": "u",
+  "7": "p",
+  "8": "p",
+  "9": "l",
+  "10": "y",
+  "11": " ",
+  "12": "a",
+  "13": "p",
+  "14": "i",
+  "15": "_",
+  "16": "k",
+  "17": "e",
+  "18": "y"
+}
+[2026-06-05T16:59:02.271Z] ERROR: Update product error {
+  "0": "M",
+  "1": "u",
+  "2": "s",
+  "3": "t",
+  "4": " ",
+  "5": "s",
+  "6": "u",
+  "7": "p",
+  "8": "p",
+  "9": "l",
+  "10": "y",
+  "11": " ",
+  "12": "a",
+  "13": "p",
+  "14": "i",
+  "15": "_",
+  "16": "k",
+  "17": "e",
+  "18": "y"
+}
+[2026-06-05T17:04:16.176Z] ERROR: Create product error {
+  "message": "Cloudinary غير مهيأ: الرجاء تعيين CLOUDINARY_CLOUD_NAME و CLOUDINARY_API_KEY و CLOUDINARY_API_SECRET أو CLOUDINARY_URL",
+  "stack": "Error: Cloudinary غير مهيأ: الرجاء تعيين CLOUDINARY_CLOUD_NAME و CLOUDINARY_API_KEY و CLOUDINARY_API_SECRET أو CLOUDINARY_URL\n    at ensureCloudinaryConfigured (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\config\\cloudinary.js:27:11)\n    at Object.uploadBuffer (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\config\\cloudinary.js:34:3)\n    at create (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\modules\\admin\\products.controller.js:52:62)\n    at Layer.handleRequest (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\router\\lib\\layer.js:152:17)\n    at next (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\router\\lib\\route.js:157:13)\n    at C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\modules\\admin\\products.route.js:37:13\n    at done (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\multer\\lib\\make-middleware.js:59:7)\n    at indicateDone (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\multer\\lib\\make-middleware.js:63:68)\n    at Multipart.<anonymous> (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\multer\\lib\\make-middleware.js:187:7)\n    at Multipart.emit (node:events:508:28)"
+}
+[2026-06-05T17:16:00.989Z] ERROR: Update product error {
+  "message": "DECIMAL value is out of range in '?'",
+  "stack": "Error: DECIMAL value is out of range in '?'\n    at PromisePoolConnection.query (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\mysql2\\lib\\promise\\connection.js:29:22)\n    at Product.update (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\modules\\admin\\products.model.js:77:30)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async update (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\modules\\admin\\products.controller.js:168:28)",
+  "code": "ER_DATA_OUT_OF_RANGE",
+  "errno": 1690,
+  "sql": "UPDATE Products SET\n                 Product_Name = 'ثقلاهخثقلق', Category = 'ساندويتشات', Category_ID = 4, Description = 'ثقصثحب',\n                 Image = '1780679760767-hf2e4uj2.png', Quantity = 435, Price = 2345678902345678, Discount = '3.00', Supplier_ID = NULL\n                 WHERE Product_ID = 360127",
+  "sqlState": "22003",
+  "sqlMessage": "DECIMAL value is out of range in '?'"
+}
+[2026-06-05T17:17:09.362Z] ERROR: Delete category error {
+  "message": "لا يمكن حذف التصنيف لأنه يحتوي على منتجات",
+  "stack": "Error: لا يمكن حذف التصنيف لأنه يحتوي على منتجات\n    at Category.delete (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\modules\\admin\\category.model.js:70:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async exports.deleteCategory (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\modules\\admin\\category.controller.js:95:5)"
+}
+[2026-06-05T17:17:15.595Z] ERROR: Delete category error {
+  "message": "لا يمكن حذف التصنيف لأنه يحتوي على منتجات",
+  "stack": "Error: لا يمكن حذف التصنيف لأنه يحتوي على منتجات\n    at Category.delete (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\modules\\admin\\category.model.js:70:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async exports.deleteCategory (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\modules\\admin\\category.controller.js:95:5)"
+}
+[2026-06-05T17:17:23.291Z] ERROR: Delete category error {
+  "message": "لا يمكن حذف التصنيف لأنه يحتوي على منتجات",
+  "stack": "Error: لا يمكن حذف التصنيف لأنه يحتوي على منتجات\n    at Category.delete (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\modules\\admin\\category.model.js:70:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async exports.deleteCategory (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\modules\\admin\\category.controller.js:95:5)"
+}
+[2026-06-05T17:17:31.824Z] ERROR: Update product error {
+  "message": "Column 'Category' cannot be null",
+  "stack": "Error: Column 'Category' cannot be null\n    at PromisePoolConnection.query (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\mysql2\\lib\\promise\\connection.js:29:22)\n    at Product.update (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\modules\\admin\\products.model.js:77:30)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async update (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\modules\\admin\\products.controller.js:168:28)",
+  "code": "ER_BAD_NULL_ERROR",
+  "errno": 1048,
+  "sql": "UPDATE Products SET\n                 Product_Name = 'ثقلاباخحلحفلخهبخه', Category = NULL, Category_ID = NULL, Description = 'ثقصثحب',\n                 Image = '1780679775087-lvb1f5uu.png', Quantity = 435, Price = '234567.00', Discount = 0, Supplier_ID = NULL\n                 WHERE Product_ID = 360127",
+  "sqlState": "23000",
+  "sqlMessage": "Column 'Category' cannot be null"
+}
+[2026-06-05T17:17:52.829Z] ERROR: Update product error {
+  "message": "Column 'Category' cannot be null",
+  "stack": "Error: Column 'Category' cannot be null\n    at PromisePoolConnection.query (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\node_modules\\mysql2\\lib\\promise\\connection.js:29:22)\n    at Product.update (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\modules\\admin\\products.model.js:77:30)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async update (C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\modules\\admin\\products.controller.js:168:28)",
+  "code": "ER_BAD_NULL_ERROR",
+  "errno": 1048,
+  "sql": "UPDATE Products SET\n                 Product_Name = 'ثقلاباخحلحفلخهبخه', Category = NULL, Category_ID = NULL, Description = 'ثقصثحب',\n                 Image = '1780679775087-lvb1f5uu.png', Quantity = 435, Price = '234567.00', Discount = 0, Supplier_ID = NULL\n                 WHERE Product_ID = 360127",
+  "sqlState": "23000",
+  "sqlMessage": "Column 'Category' cannot be null"
+}

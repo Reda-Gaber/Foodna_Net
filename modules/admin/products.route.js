@@ -16,13 +16,28 @@ const upload = multer({
     storage,
     limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
     fileFilter: (req, file, cb) => {
-        const filetypes = /jpeg|jpg|png|gif/;
-        const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-        const mimetype = filetypes.test(file.mimetype);
-        if (extname && mimetype) return cb(null, true);
-        cb(new Error('صور فقط!'));
+        const allowedExtensions = /jpeg|jpg|png|gif|webp|heic|heif/;
+        const allowedMimeTypes = /image\/(jpeg|pjpeg|jpg|png|x-png|gif|webp|heic|heif)$/i;
+        const extname = allowedExtensions.test(path.extname(file.originalname).toLowerCase());
+        const mimetype = allowedMimeTypes.test(file.mimetype);
+        if (extname || mimetype) return cb(null, true);
+        cb(new Error('الرجاء رفع صورة بصيغة JPEG أو JPG أو PNG أو GIF أو WEBP أو HEIC'));
     }
 });
+
+function handleUploadError(fieldName) {
+    return (req, res, next) => {
+        upload.single(fieldName)(req, res, (err) => {
+            if (err) {
+                if (err instanceof multer.MulterError) {
+                    return res.status(400).json({ success: false, message: err.message });
+                }
+                return res.status(400).json({ success: false, message: err.message || 'خطأ في رفع الصورة' });
+            }
+            next();
+        });
+    };
+}
 
 // =====================================================
 // Auth Middleware - التحقق من تسجيل الدخول كأدمن
@@ -42,10 +57,10 @@ function requireAdmin(req, res, next) {
 // =====================================================
 
 // إنشاء منتج مع صورة
-router.post('/create', requireAdmin, upload.single('image'), ProductController.create);
+router.post('/create', requireAdmin, handleUploadError('image'), ProductController.create);
 
 // تعديل منتج مع صورة
-router.post('/update/:id', requireAdmin, upload.single('image'), ProductController.update);
+router.post('/update/:id', requireAdmin, handleUploadError('image'), ProductController.update);
 
 // حذف منتج
 router.delete('/delete/:id', requireAdmin, ProductController.delete);

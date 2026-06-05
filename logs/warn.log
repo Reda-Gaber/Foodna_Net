@@ -230,3 +230,17 @@
   "message": "failed to load session"
 }
 [2026-06-03T13:26:45.635Z] WARN: [Chatbot] Transient error on attempt 1, retrying in 1000ms...
+[2026-06-05T12:34:40.846Z] WARN: [sessionHandler] Session reload failed {
+  "sid": "wG1PDnUhFaxrYGO8QEudC-8qJcQZwL3h",
+  "message": "read ECONNRESET"
+}
+[2026-06-05T13:20:45.333Z] WARN: [sessionHandler] Session reload failed {
+  "sid": "MOstM3BwM89vn3M4eq6KDvrph26BxKCD",
+  "message": "read ECONNRESET"
+}
+[2026-06-05T17:16:15.092Z] WARN: Failed to delete image file {
+  "errno": -4058,
+  "code": "ENOENT",
+  "syscall": "unlink",
+  "path": "C:\\Users\\skandr store\\.ms-ad\\fodna-servir-net\\Foodna_Net\\public\\images\\products\\1780679700149-38fo3me5.png"
+}

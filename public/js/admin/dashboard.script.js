@@ -10,6 +10,14 @@ const state = {
     currentPeriod: 'daily'
 };
 
+function resolveProductImage(image) {
+    if (!image) return '';
+    if (/^https?:\/\//i.test(image)) return image;
+    if (image.startsWith('/')) return image;
+    if (image.startsWith('images/')) return `/${image}`;
+    return `/images/products/${image}`;
+}
+
 // =====================================================
 // INITIALIZATION
 // =====================================================
@@ -50,6 +58,34 @@ function ensureSwal() {
         });
     });
     return _swalLoader;
+}
+
+async function showAdminAlert(message, title = 'تنبيه', icon = 'info') {
+    try {
+        const swal = await ensureSwal();
+        return swal.fire({ title, text: message, icon, confirmButtonText: 'حسناً' });
+    } catch (e) {
+        window.alert(message);
+        return { isConfirmed: true };
+    }
+}
+
+async function showAdminConfirm(message, title = 'تأكيد') {
+    try {
+        const swal = await ensureSwal();
+        const result = await swal.fire({
+            title,
+            text: message,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'نعم',
+            cancelButtonText: 'إلغاء',
+            reverseButtons: true
+        });
+        return result.isConfirmed;
+    } catch (e) {
+        return window.confirm(message);
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -101,13 +137,15 @@ async function loadProducts() {
         const res = await fetch('/api/products?limit=100');
         const products = await res.json();
         state.products = products.map((p, idx) => ({
-            id: p.Product_ID || idx + 1,
-            name: p.Product_Name,
-            category: p.Category,
-            category_id: p.Category_ID,
+            id: p.Product_ID || p.id || idx + 1,
+            name: p.Product_Name || p.name || '',
+            description: p.Description || p.description || '',
+            category: p.Category || p.category || '',
+            category_id: p.Category_ID || p.category_id || null,
             price: (() => { const v = p.Price ?? p.price; const n = parseFloat(v); return Number.isFinite(n) ? n : 0; })(),
             stock: (p.Quantity_Available ?? p.Quantity ?? p.stock) ? parseInt(p.Quantity_Available ?? p.Quantity ?? p.stock) : 0,
-            status: 'نشط'
+            status: p.status || p.Status || 'نشط',
+            image: p.Images || p.image || null
         }));
     } catch (error) {
         state.products = [];
@@ -477,7 +515,7 @@ function attachProductActionListeners() {
     tbody._hasProductListener = true;
 }
 
-fetch('/api/products')
+fetch('/admin/products?limit=100')
     .then(response => {
         if (!response.ok) throw new Error('Network response was not ok');
         return response.json();
@@ -490,6 +528,8 @@ fetch('/api/products')
             name: item.Product_Name || item.name,
             description: item.Description || item.description,
             category: item.Category || item.category,
+            category_id: item.Category_ID || item.category_id,
+            discount: parseFloat(item.Discount || item.discount || 0),
             price: (() => { const v = item.Price ?? item.price; const n = parseFloat(v); return Number.isFinite(n) ? n : 0; })(),
             stock: parseInt(item.Quantity) || 0,
             status: item.status || 'active',
@@ -501,8 +541,8 @@ fetch('/api/products')
         renderInventory();
     })
     .catch(error => {
-        // في حالة الفشل، استخدم البيانات النموذجية
-        state.products = [...sampleProducts];
+        // في حالة الفشل، حافظ على حالة المنتجات فارغة بدل الاعتماد على متغير غير معرف
+        state.products = [];
         renderProducts();
         renderDashboard();
         renderInventory();
@@ -511,6 +551,33 @@ fetch('/api/products')
 async function openProductModal(productId = null) {
     const product = productId ? state.products.find(p => p.id === productId) : null;
     const isEdit = !!product;
+    
+    // For edit mode, fetch fresh product data from backend to ensure category info
+    let freshProduct = product;
+    if (isEdit && productId) {
+        try {
+            const res = await fetch(`/admin/products/${productId}`, { credentials: 'include' });
+            if (res.ok) {
+                const data = await res.json();
+                const item = data.data || data;
+                freshProduct = {
+                    id: item.Product_ID || item.id,
+                    name: item.Product_Name || item.name,
+                    description: item.Description || item.description,
+                    category: item.Category || item.category || '',
+                    category_id: item.Category_ID || item.category_id,
+                    discount: parseFloat(item.Discount || item.discount || 0),
+                    price: parseFloat(item.Price || item.price || 0),
+                    stock: parseInt(item.Quantity) || 0,
+                    status: item.status || 'active',
+                    image: item.Images || item.image || "Null"
+                };
+            }
+        } catch (err) {
+            // If fetch fails, use the state data as fallback
+            freshProduct = product;
+        }
+    }
 
     // جلب الفئات من API
     let categories = [];
@@ -536,23 +603,23 @@ async function openProductModal(productId = null) {
     const categoryOptions = categories.map(cat => {
         const categoryId = cat.Category_ID || cat.id;
         const categoryName = cat.Category_Name || cat.category_name || cat.name;
-        const isSelected = product?.category_id === categoryId ? 'selected' : '';
-        return `<option value="${categoryId}" data-name="${categoryName}">${categoryName}</option>`;
+        const isSelected = freshProduct?.category_id === categoryId ? 'selected' : '';
+        return `<option value="${categoryId}" data-name="${categoryName}" ${isSelected}>${categoryName}</option>`;
     }).join('');
 
     const modalTitle = isEdit ? 'تعديل المنتج' : 'إضافة منتج جديد';
     const modalBody = `
         <form id="productForm" enctype="multipart/form-data">
-            <input type="hidden" name="id" value="${product?.id || ''}">
+            <input type="hidden" name="id" value="${freshProduct?.id || ''}">
 
             <div class="form-group">
                 <label for="productName">اسم المنتج</label>
-                <input type="text" id="productName" name="name" value="${product?.name || ''}" required>
+                <input type="text" id="productName" name="name" value="${freshProduct?.name || ''}" required>
             </div>
 
             <div class="form-group">
                 <label for="description">الوصف</label>
-                <input type="text" id="description" name="description" value="${product?.description || ''}">
+                <input type="text" id="description" name="description" value="${freshProduct?.description || ''}">
             </div>
 
             <div class="form-group">
@@ -566,27 +633,27 @@ async function openProductModal(productId = null) {
 
             <div class="form-group">
                 <label for="productPrice">السعر</label>
-                <input type="number" step="0.01" id="productPrice" name="price" value="${product?.price || ''}" required>
+                <input type="number" step="0.01" id="productPrice" name="price" value="${freshProduct?.price || ''}" required>
             </div>
 
             <div class="form-group">
                 <label for="productDiscount">خصم (٪)</label>
-                <input type="number" step="0.01" id="productDiscount" name="discount" value="${product?.discount ?? ''}" min="0" max="100">
+                <input type="number" step="0.01" id="productDiscount" name="discount" value="${freshProduct?.discount ?? ''}" min="0" max="100">
             </div>
 
             <div class="form-group">
                 <label for="productStock">الكمية</label>
-                <input type="number" id="productStock" name="quantity" value="${product?.stock || ''}" required>
+                <input type="number" id="productStock" name="quantity" value="${freshProduct?.stock || ''}" required>
             </div>
 
             <div class="form-group">
                 <label>صورة المنتج</label>
                 <button type="button" id="selectImageBtn" class="btn btn-outline-primary btn-sm">اختر الصورة</button>
-                <input type="file" id="productImage" name="image" accept="image/*" style="display:none;" ${!isEdit ? '' : ''}>
+                <input type="file" id="productImage" name="image" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,image/heic,image/heif" style="display:none;" ${!isEdit ? '' : ''}>
                 <p id="imageName" class="text-muted mt-1" style="font-size:0.9em;"></p>
-               ${product?.image ? `
+               ${freshProduct?.image ? `
     <div class="mt-2">
-        <img src="/images/${product.image}" width="80" alt="الحالي">
+        <img src="${resolveProductImage(freshProduct.image)}" width="80" alt="الحالي">
         <br><small>الصورة الحالية</small>
     </div>
 ` : ''}
@@ -647,10 +714,11 @@ async function openProductModal(productId = null) {
 
             // helper: safe JSON parse
             const safeJson = async (res) => {
+                const text = await res.text();
                 try {
-                    return await res.json();
+                    return JSON.parse(text);
                 } catch (err) {
-                    return { success: false, message: res.statusText || 'Unexpected server response' };
+                    return { success: false, message: text || res.statusText || 'Unexpected server response' };
                 }
             };
 
@@ -689,18 +757,17 @@ async function openProductModal(productId = null) {
                         // Close modal immediately, then show confirmation
                         finalize(true);
                         if (swal) swal.fire({ icon: 'success', title: 'تم بنجاح ✅', text: result.message || 'تم إضافة المنتج', timer: 1500, showConfirmButton: false });
-                        else alert(result.message || 'تم إضافة المنتج');
+                        else await showAdminAlert(result.message || 'تم إضافة المنتج', 'نجاح', 'success');
                     } else {
                         const msg = result.message || 'حدث خطأ في إضافة المنتج';
-                        if (swal) swal.fire({ icon: 'error', title: 'خطأ', text: msg });
-                        else alert(msg);
+                        await showAdminAlert(msg, 'خطأ', 'error');
                         finalize(false);
                     }
                     return;
                 }
 
                 // EDIT flow - send only changed fields
-                const original = product;
+                const original = freshProduct;
                 const fd = new FormData();
                 fd.append('id', original.id);
 
@@ -713,8 +780,22 @@ async function openProductModal(productId = null) {
                 if (description !== (original.description || '')) { fd.append('description', description); changed = true; }
 
                 const categoryVal = document.getElementById('productCategory');
-                const categoryId = categoryVal.value;
-                const categoryName = categoryVal.options[categoryVal.selectedIndex]?.dataset?.name || '';
+                let categoryId = categoryVal.value;
+                let categoryName = categoryVal.options[categoryVal.selectedIndex]?.dataset?.name || '';
+                
+                // إذا لم يتم اختيار فئة، استخدم الفئة الأصلية
+                if (!categoryId || !categoryName) {
+                    categoryId = original.category_id || '';
+                    categoryName = original.category || '';
+                }
+                
+                // تحقق من أن الفئة ليست فارغة
+                if (!categoryId || !categoryName) {
+                    const swal2 = await ensureSwal();
+                    swal2.fire({ icon: 'error', title: 'خطأ', text: 'يجب اختيار فئة للمنتج' });
+                    return;
+                }
+                
                 fd.append('category_id', categoryId);
                 fd.append('category', categoryName);
                 if (categoryId !== (original.category_id || '') || categoryName !== (original.category || '')) {
@@ -746,13 +827,12 @@ async function openProductModal(productId = null) {
                 }
 
                 if (!changed) {
-                    if (swal) swal.fire({ icon: 'info', title: 'لم يتم تغيير أي شيء', text: 'لم تقم بتعديل أي حقل.' });
-                    else alert('لم تقم بتعديل أي حقل.');
+                    await showAdminAlert('لم تقم بتعديل أي حقل.', 'لم يتم تغيير أي شيء', 'info');
                     finalize(false);
                     return;
                 }
 
-                const response = await fetch('/admin/products/update', { method: 'POST', body: fd });
+                const response = await fetch(`/admin/products/update/${encodeURIComponent(original.id)}`, { method: 'POST', body: fd });
                 const result = await safeJson(response);
 
                 if (response.ok && (result.success || response.status === 200)) {
@@ -763,7 +843,10 @@ async function openProductModal(productId = null) {
                             const updated = { ...state.products[idx] };
                             if (fd.has('name')) updated.name = name;
                             if (fd.has('description')) updated.description = description;
-                            if (fd.has('category')) updated.category = categoryVal;
+                            if (fd.has('category')) {
+                                updated.category = categoryName;
+                                updated.category_id = categoryId;
+                            }
                             if (fd.has('price')) updated.price = parseFloat(document.getElementById('productPrice').value) || updated.price;
                             if (fd.has('discount')) updated.discount = parseFloat(document.getElementById('productDiscount').value) || updated.discount;
                             if (fd.has('quantity')) updated.stock = parseInt(document.getElementById('productStock').value) || updated.stock;
@@ -774,24 +857,24 @@ async function openProductModal(productId = null) {
                         // Close modal immediately, then show confirmation
                         finalize(true);
                         if (swal) swal.fire({ icon: 'success', title: 'تم التحديث', text: result.message || 'تم تحديث المنتج بنجاح', timer: 1400, showConfirmButton: false });
-                        else alert(result.message || 'تم تحديث المنتج');
+                        else await showAdminAlert(result.message || 'تم تحديث المنتج', 'تم التحديث', 'success');
                     } else {
                         await loadDashboardData(); renderProducts();
                         // Close modal immediately, then show confirmation
                         finalize(true);
                         if (swal) swal.fire({ icon: 'success', title: 'تم التحديث', text: result.message || 'تم تحديث المنتج', timer: 1400, showConfirmButton: false });
-                        else alert(result.message || 'تم تحديث المنتج');
+                        else await showAdminAlert(result.message || 'تم تحديث المنتج', 'تم التحديث', 'success');
                     }
                 } else {
                     const msg = result.message || 'فشل في تحديث المنتج';
                     if (swal) swal.fire({ icon: 'error', title: 'خطأ', text: msg });
-                    else alert(msg);
+                    else await showAdminAlert(msg, 'خطأ', 'error');
                     finalize(false);
                 }
             } catch (err) {
                 const swal = await getSwalOrFallback();
                 if (swal) swal.fire({ icon: 'error', title: 'خطأ', text: 'حدث خطأ في الاتصال بالخادم: ' + (err.message || err) });
-                else alert('حدث خطأ في الاتصال بالخادم: ' + (err.message || err));
+                else await showAdminAlert('حدث خطأ في الاتصال بالخادم: ' + (err.message || err), 'خطأ', 'error');
                 submitBtn.disabled = false;
                 submitBtn.textContent = originalText;
             }
@@ -977,92 +1060,34 @@ function editCustomer(id) {
     });
 }
 
-function deleteCustomer(id) {
-    
+async function deleteCustomer(id) {
     const customer = state.customers.find(c => c.id === id);
-    
     if (!customer) {
-        alert('العميل غير موجود');
+        await showAdminAlert('العميل غير موجود', 'خطأ', 'error');
         return;
     }
-    
-    // استخدام SweetAlert إذا كان متاحاً، وإلا استخدام confirm
-    if (typeof Swal !== 'undefined') {
-        Swal.fire({
-            title: 'تأكيد الحذف',
-            text: `هل أنت متأكد من حذف العميل "${customer.name}"؟ سيتم حذف جميع طلباته أيضاً.`,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#ef4444',
-            cancelButtonColor: '#e73939',
-            confirmButtonText: 'نعم، احذف',
-            cancelButtonText: 'إلغاء'
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                try {
-                    const res = await fetch(`/admin/api/customers/${id}`, {
-                        method: 'DELETE',
-                        credentials: 'include',
-                        headers: { 'Content-Type': 'application/json' }
-                    });
-                    
-                    if (res.ok) {
-                        const data = await res.json();
-                        
-                        state.customers = state.customers.filter(c => c.id !== id);
-                        renderCustomers();
-                        renderDashboard();
-                        
-                        Swal.fire({
-                            title: 'تم بنجاح ✓',
-                            text: 'تم حذف العميل بنجاح',
-                            icon: 'success',
-                            timer: 1500,
-                            showConfirmButton: false
-                        });
-                    } else {
-                        const errorData = await res.json().catch(() => ({ error: 'خطأ غير معروف' }));
-                        
-                        Swal.fire({
-                            title: 'خطأ',
-                            text: errorData.error || errorData.message || 'فشل حذف العميل',
-                            icon: 'error'
-                        });
-                    }
-                } catch (error) {
-                    Swal.fire({
-                        title: 'خطأ',
-                        text: 'حدث خطأ في الاتصال: ' + error.message,
-                        icon: 'error'
-                    });
-                }
-            }
+
+    const confirmed = await showAdminConfirm(`هل أنت متأكد من حذف العميل "${customer.name}"؟ سيتم حذف جميع طلباته أيضاً.`, 'تأكيد الحذف');
+    if (!confirmed) return;
+
+    try {
+        const res = await fetch(`/admin/api/customers/${id}`, {
+            method: 'DELETE',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' }
         });
-    } else {
-        // fallback إلى confirm
-        if (confirm(`هل أنت متأكد من حذف العميل "${customer.name}"؟`)) {
-            try {
-                fetch(`/admin/api/customers/${id}`, {
-                    method: 'DELETE',
-                    credentials: 'include',
-                    headers: { 'Content-Type': 'application/json' }
-                }).then(async res => {
-                    if (res.ok) {
-                        state.customers = state.customers.filter(c => c.id !== id);
-                        renderCustomers();
-                        renderDashboard();
-                        alert('تم حذف العميل بنجاح');
-                    } else {
-                        const errorData = await res.json().catch(() => ({ error: 'خطأ غير معروف' }));
-                        alert('فشل حذف العميل: ' + (errorData.error || 'خطأ غير معروف'));
-                    }
-                }).catch(error => {
-                    alert('حدث خطأ: ' + error.message);
-                });
-            } catch (error) {
-                alert('حدث خطأ: ' + error.message);
-            }
+
+        if (res.ok) {
+            state.customers = state.customers.filter(c => c.id !== id);
+            renderCustomers();
+            renderDashboard();
+            await showAdminAlert('تم حذف العميل بنجاح', 'تم الحذف', 'success');
+        } else {
+            const errorData = await res.json().catch(() => ({ error: 'خطأ غير معروف' }));
+            await showAdminAlert('فشل حذف العميل: ' + (errorData.error || 'خطأ غير معروف'), 'خطأ', 'error');
         }
+    } catch (error) {
+        await showAdminAlert('حدث خطأ: ' + error.message, 'خطأ', 'error');
     }
 }
 
@@ -1157,12 +1182,13 @@ function updateOrderStatus(id) {
     });
 }
 
-function deleteOrder(id) {
-    if (confirm('Are you sure you want to delete this order?')) {
-        state.orders = state.orders.filter(o => o.id !== id);
-        renderOrders();
-        renderDashboard();
-    }
+async function deleteOrder(id) {
+    const confirmed = await showAdminConfirm('هل أنت متأكد من حذف هذا الطلب؟', 'تأكيد الحذف');
+    if (!confirmed) return;
+
+    state.orders = state.orders.filter(o => o.id !== id);
+    renderOrders();
+    renderDashboard();
 }
 
 // =====================================================
@@ -1281,11 +1307,11 @@ function editSupplier(id) {
     openSupplierModal(id);
 }
 
-function deleteSupplier(id) {
-    if (confirm('Are you sure you want to delete this supplier?')) {
-        state.suppliers = state.suppliers.filter(s => s.id !== id);
-        renderSuppliers();
-    }
+async function deleteSupplier(id) {
+    const confirmed = await showAdminConfirm('هل أنت متأكد من حذف هذا المورد؟', 'تأكيد الحذف');
+    if (!confirmed) return;
+    state.suppliers = state.suppliers.filter(s => s.id !== id);
+    renderSuppliers();
 }
 
 // =====================================================
@@ -1453,12 +1479,15 @@ async function saveCategoryEdit(id) {
 }
 
 async function deleteCategory(id) {
-    if (!confirm('هل تريد حذف هذا التصنيف؟')) return;
+    const confirmed = await showAdminConfirm('هل تريد حذف هذا التصنيف؟', 'تأكيد الحذف');
+    if (!confirmed) return;
     try {
         const res = await fetch(`/admin/api/categories/${id}`, { method: 'DELETE', credentials: 'include' });
         if (res.ok) loadCategories();
-        else alert('فشل الحذف');
-    } catch (e) { alert('خطأ في الاتصال'); }
+        else await showAdminAlert('فشل الحذف', 'خطأ', 'error');
+    } catch (e) {
+        await showAdminAlert('خطأ في الاتصال', 'خطأ', 'error');
+    }
 }
 
 // إضافة تصنيف جديد
@@ -1638,9 +1667,9 @@ async function saveOfferDiscount(productId) {
     try {
         const fd = new FormData();
         fd.append('discount', val);
-        const res = await fetch(`/admin/products/update`, {
+        const res = await fetch(`/admin/products/update/${encodeURIComponent(productId)}`, {
             method: 'POST', credentials: 'include',
-            body: (() => { fd.append('id', productId); return fd; })()
+            body: fd
         });
         if (res.ok) {
             if (msg) { msg.textContent = '✓ تم الحفظ'; msg.style.color = '#2e7d32'; }
@@ -1654,15 +1683,17 @@ async function saveOfferDiscount(productId) {
 }
 
 async function removeDiscount(productId) {
-    if (!confirm('هل تريد إزالة الخصم من هذا المنتج؟')) return;
+    const confirmed = await showAdminConfirm('هل تريد إزالة الخصم من هذا المنتج؟', 'تأكيد', 'warning');
+    if (!confirmed) return;
     try {
         const fd = new FormData();
-        fd.append('id', productId);
         fd.append('discount', 0);
-        const res = await fetch('/admin/products/update', { method: 'POST', credentials: 'include', body: fd });
+        const res = await fetch(`/admin/products/update/${encodeURIComponent(productId)}`, { method: 'POST', credentials: 'include', body: fd });
         if (res.ok) loadOffers();
-        else alert('فشل إزالة الخصم');
-    } catch (e) { alert('خطأ في الاتصال'); }
+        else await showAdminAlert('فشل إزالة الخصم', 'خطأ', 'error');
+    } catch (e) {
+        await showAdminAlert('خطأ في الاتصال', 'خطأ', 'error');
+    }
 }
 
 // ربط زر "إضافة عرض"
@@ -1722,9 +1753,8 @@ async function applyNewOffer() {
     }
     try {
         const fd = new FormData();
-        fd.append('id', pid);
         fd.append('discount', val);
-        const res = await fetch('/admin/products/update', { method: 'POST', credentials: 'include', body: fd });
+        const res = await fetch(`/admin/products/update/${encodeURIComponent(pid)}`, { method: 'POST', credentials: 'include', body: fd });
         
         if (res.ok) {
             if (msg) { msg.textContent = '✓ تم تطبيق العرض'; msg.style.color = '#2e7d32'; }
@@ -1823,17 +1853,22 @@ async function toggleCoupon(id, isCurrentlyActive) {
             body: JSON.stringify({ isActive: !isCurrentlyActive })
         });
         if (res.ok) loadCoupons();
-        else alert('فشل تغيير حالة الكوبون');
-    } catch (e) { alert('خطأ في الاتصال'); }
+        else await showAdminAlert('فشل تغيير حالة الكوبون', 'خطأ', 'error');
+    } catch (e) {
+        await showAdminAlert('خطأ في الاتصال', 'خطأ', 'error');
+    }
 }
 
 async function deleteCoupon(id) {
-    if (!confirm('هل تريد حذف هذا الكوبون؟')) return;
+    const confirmed = await showAdminConfirm('هل تريد حذف هذا الكوبون؟', 'تأكيد الحذف');
+    if (!confirmed) return;
     try {
         const res = await fetch(`/admin/api/coupons/${id}`, { method: 'DELETE', credentials: 'include' });
         if (res.ok) loadCoupons();
-        else alert('فشل الحذف');
-    } catch (e) { alert('خطأ في الاتصال'); }
+        else await showAdminAlert('فشل الحذف', 'خطأ', 'error');
+    } catch (e) {
+        await showAdminAlert('خطأ في الاتصال', 'خطأ', 'error');
+    }
 }
 
 // ربط زر "إضافة كوبون"

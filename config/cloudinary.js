@@ -2,14 +2,43 @@ const { v2: cloudinary } = require('cloudinary');
 const streamifier = require('streamifier');
 const Logger = require('../core/utils/logger');
 
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
+const cloudinaryConfig = {
   secure: true
-});
+};
+
+if (process.env.CLOUDINARY_URL) {
+  cloudinaryConfig.cloudinary_url = process.env.CLOUDINARY_URL;
+}
+if (process.env.CLOUDINARY_CLOUD_NAME) {
+  cloudinaryConfig.cloud_name = process.env.CLOUDINARY_CLOUD_NAME;
+}
+if (process.env.CLOUDINARY_API_KEY) {
+  cloudinaryConfig.api_key = process.env.CLOUDINARY_API_KEY;
+}
+if (process.env.CLOUDINARY_API_SECRET) {
+  cloudinaryConfig.api_secret = process.env.CLOUDINARY_API_SECRET;
+}
+
+cloudinary.config(cloudinaryConfig);
+
+function isCloudinaryConfigured() {
+  const config = cloudinary.config();
+  return Boolean(
+    process.env.CLOUDINARY_URL ||
+    (config.cloud_name && config.api_key && config.api_secret)
+  );
+}
+
+function ensureCloudinaryConfigured() {
+  if (!isCloudinaryConfigured()) {
+    throw new Error(
+      'Cloudinary غير مهيأ: الرجاء تعيين CLOUDINARY_CLOUD_NAME و CLOUDINARY_API_KEY و CLOUDINARY_API_SECRET أو CLOUDINARY_URL'
+    );
+  }
+}
 
 function uploadBuffer(buffer, options = {}) {
+  ensureCloudinaryConfigured();
   return new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream({
       resource_type: 'image',
@@ -54,5 +83,6 @@ async function deleteResource(url, options = {}) {
 module.exports = {
   uploadBuffer,
   deleteResource,
-  extractPublicId
+  extractPublicId,
+  isCloudinaryConfigured
 };

@@ -1577,3 +1577,57 @@
   "email": "admin@foodna.com",
   "role": "Admin"
 }
+[2026-06-05T16:04:30.697Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-06-05T16:06:21.946Z] AUDIT: Action: COUPON_UPDATED, User: 8 {
+  "couponId": "90002"
+}
+[2026-06-05T16:36:55.518Z] AUDIT: Action: USER_LOGIN, User: 8 {
+  "email": "admin@foodna.com",
+  "role": "Admin"
+}
+[2026-06-05T16:38:11.602Z] AUDIT: Action: PRODUCT_UPDATED, User: 8 {
+  "productId": 210127
+}
+[2026-06-05T17:07:35.726Z] AUDIT: Action: PRODUCT_CREATED, User: 8 {
+  "productId": 360126
+}
+[2026-06-05T17:07:56.005Z] AUDIT: Action: PRODUCT_UPDATED, User: 8 {
+  "productId": 360126
+}
+[2026-06-05T17:08:50.983Z] AUDIT: Action: CATEGORY_DELETED, User: 8 {
+  "categoryId": "3"
+}
+[2026-06-05T17:09:27.075Z] AUDIT: Action: COUPON_CREATED, User: 8 {
+  "couponId": 150001,
+  "code": "2345"
+}
+[2026-06-05T17:09:43.277Z] AUDIT: Action: PRODUCT_DELETED, User: 8 {
+  "productId": 360126
+}
+[2026-06-05T17:15:00.573Z] AUDIT: Action: PRODUCT_CREATED, User: 8 {
+  "productId": 360127
+}
+[2026-06-05T17:16:15.353Z] AUDIT: Action: PRODUCT_UPDATED, User: 8 {
+  "productId": 360127
+}
+[2026-06-05T17:16:41.058Z] AUDIT: Action: PRODUCT_UPDATED, User: 8 {
+  "productId": 360127
+}
+[2026-06-05T17:16:54.715Z] AUDIT: Action: PRODUCT_UPDATED, User: 8 {
+  "productId": 360127
+}
+[2026-06-05T17:17:19.674Z] AUDIT: Action: CATEGORY_DELETED, User: 8 {
+  "categoryId": "4"
+}
+[2026-06-05T17:17:58.859Z] AUDIT: Action: COUPON_DELETED, User: 8 {
+  "couponId": "150001"
+}
+[2026-06-05T17:18:01.741Z] AUDIT: Action: COUPON_UPDATED, User: 8 {
+  "couponId": "90002"
+}
+[2026-06-05T17:18:05.095Z] AUDIT: Action: COUPON_DELETED, User: 8 {
+  "couponId": "90002"
+}
